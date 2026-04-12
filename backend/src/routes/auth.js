@@ -72,7 +72,10 @@ authRouter.post("/signup", async (req, res) => {
     );
 
     // Send verification email
-    await sendVerificationEmail(emailId, token);
+    // await sendVerificationEmail(emailId, token);
+    sendVerificationEmail(emailId, token)
+      .then(() => console.log("📩 Email process done"))
+      .catch(err => console.error("Email error:", err));
 
     return res.json({
       message: "📩 Signup successful! Please verify your email.",
