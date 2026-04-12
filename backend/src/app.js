@@ -36,8 +36,8 @@ app.use("/api", userRouter);
 // 🔥 Serve frontend (React build)
 app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
-// ✅ Use the named parameter with a custom regex group
-app.get("/:path(.*)", (req, res) => {
+// ✅ Use a Regex Literal (no quotes) instead of a string
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
 });
 // ✅ Server
