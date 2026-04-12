@@ -2,13 +2,20 @@ require("dotenv").config();
 const nodemailer = require("nodemailer");
 
 // Create transporter ONCE (better performance)
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+let transporter;
+
+const getTransporter = () => {
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+  }
+  return transporter;
+};
 
 // ✅ Verification Email
 const sendVerificationEmail = async (email, token) => {
@@ -16,7 +23,9 @@ const sendVerificationEmail = async (email, token) => {
   const domain = process.env.BASE_URL || "http://localhost:5173";
   const link = `${domain}/verify-email?token=${token}`;
 
-  return await transporter.sendMail({
+  const mailer = getTransporter();
+
+  return await mailer.sendMail({
     from: process.env.EMAIL_USER,
     to: email,
     subject: "Verify your email",
