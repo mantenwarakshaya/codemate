@@ -10,7 +10,7 @@ const BASE_URL =
     ? "http://localhost:7777"
     : "/api";
 
-class Signup extends Component {
+class SignupForm extends Component {
   // Initialize state to track form inputs and API feedback
   state = {
     firstName: '',
@@ -193,4 +193,4 @@ class Signup extends Component {
   }
 }
 
-export default Signup
+export default SignupForm
