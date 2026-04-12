@@ -1,0 +1,371 @@
+/* =========================
+   PAGE CONTAINER (SHARED)
+========================= */
+.page-container {
+  min-height: 90vh;
+  background-color: rgb(243, 243, 243);
+  padding: 40px 16px;
+}
+
+.content-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   HEADER
+========================= */
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #475569;
+  margin-right: 10px;
+}
+
+.badge {
+  background-color: #0967d2;
+  color: #ffffff;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  text-align: center;
+  gap: 20px;
+}
+
+.no-connections {
+  color: #475569;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.explore-btn {
+  background-color: #0967d2;
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.explore-btn:hover {
+  background-color: #475569;
+}
+
+/* =====================================================
+   🔵 CONNECTION CARD
+===================================================== */
+.connection-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 20px;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  border: 1px solid #bfdbfe;
+  transition: 0.2s;
+}
+
+.connection-card:hover {
+  background-color: #e6f6ff;
+}
+
+.connection-card-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.connection-profile-img {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #bfdbfe;
+}
+
+.connection-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.connection-user-name {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.connection-user-link {
+  text-decoration: none;
+  color: #0967d2;
+}
+
+.connection-user-link:hover {
+  text-decoration: underline;
+}
+
+.connection-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.connection-skill-badge {
+  background-color: #e6f6ff;
+  color: #0967d2;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid #bfdbfe;
+}
+
+.connection-skill-more {
+  font-size: 12px;
+  color: #475569;
+}
+
+/* Message Button */
+.connection-message-btn {
+  background-color: #0967d2;
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.connection-message-btn:hover {
+  background-color: #475569;
+}
+
+.connection-msg-icon {
+  font-size: 18px;
+}
+
+.connection-msg-text {
+  display: inline;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .connection-card {
+    padding: 16px;
+  }
+
+  .connection-profile-img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .connection-message-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .connection-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .connection-card-left {
+    width: 100%;
+    gap: 12px;
+  }
+
+  .connection-profile-img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .connection-message-btn {
+    align-self: flex-end;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: #e5e7eb;
+    color: #6b7280;
+    justify-content: center;
+  }
+
+  .connection-msg-text {
+    display: none;
+  }
+}
+
+/* =====================================================
+   🟢 REQUEST CARD
+===================================================== */
+.request-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 24px;
+  margin-bottom: 16px;
+  border-radius: 16px;
+  border: 1px solid #bfdbfe;
+  transition: 0.2s;
+}
+
+.request-card:hover {
+  transform: translateY(-2px);
+}
+
+.request-card-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.request-profile-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #bfdbfe;
+}
+
+.request-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.request-user-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.request-user-link {
+  text-decoration: none;
+  color: #0967d2;
+}
+
+.request-user-link:hover {
+  text-decoration: underline;
+}
+
+.request-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.request-skill-badge {
+  padding: 4px 12px;
+  background-color: #e6f6ff;
+  color: #0967d2;
+  font-size: 12px;
+  border-radius: 9999px;
+  border: 1px solid #bfdbfe;
+}
+
+.request-skill-more {
+  font-size: 12px;
+  color: #475569;
+}
+
+/* Buttons */
+.request-action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.request-accept-btn,
+.request-reject-btn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.request-accept-btn {
+  background-color: #0967d2;
+  color: #ffffff;
+}
+
+.request-accept-btn:hover {
+  background-color: #0752a3;
+}
+
+.request-reject-btn {
+  background-color: transparent;
+  color: #0967d2;
+  border: 1px solid #bfdbfe;
+}
+
+.request-reject-btn:hover {
+  background-color: #e6f6ff;
+}
+
+/* Icons */
+.request-btn-icon {
+  display: none;
+}
+
+.request-btn-text {
+  display: inline;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .request-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .request-action-buttons {
+    width: 100%;
+  }
+
+  .request-btn-text {
+    display: none;
+  }
+
+  .request-btn-icon {
+    display: inline;
+    font-size: 18px;
+  }
+
+  .request-accept-btn,
+  .request-reject-btn {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

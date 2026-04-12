@@ -1,0 +1,28 @@
+/* =========================
+   NOT FOUND PAGE
+========================= */
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
+
+.not-found-img {
+  width: 400px;
+  margin-bottom: 24px;
+  border-radius: 20px;
+}
+
+.not-found-container button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff; 
+  background-color: #0967d2; 
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}

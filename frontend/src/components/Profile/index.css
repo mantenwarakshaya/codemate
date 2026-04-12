@@ -1,0 +1,184 @@
+.profile-main-container {
+  background-color: #f4f6f9;
+  min-height: 90vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ✅ Make card responsive */
+.profile-card {
+  width: 100%;
+  max-width: 700px;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.profile-title {
+  font-size: 26px;
+  font-weight: 600;
+  color: #0967d2;
+}
+
+.profile-subtitle {
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+/* Image Section */
+.profile-image-section {
+  border: 1px dashed #d1d5db;
+  padding: 25px;
+  text-align: center;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.profile-image {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid #0967d2;
+  object-fit: cover;
+}
+
+/* Sections */
+.section-title {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  flex-wrap: wrap; /* IMPORTANT */
+}
+
+.about {
+  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-weight: 400; 
+  line-height: 1.6; 
+  color: #333;
+}
+
+.input,
+.skills-select {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #f9fafb;
+  font-size: 14px;
+}
+
+.imageinput {
+  width: 100%;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #f9fafb;
+}
+
+/* Skills */
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  display: flex;
+  align-items: center;
+  background: #e0e7ff;
+  color: #0967d2;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.skill-remove {
+  margin-left: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Button */
+.save-btn {
+  margin-top: 25px;
+  width: 100%;
+  padding: 12px;
+  background: #0967d2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Sub form */
+.sub-form-row {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 200px;
+  font-size: 14px;
+}
+
+/*  RESPONSIVE BREAKPOINTS */
+
+/* Tablet */
+@media (max-width: 768px) {
+  .profile-card {
+    padding: 20px;
+  }
+
+  .profile-title {
+    font-size: 22px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .profile-main-container {
+    padding: 10px;
+  }
+
+  .profile-card {
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  .form-row {
+    flex-direction: column; 
+  }
+
+  .input,
+  .skills-select {
+    width: 100%;
+  }
+
+  .profile-title {
+    font-size: 20px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .profile-image {
+    width: 70px;
+    height: 70px;
+  }
+}

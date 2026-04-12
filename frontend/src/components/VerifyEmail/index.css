@@ -1,0 +1,43 @@
+/* =========================
+   PAGE CONTAINER
+========================= */
+.verify-email-container {
+  min-height: 90vh;
+  background-color: rgb(243, 243, 243);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* =========================
+   CARD
+========================= */
+.verify-email-card {
+  background-color: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  border: 1px solid #e6f6ff;
+}
+
+/* =========================
+   TEXT
+========================= */
+.verify-email-text {
+  font-size: 20px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.success-text {
+  color: #0967d2;
+}
+
+.verify-email-subtext {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #475569;
+}
