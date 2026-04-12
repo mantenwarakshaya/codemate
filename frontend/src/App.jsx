@@ -7,7 +7,7 @@ import Profile from "./components/Profile";
 import Connections from "./components/Connections";
 import Requests from "./components/Requests";
 import ShowProfile from "./components/ShowProfile";
-import VerifyEmail from "./components/VerifyEmail";
+import VerifyEmailWithHooks from "./components/VerifyEmail";
 import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -17,7 +17,7 @@ const App = () => (
     {/* Public */}
     <Route path="/login" element={<LoginForm />} />
     <Route path="/signup" element={<SignupForm />} />
-    <Route path="/verify-email" element={<VerifyEmail />} />
+    <Route path="/verify-email" element={<VerifyEmailWithHooks />} />
 
     {/* Protected */}
     <Route
