@@ -1,31 +1,20 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
-// Create transporter ONCE (better performance)
-let transporter;
-
-const getTransporter = () => {
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-  }
-  return transporter;
-};
-
 // ✅ Verification Email
 const sendVerificationEmail = async (email, token) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
   // If BASE_URL is missing, it falls back to localhost for safety during dev
   const domain = process.env.BASE_URL || "http://localhost:5173";
   const link = `${domain}/verify-email?token=${token}`;
 
-  const mailer = getTransporter();
-
-  return await mailer.sendMail({
+  return await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: email,
     subject: "Verify your email",
