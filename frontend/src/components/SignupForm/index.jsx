@@ -54,35 +54,28 @@ class Signup extends Component {
   }
 
   submitForm = async event => {
-    event.preventDefault()
+    event.preventDefault() // Prevent page refresh on form submission
 
     const {firstName, lastName, emailId, password} = this.state
     const userDetails = {firstName, lastName, emailId, password}
 
     const url = `${BASE_URL}/signup`
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', // Include cookies/session info if required by backend
+      body: JSON.stringify(userDetails),
+    }
 
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(userDetails),
-      })
+    const response = await fetch(url, options)
 
+    if (response.ok) {
+      this.onSubmitSuccess()
+    } else {
       const data = await response.text()
-      console.log("Signup response:", data)
-
-      if (response.ok) {
-        alert("📩 Verification email sent! Please check your inbox.")
-        window.location.replace('/login')
-      } else {
-        this.onSubmitFailure(data)
-      }
-    } catch (error) {
-      console.error("Error:", error)
-      this.onSubmitFailure("Something went wrong")
+      this.onSubmitFailure(data)
     }
   }
 
