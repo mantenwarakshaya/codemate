@@ -6,7 +6,7 @@ import "./index.css";
 const BASE_URL =
   location.hostname === "localhost"
     ? "http://localhost:7777"
-    : "";
+    : "/api";
 
 class VerifyEmail extends Component {
   // Initialize state replacing useState hooks

@@ -8,7 +8,7 @@ import navlogo from "../../assets/navlogo.png";
 const BASE_URL =
   location.hostname === "localhost"
     ? "http://localhost:7777"
-    : "";
+    : "/api";
     
 class LoginForm extends Component {
   constructor(props) {

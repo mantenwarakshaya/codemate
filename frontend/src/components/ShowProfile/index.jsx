@@ -11,7 +11,7 @@ import { LoaderView, ErrorView, EmptyView } from "../Common";
 const BASE_URL =
   location.hostname === "localhost"
     ? "http://localhost:7777"
-    : "";
+    : "/api";
     
 const apiStatusConstants = {
   initial: "INITIAL",
