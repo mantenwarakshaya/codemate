@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 const sendVerificationEmail = async (email, token) => {
   // If BASE_URL is missing, it falls back to localhost for safety during dev
   const domain = process.env.BASE_URL || "http://localhost:5173";
-  const link = `${domain}/api/verify-email?token=${token}`;
+  const link = `${domain}/verify-email?token=${token}`;
   return await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: email,
