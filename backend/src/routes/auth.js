@@ -9,6 +9,38 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // =========================
+// VERIFY EMAIL
+// =========================
+authRouter.get("/verify-email", async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    if (!token) {
+      return res.status(400).send("Token missing");
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded._id);
+
+    if (!user) {
+      return res.status(400).send("Invalid token");
+    }
+
+    if (user.isVerified) {
+      return res.send("Email already verified!");
+    }
+
+    user.isVerified = true;
+    await user.save();
+
+    return res.send("✅ Email verified successfully!");
+  } catch (err) {
+    return res.status(400).send("Invalid or expired token");
+  }
+});
+
+// =========================
 // SIGNUP
 // =========================
 authRouter.post("/signup", async (req, res) => {
@@ -47,38 +79,6 @@ authRouter.post("/signup", async (req, res) => {
     });
   } catch (err) {
     return res.status(400).send(err.message);
-  }
-});
-
-// =========================
-// VERIFY EMAIL
-// =========================
-authRouter.get("/verify-email", async (req, res) => {
-  try {
-    const { token } = req.query;
-
-    if (!token) {
-      return res.status(400).send("Token missing");
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const user = await User.findById(decoded._id);
-
-    if (!user) {
-      return res.status(400).send("Invalid token");
-    }
-
-    if (user.isVerified) {
-      return res.send("Email already verified!");
-    }
-
-    user.isVerified = true;
-    await user.save();
-
-    return res.send("✅ Email verified successfully!");
-  } catch (err) {
-    return res.status(400).send("Invalid or expired token");
   }
 });
 

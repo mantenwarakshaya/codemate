@@ -11,13 +11,17 @@ const transporter = nodemailer.createTransport({
 
 // ✅ Verification Email
 const sendVerificationEmail = async (email, token) => {
-  const link = `${process.env.BASE_URL}/verify-email?token=${token}`;
+  // If BASE_URL is missing, it falls back to localhost for safety during dev
+  const domain = process.env.BASE_URL || "http://localhost:5173";
+  const link = `${domain}/verify-email?token=${token}`;
+
   return await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: email,
     subject: "Verify your email",
-    html: `<h3>Click below to verify your email:</h3>
-           <a href="${link}">Verify Email</a>`,
+    html: `<h3>Welcome!</h3>
+           <p>Please click the link below to verify your account:</p>
+           <a href="${link}" style="background: blue; color: white; padding: 10px;">Verify Email</a>`,
   });
 };
 
