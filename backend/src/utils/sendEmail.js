@@ -1,7 +1,7 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
-// Create transporter ONCE (better performance)
+// Create transporter ONCE
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -12,20 +12,34 @@ const transporter = nodemailer.createTransport({
 
 // ✅ Verification Email
 const sendVerificationEmail = async (email, token) => {
-  // If BASE_URL is missing, it falls back to localhost for safety during dev
-  const domain = process.env.BASE_URL || "http://localhost:5173";
+  const domain =
+    process.env.BASE_URL || "http://localhost:5173";
+
   const link = `${domain}/verify-email?token=${token}`;
-  return await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: "Verify your email",
-    html: `<h3>Welcome!</h3>
-           <p>Please click the link below to verify your account:</p>
-           <a href="${link}" style="background: blue; color: white; padding: 10px;">Verify Email</a>`,
-  });
+
+  try {
+    const info = await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Verify your email",
+      html: `
+        <h3>Welcome!</h3>
+        <p>Please click below to verify:</p>
+        <a href="${link}" style="padding:10px;background:blue;color:white;">
+          Verify Email
+        </a>
+      `,
+    });
+
+    console.log("📩 Email sent:", info.response);
+    return info;
+  } catch (err) {
+    console.error("❌ EMAIL SEND FAILED:", err);
+    throw err;
+  }
 };
 
-// ✅ General Email (used in cron)
+// ✅ General Email
 const sendEmail = async (to, subject, text) => {
   return await transporter.sendMail({
     from: process.env.EMAIL_USER,
