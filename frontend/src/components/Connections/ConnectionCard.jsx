@@ -23,9 +23,7 @@ class ConnectionCard extends Component {
       <div className="connection-card">
         <div className="connection-card-left">
           <img
-            src={photoUrl || "https://via.placeholder.com/75"}
-            // Fallback for broken image URLs
-            onError={(e) => (e.target.src = "https://via.placeholder.com/75")}
+            src={photoUrl}
             alt={`${firstName} ${lastName}`}
             className="connection-profile-img"
           />

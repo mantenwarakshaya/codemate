@@ -67,10 +67,6 @@ class ShowProfile extends Component {
     if (!user) {
       return <EmptyView message="User not available." />;
     }
-    const safePhotoUrl =
-      user.photoUrl?.replace("http://", "https://") ||
-      "https://via.placeholder.com/150";
-
     return (
       <div className="show-feed-container">
         <div className="show-user-card">
@@ -78,7 +74,7 @@ class ShowProfile extends Component {
           <div className="show-left">
             <div className="show-image-ring">
               <img
-                src={safePhotoUrl}
+                src={photoUrl}
                 alt="profile"
                 className="show-profile-img"
               />
