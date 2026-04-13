@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import axios from "axios";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import LoginForm from "./components/LoginForm";
@@ -12,7 +15,24 @@ import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 
-const App = () => (
+const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const syncUser = async () => {
+      try {
+        // This calls your existing profile/view route
+        const res = await axios.get("/api/profile/view", { withCredentials: true });
+        
+        // This fills Redux so the Chat component stops saying "Loading"
+        dispatch({ type: "SET_USER", payload: res.data });
+      } catch (err) {
+        console.log("No active session found");
+      }
+    };
+    syncUser();
+  }, [dispatch]);
+  return(
   <Routes>
     {/* Public */}
     <Route path="/login" element={<LoginForm />} />
@@ -70,7 +90,7 @@ const App = () => (
     {/* Fallback */}
     <Route path="/not-found" element={<NotFound />} />
     <Route path="*" element={<Navigate to="/not-found" />} />
-  </Routes>
-);
+  </Routes>)
+};
 
 export default App;
