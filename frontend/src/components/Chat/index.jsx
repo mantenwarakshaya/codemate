@@ -22,7 +22,13 @@ const Chat = () => {
         });
         const data = await res.json();
 
-        setMessages(data.messages || []); // ✅ important
+        setMessages(
+          (data.messages || []).map(msg => ({
+            ...msg,
+            firstName: msg.firstName || (msg.senderId === userId ? user.firstName : "User"),
+            lastName: msg.lastName || ""
+          }))
+        );
       } catch (err) {
         console.error("Error fetching messages:", err);
       }
@@ -51,7 +57,14 @@ const Chat = () => {
     });
 
     newSocket.on("messageReceived", ({ firstName, lastName, text }) => {
-      setMessages(prev => [...prev, { firstName, lastName, text }]);
+      setMessages(prev => [
+        ...prev,
+        {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          text: newMessage,
+        },
+      ]);
     });
 
     return () => {

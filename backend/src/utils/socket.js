@@ -47,13 +47,18 @@ const initializeSocket = (server) => {
 
           if (!chat) {
             chat = new Chat({
-              participants: [userId, targetUserId],
+              participants: [
+                new mongoose.Types.ObjectId(userId),
+                new mongoose.Types.ObjectId(targetUserId),
+              ],
               messages: [],
             });
           }
 
           chat.messages.push({
             senderId: userId,
+            firstName,
+            lastName,
             text,
           });
 
