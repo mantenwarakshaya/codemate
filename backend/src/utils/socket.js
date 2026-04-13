@@ -13,6 +13,7 @@ const getSecretRoomId = (userId, targetUserId) => {
 
 const initializeSocket = (server) => {
     const io = socket(server, {
+      path: "/api/socket.io",
       cors: {
         origin: ["https://codemate-xd74.onrender.com"],
         credentials: true,
@@ -30,12 +31,19 @@ const initializeSocket = (server) => {
     socket.on(
       "sendMessage",
       async ({ firstName, lastName, userId, targetUserId, text }) => {
-        // Save messages to the database
+
+        // 🔥 ADD THIS LINE HERE
+        console.log("🔥 MESSAGE RECEIVED:", {
+          firstName,
+          lastName,
+          userId,
+          targetUserId,
+          text,
+        });
+
         try {
           const roomId = getSecretRoomId(userId, targetUserId);
           console.log(firstName + " " + text);
-
-          // TODO: Check if userId & targetUserId are friends
 
           let chat = await Chat.findOne({
             participants: {
@@ -64,12 +72,18 @@ const initializeSocket = (server) => {
           });
 
           await chat.save();
-          io.to(roomId).emit("messageReceived", { firstName, lastName, text });
+
+          io.to(roomId).emit("messageReceived", {
+            firstName,
+            lastName,
+            text,
+          });
+
         } catch (err) {
           console.log(err);
         }
-      }
-    );
+  }
+);
 
     socket.on("disconnect", () => {});
   });
