@@ -87,21 +87,71 @@
 // module.exports = { sendVerificationEmail, sendEmail };
 
 
+// require("dotenv").config();
+// const { Resend } = require("resend");
+
+// const resend = new Resend(process.env.RESEND_API_KEY);
+
+// // ✅ Verification Email
+// const sendVerificationEmail = async (email, token) => {
+//   const domain = process.env.BASE_URL;
+//   const link = `${domain}/verify-email?token=${token}`;
+
+//   console.log("📨 Sending email to:", email);
+
+//   try {
+//     const data = await resend.emails.send({
+//       from: "onboarding@resend.dev", // default test sender
+//       to: email,
+//       subject: "Verify your email",
+//       html: `
+//         <h3>Welcome!</h3>
+//         <p>Click below to verify:</p>
+//         <a href="${link}">Verify Email</a>
+//       `,
+//     });
+
+//     console.log("✅ Email sent:", data);
+//     return data;
+//   } catch (err) {
+//     console.error("❌ Email failed:", err);
+//     return null;
+//   }
+// };
+
+// // ✅ General Email (also via Resend)
+// const sendEmail = async (to, subject, text) => {
+//   try {
+//     const data = await resend.emails.send({
+//       from: "onboarding@resend.dev",
+//       to,
+//       subject,
+//       text,
+//     });
+
+//     return data;
+//   } catch (err) {
+//     console.error("❌ GENERAL EMAIL FAILED:", err);
+//     return null;
+//   }
+// };
+
+// module.exports = { sendVerificationEmail, sendEmail };
+
 require("dotenv").config();
 const { Resend } = require("resend");
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// ✅ Verification Email
 const sendVerificationEmail = async (email, token) => {
   const domain = process.env.BASE_URL;
   const link = `${domain}/verify-email?token=${token}`;
 
-  console.log("📨 Sending email to:", email);
+  console.log("📨 RESEND EMAIL TO:", email);
 
   try {
     const data = await resend.emails.send({
-      from: "onboarding@resend.dev", // default test sender
+      from: "onboarding@resend.dev",
       to: email,
       subject: "Verify your email",
       html: `
@@ -111,29 +161,10 @@ const sendVerificationEmail = async (email, token) => {
       `,
     });
 
-    console.log("✅ Email sent:", data);
-    return data;
+    console.log("✅ RESEND SUCCESS:", data);
   } catch (err) {
-    console.error("❌ Email failed:", err);
-    return null;
+    console.error("❌ RESEND FAILED:", err);
   }
 };
 
-// ✅ General Email (also via Resend)
-const sendEmail = async (to, subject, text) => {
-  try {
-    const data = await resend.emails.send({
-      from: "onboarding@resend.dev",
-      to,
-      subject,
-      text,
-    });
-
-    return data;
-  } catch (err) {
-    console.error("❌ GENERAL EMAIL FAILED:", err);
-    return null;
-  }
-};
-
-module.exports = { sendVerificationEmail, sendEmail };
+module.exports = { sendVerificationEmail };
