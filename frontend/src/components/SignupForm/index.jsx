@@ -44,8 +44,6 @@ class SignupForm extends Component {
   }
 
   onSubmitSuccess = () => {
-    alert("📩 Verification email sent! Please check your inbox.")
-    // Force redirect to login page after successful registration
     window.location.replace('/login')
   }
 
