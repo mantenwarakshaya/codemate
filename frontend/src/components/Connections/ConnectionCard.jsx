@@ -55,13 +55,10 @@ class ConnectionCard extends Component {
           </div>
         </div>
 
-        <button
-          className="connection-message-btn"
-          // Using navigate prop passed from the wrapper
-          onClick={() => navigate(`/chat/${_id}`)}
-        >
+        
+        <Link to={`/chat/${_id}`} className="connection-message-btn">
           <span className="connection-msg-text">Message</span>
-        </button>
+        </Link>
       </div>
     );
   }

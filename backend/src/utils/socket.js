@@ -1,7 +1,6 @@
 const socket = require("socket.io");
 const crypto = require("crypto");
 const { Chat } = require("../models/chat");
-const mongoose = require("mongoose"); 
 const ConnectionRequest = require("../models/connectionRequest");
 
 const getSecretRoomId = (userId, targetUserId) => {
@@ -12,12 +11,11 @@ const getSecretRoomId = (userId, targetUserId) => {
 };
 
 const initializeSocket = (server) => {
-    const io = socket(server, {
-  cors: {
-    origin: "https://codemate-xd74.onrender.com",
-    credentials: true,
-  },
-});
+  const io = socket(server, {
+    cors: {
+      origin: "https://codemate-xd74.onrender.com",
+    },
+  });
 
   io.on("connection", (socket) => {
     socket.on("joinChat", ({ firstName, userId, targetUserId }) => {
@@ -29,59 +27,36 @@ const initializeSocket = (server) => {
     socket.on(
       "sendMessage",
       async ({ firstName, lastName, userId, targetUserId, text }) => {
-
-        // 🔥 ADD THIS LINE HERE
-        console.log("🔥 MESSAGE RECEIVED:", {
-          firstName,
-          lastName,
-          userId,
-          targetUserId,
-          text,
-        });
-
+        // Save messages to the database
         try {
           const roomId = getSecretRoomId(userId, targetUserId);
           console.log(firstName + " " + text);
 
+          // TODO: Check if userId & targetUserId are friends
+
           let chat = await Chat.findOne({
-            participants: {
-              $all: [
-                new mongoose.Types.ObjectId(userId),
-                new mongoose.Types.ObjectId(targetUserId),
-              ],
-            },
+            participants: { $all: [userId, targetUserId] },
           });
 
           if (!chat) {
             chat = new Chat({
-              participants: [
-                new mongoose.Types.ObjectId(userId),
-                new mongoose.Types.ObjectId(targetUserId),
-              ],
+              participants: [userId, targetUserId],
               messages: [],
             });
           }
 
           chat.messages.push({
             senderId: userId,
-            firstName,
-            lastName,
             text,
           });
 
           await chat.save();
-
-          io.to(roomId).emit("messageReceived", {
-            firstName,
-            lastName,
-            text,
-          });
-
+          io.to(roomId).emit("messageReceived", { firstName, lastName, text });
         } catch (err) {
           console.log(err);
         }
-  }
-);
+      }
+    );
 
     socket.on("disconnect", () => {});
   });
