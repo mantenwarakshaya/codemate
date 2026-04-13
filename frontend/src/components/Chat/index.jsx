@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { createSocketConnection } from "../../utils/socket";
+import './index.css'
 
 const Chat = () => {
   const { targetUserId } = useParams();
@@ -95,18 +96,29 @@ const Chat = () => {
         ))}
       </div>
 
-      <div className="input-container">
+      {/* Wrapping in a form allows "Enter" key to send automatically */}
+      <form 
+        className="input-container" 
+        onSubmit={(e) => {
+          e.preventDefault();
+          sendMessage();
+        }}
+      >
+        <label htmlFor="chat-message" className="sr-only">Message</label>
         <input
+          id="chat-message"
+          name="message"
           type="text"
           value={newMessage}
           onChange={e => setNewMessage(e.target.value)}
           className="message-input"
           placeholder="Type a message..."
+          autoComplete="off"
         />
-        <button className="send-button" onClick={sendMessage}>
+        <button type="submit" className="send-button">
           Send
         </button>
-      </div>
+      </form>
     </div>
   );
 };
