@@ -4,6 +4,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const cors = require("cors");
+const http = require("http");
 require("dotenv").config();
 
 // ✅ Middlewares
@@ -13,16 +14,18 @@ app.use(cookieParser());
 // ✅ CORS (simple since same domain)
 app.use(
   cors({
-    origin: "https://codemate-xd74.onrender.com",
+    // origin: "https://codemate-xd74.onrender.com",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
-
 // ✅ Routes
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
+const initializeSocket = require("./utils/socket");
+const chatRouter = require("./routes/chat");
 
 // 🔥 IMPORTANT: prefix with /api
 app.set("trust proxy", 1);
@@ -30,6 +33,10 @@ app.use("/api", authRouter);
 app.use("/api", profileRouter);
 app.use("/api", requestRouter);
 app.use("/api", userRouter);
+app.use("/api", chatRouter);
+
+const server = http.createServer(app);
+initializeSocket(server);
 
 // 🔥 Serve frontend (React build)
 app.use(express.static(path.join(__dirname, "../../frontend/dist")));
@@ -45,7 +52,7 @@ connectDB()
   .then(() => {
     console.log("Database connection established");
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`Server running on port http://localhost:${PORT}`);
     });
   })
   .catch((err) => {

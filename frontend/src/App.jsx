@@ -7,6 +7,7 @@ import Profile from "./components/Profile";
 import Connections from "./components/Connections";
 import Requests from "./components/Requests";
 import ShowProfile from "./components/ShowProfile";
+import Chat from "./components/Chat";
 import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -16,6 +17,8 @@ const App = () => (
     {/* Public */}
     <Route path="/login" element={<LoginForm />} />
     <Route path="/signup" element={<SignupForm />} />
+    <Route path="/chat/:targetUserId" element={<Chat />} />
+
 
     {/* Protected */}
     <Route
