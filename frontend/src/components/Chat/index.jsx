@@ -18,28 +18,29 @@ const Chat = () => {
   const userId = user?._id;
 
   const fetchChatMessages = async () => {
+    try{
     const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
       withCredentials: true,
     });
 
     console.log(chat.data.messages);
 
-    const chatMessages = chat?.data?.messages.map((msg) => {
+    const chatMessages = chat?.data?.messages?.map((msg) => {
       const { senderId, text } = msg;
       return {
-        firstName: senderId?.firstName,
-        lastName: senderId?.lastName,
+        firstName: senderId?.firstName || "Unknown",
+        lastName: senderId?.lastName || "",
         text,
       };
-    });
-    setMessages(chatMessages);
+    }) || [];
+    setMessages(chatMessages);}catch(err){console.log("Error fetching essages: ",err)}
   };
   useEffect(() => {
     fetchChatMessages();
-  }, []);
+  }, [targetUserId]);
 
   useEffect(() => {
-    if (!userId) {
+    if (!userId || !user) {
       return;
     }
     const socket = createSocketConnection();
@@ -52,7 +53,7 @@ const Chat = () => {
 
     socket.on("messageReceived", ({ firstName, lastName, text }) => {
       console.log(firstName + " :  " + text);
-      setMessages((messages) => [...messages, { firstName, lastName, text }]);
+      setMessages((prev) => [...prev, { firstName, lastName, text }]);
     });
 
     return () => {
@@ -61,6 +62,7 @@ const Chat = () => {
   }, [userId, targetUserId]);
 
   const sendMessage = () => {
+    if (!user || !newMessage.trim()) return;
     const socket = createSocketConnection();
     socket.emit("sendMessage", {
       firstName: user.firstName,
@@ -71,7 +73,9 @@ const Chat = () => {
     });
     setNewMessage("");
   };
-
+if (!user) {
+    return <div className="chat-container">Loading chat...</div>;
+  }
   return (
     <div className="chat-container">
       <h1 className="chat-heading">Chat</h1>
