@@ -123,8 +123,14 @@
 // };
 // export default Chat;
 
-import { useEffect, useState, useRef } from "react"; // Added useRef
-// ... other imports
+import { useEffect, useState, useRef } from "react"; 
+import { useParams } from "react-router-dom";
+import { createSocketConnection } from "../../utils/socket";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import "./index.css";
+
+const BASE_URL = "/api";
 
 const Chat = () => {
   const { targetUserId } = useParams();
