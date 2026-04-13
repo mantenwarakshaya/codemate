@@ -7,17 +7,41 @@ const Chat = () => {
   const { targetUserId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [socket, setSocket] = useState(null); // ✅ ADD THIS
+  const [socket, setSocket] = useState(null);
 
   const user = useSelector(store => store.user);
   const userId = user?._id;
 
-  // ✅ SOCKET CONNECTION
+  // ✅ 1. FETCH OLD MESSAGES FROM DB
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const res = await fetch(`/api/chat/${targetUserId}`, {
+          credentials: "include",
+        });
+        const data = await res.json();
+
+        setMessages(data.messages || []); // ✅ important
+      } catch (err) {
+        console.error("Error fetching messages:", err);
+      }
+    };
+
+    if (targetUserId) {
+      fetchMessages();
+    }
+  }, [targetUserId]);
+
+  // ✅ 2. SOCKET CONNECTION
   useEffect(() => {
     if (!userId) return;
 
     const newSocket = createSocketConnection();
     setSocket(newSocket);
+
+    newSocket.on("connect", () => {
+      console.log("Socket connected:", newSocket.id);
+    });
 
     newSocket.emit("joinChat", {
       firstName: user.firstName,
@@ -29,10 +53,12 @@ const Chat = () => {
       setMessages(prev => [...prev, { firstName, lastName, text }]);
     });
 
-    return () => newSocket.disconnect();
+    return () => {
+      newSocket.disconnect();
+    };
   }, [userId, targetUserId]);
 
-  // ✅ SEND MESSAGE
+  // ✅ 3. SEND MESSAGE
   const sendMessage = () => {
     if (!newMessage.trim() || !socket) return;
 
@@ -86,4 +112,3 @@ const Chat = () => {
 };
 
 export default Chat;
-

@@ -1,6 +1,7 @@
 const socket = require("socket.io");
 const crypto = require("crypto");
 const { Chat } = require("../models/chat");
+const mongoose = require("mongoose"); 
 const ConnectionRequest = require("../models/connectionRequest");
 
 const getSecretRoomId = (userId, targetUserId) => {
@@ -36,7 +37,12 @@ const initializeSocket = (server) => {
           // TODO: Check if userId & targetUserId are friends
 
           let chat = await Chat.findOne({
-            participants: { $all: [userId, targetUserId] },
+            participants: {
+              $all: [
+                new mongoose.Types.ObjectId(userId),
+                new mongoose.Types.ObjectId(targetUserId),
+              ],
+            },
           });
 
           if (!chat) {
