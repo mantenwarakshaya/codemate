@@ -138,33 +138,26 @@
 
 // module.exports = { sendVerificationEmail, sendEmail };
 
-require("dotenv").config();
-const { Resend } = require("resend");
+const nodemailer = require("nodemailer");
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const sendEmail = async (to, link) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
 
-const sendVerificationEmail = async (email, token) => {
-  const domain = process.env.BASE_URL;
-  const link = `${domain}/verify-email?token=${token}`;
-
-  console.log("📨 RESEND EMAIL TO:", email);
-
-  try {
-    const data = await resend.emails.send({
-      from: "onboarding@resend.dev",
-      to: email,
-      subject: "Verify your email",
-      html: `
-        <h3>Welcome!</h3>
-        <p>Click below to verify:</p>
-        <a href="${link}">Verify Email</a>
-      `,
-    });
-
-    console.log("✅ RESEND SUCCESS:", data);
-  } catch (err) {
-    console.error("❌ RESEND FAILED:", err);
-  }
+  await transporter.sendMail({
+    from: "your_email@gmail.com",
+    to,
+    subject: "Verify your email",
+    html: `
+      <h2>Verify Email</h2>
+      <a href="${link}">Click to verify</a>
+    `,
+  });
 };
 
-module.exports = { sendVerificationEmail };
+module.exports = sendEmail;
