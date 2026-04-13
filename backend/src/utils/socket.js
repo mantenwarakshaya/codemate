@@ -13,13 +13,11 @@ const getSecretRoomId = (userId, targetUserId) => {
 
 const initializeSocket = (server) => {
     const io = socket(server, {
-      path: "/api/socket.io",
-      cors: {
-        origin: ["https://codemate-xd74.onrender.com"],
-        credentials: true,
-        methods: ["GET", "POST"],
-      },
-    });
+  cors: {
+    origin: "https://codemate-xd74.onrender.com",
+    credentials: true,
+  },
+});
 
   io.on("connection", (socket) => {
     socket.on("joinChat", ({ firstName, userId, targetUserId }) => {

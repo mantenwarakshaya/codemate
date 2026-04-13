@@ -39,53 +39,58 @@ const Chat = () => {
     }
   }, [targetUserId]);
 
-  // ✅ 2. SOCKET CONNECTION
-  useEffect(() => {
-    if (!userId) return;
 
-    const newSocket = createSocketConnection();
-    setSocket(newSocket);
 
-    newSocket.on("connect", () => {
-      console.log("Socket connected:", newSocket.id);
-    });
+useEffect(() => {
+  if (!userId) return;
 
-    newSocket.emit("joinChat", {
-      firstName: user.firstName,
-      userId,
-      targetUserId,
-    });
+  const newSocket = createSocketConnection();
+  setSocket(newSocket);
 
-    newSocket.on("messageReceived", ({ firstName, lastName, text }) => {
-      setMessages(prev => [
-        ...prev,
-        {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          text: newMessage,
-        },
-      ]);
-    });
+  newSocket.emit("joinChat", {
+    firstName: user.firstName,
+    userId,
+    targetUserId,
+  });
 
-    return () => {
-      newSocket.disconnect();
-    };
-  }, [userId, targetUserId]);
+  newSocket.on("messageReceived", ({ firstName, lastName, text }) => {
+    setMessages((messages) => [...messages, { firstName, lastName, text }]);
+  });
 
-  // ✅ 3. SEND MESSAGE
-  const sendMessage = () => {
-    if (!newMessage.trim() || !socket) return;
+  return () => newSocket.disconnect();
+}, [userId, targetUserId]);
+useEffect(() => {
+  if (!userId) return;
 
-    socket.emit("sendMessage", {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      userId,
-      targetUserId,
-      text: newMessage,
-    });
+  const newSocket = createSocketConnection();
+  setSocket(newSocket);
 
-    setNewMessage("");
-  };
+  newSocket.emit("joinChat", {
+    firstName: user.firstName,
+    userId,
+    targetUserId,
+  });
+
+  newSocket.on("messageReceived", ({ firstName, lastName, text }) => {
+    setMessages((messages) => [...messages, { firstName, lastName, text }]);
+  });
+
+  return () => newSocket.disconnect();
+}, [userId, targetUserId]);
+
+const sendMessage = () => {
+  if (!socket) return;
+
+  socket.emit("sendMessage", {
+    firstName: user.firstName,
+    lastName: user.lastName,
+    userId,
+    targetUserId,
+    text: newMessage,
+  });
+
+  setNewMessage("");
+};
 
   return (
     <div className="chat-container">
