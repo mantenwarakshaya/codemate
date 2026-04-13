@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { createSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import "./index.css";
 
 const BASE_URL =
   location.hostname === "localhost"
@@ -72,35 +73,35 @@ const Chat = () => {
   };
 
   return (
-    <div className="w-3/4 mx-auto border border-gray-600 m-5 h-[70vh] flex flex-col">
-      <h1 className="p-5 border-b border-gray-600">Chat</h1>
-      <div className="flex-1 overflow-scroll p-5">
+    <div className="chat-container">
+      <h1 className="chat-heading">Chat</h1>
+
+      <div className="messages-container">
         {messages.map((msg, index) => {
+          const isOwnMessage = user.firstName === msg.firstName;
+
           return (
             <div
               key={index}
-              className={
-                "chat " +
-                (user.firstName === msg.firstName ? "chat-end" : "chat-start")
-              }
+              className={isOwnMessage ? "message-right" : "message-left"}
             >
-              <div className="chat-header">
-                {`${msg.firstName}  ${msg.lastName}`}
-                <time className="text-xs opacity-50"> 2 hours ago</time>
+              <div className="message-name">
+                {msg.firstName} {msg.lastName}
               </div>
-              <div className="chat-bubble">{msg.text}</div>
-              <div className="chat-footer opacity-50">Seen</div>
+              <div className="message-text">{msg.text}</div>
             </div>
           );
         })}
       </div>
-      <div className="p-5 border-t border-gray-600 flex items-center gap-2">
+
+      <div className="input-container">
         <input
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          className="flex-1 border border-gray-500 text-white rounded p-2"
-        ></input>
-        <button onClick={sendMessage} className="btn btn-secondary">
+          className="message-input"
+          placeholder="Type a message..."
+        />
+        <button onClick={sendMessage} className="send-button">
           Send
         </button>
       </div>
