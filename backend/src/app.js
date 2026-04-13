@@ -5,11 +5,18 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 
 require("dotenv").config();
-require("./utils/cronjob");
 
 // ✅ Middlewares
 app.use(express.json());
 app.use(cookieParser());
+
+// ✅ CORS (simple since same domain)
+app.use(
+  cors({
+    origin: "https://codemate-xd74.onrender.com",
+    credentials: true,
+  })
+);
 
 // ✅ Routes
 const authRouter = require("./routes/auth");
