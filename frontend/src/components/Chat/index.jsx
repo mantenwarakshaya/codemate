@@ -1,67 +1,40 @@
-import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {createSocketConnection} from "../../utils/socket";
-import "./index.css";
-
-const BASE_URL =
-  location.hostname === "localhost"
-    ? "http://localhost:7777"
-    : "/api";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { createSocketConnection } from "../../utils/socket";
 
 const Chat = () => {
-  const {targetUserId} = useParams();
+  const { targetUserId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [socket, setSocket] = useState(null); // ✅ ADD THIS
+
   const user = useSelector(store => store.user);
   const userId = user?._id;
 
-  const fetchChatMessages = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/chat/${targetUserId}`, {
-        credentials: "include",
-      });
-
-      const data = await response.json();
-
-      const chatMessages = data?.messages?.map(msg => ({
-        firstName: msg.senderId?.firstName,
-        lastName: msg.senderId?.lastName,
-        text: msg.text,
-      }));
-
-      setMessages(chatMessages);
-    } catch (err) {
-      console.log("Error fetching messages", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchChatMessages();
-  }, [targetUserId]);
-
+  // ✅ SOCKET CONNECTION
   useEffect(() => {
     if (!userId) return;
 
-    const socket = createSocketConnection();
+    const newSocket = createSocketConnection();
+    setSocket(newSocket);
 
-    socket.emit("joinChat", {
+    newSocket.emit("joinChat", {
       firstName: user.firstName,
       userId,
       targetUserId,
     });
 
-    socket.on("messageReceived", ({firstName, lastName, text}) => {
-      setMessages(prev => [...prev, {firstName, lastName, text}]);
+    newSocket.on("messageReceived", ({ firstName, lastName, text }) => {
+      setMessages(prev => [...prev, { firstName, lastName, text }]);
     });
 
-    return () => socket.disconnect();
+    return () => newSocket.disconnect();
   }, [userId, targetUserId]);
 
+  // ✅ SEND MESSAGE
   const sendMessage = () => {
-    if (!newMessage.trim()) return;
-
-    const socket = createSocketConnection();
+    if (!newMessage.trim() || !socket) return;
 
     socket.emit("sendMessage", {
       firstName: user.firstName,
@@ -113,3 +86,4 @@ const Chat = () => {
 };
 
 export default Chat;
+
