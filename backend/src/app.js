@@ -14,8 +14,7 @@ app.use(cookieParser());
 // ✅ CORS (simple since same domain)
 app.use(
   cors({
-    // origin: "https://codemate-xd74.onrender.com",
-    origin: "http://localhost:5173",
+    origin: "https://codemate-xd74.onrender.com",
     credentials: true,
   })
 );
