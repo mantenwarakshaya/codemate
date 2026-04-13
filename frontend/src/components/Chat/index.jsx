@@ -5,10 +5,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import "./index.css";
 
-const BASE_URL =
-  location.hostname === "localhost"
-    ? "http://localhost:7777"
-    : "/api";
+const BASE_URL = "/api";
     
 const Chat = () => {
   const { targetUserId } = useParams();
@@ -16,6 +13,8 @@ const Chat = () => {
   const [newMessage, setNewMessage] = useState("");
   const user = useSelector((store) => store.user);
   const userId = user?._id;
+
+  console.log("Chat Component Render - User:", user);
 
   const fetchChatMessages = async () => {
     try{
@@ -28,16 +27,18 @@ const Chat = () => {
     const chatMessages = chat?.data?.messages?.map((msg) => {
       const { senderId, text } = msg;
       return {
-        firstName: senderId?.firstName || "Unknown",
+        firstName: senderId?.firstName || "User",
         lastName: senderId?.lastName || "",
         text,
       };
     }) || [];
     setMessages(chatMessages);}catch(err){console.log("Error fetching essages: ",err)}
   };
-  useEffect(() => {
-    fetchChatMessages();
-  }, [targetUserId]);
+useEffect(() => {
+    if (userId) {
+      fetchChatMessages();
+    }
+  }, [targetUserId, userId]);
 
   useEffect(() => {
     if (!userId || !user) {
@@ -74,7 +75,15 @@ const Chat = () => {
     setNewMessage("");
   };
 if (!user) {
-    return <div className="chat-container">Loading chat...</div>;
+    return (
+      <div className="chat-container">
+        <div className="loading-state">
+          <h2>Loading Chat...</h2>
+          <p>Verifying session... If this stays, please log in again.</p>
+          <button onClick={() => navigate("/login")}>Go to Login</button>
+        </div>
+      </div>
+    );
   }
   return (
     <div className="chat-container">
