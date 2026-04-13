@@ -11,7 +11,6 @@ require("./utils/cronjob");
 app.use(express.json());
 app.use(cookieParser());
 
-
 // ✅ Routes
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
