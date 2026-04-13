@@ -48,11 +48,6 @@ authRouter.post("/login", async (req, res) => {
       // throw new Error("Invalid credentials");
       return res.status(400).send("Invalid credentials");
     }
-    console.log("isVerified:", user.isVerified);
-    // 🔒 Block unverified users
-    if (!user.isVerified) {
-      return res.status(403).send("Please verify your email first");
-    }
 
     const isPasswordValid = await user.validatePassword(password);
 
