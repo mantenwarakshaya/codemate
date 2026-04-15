@@ -88,6 +88,7 @@
    MESSAGE BUTTON (DESKTOP)
 ========================= */
 .connection-message-btn {
+  text-decoration: none;
   background-color: #0967d2;
   color: #ffffff;
   border: none;
@@ -103,7 +104,7 @@
 }
 
 .connection-message-btn:hover {
-  background-color: #475569;
+  opacity: 0.9;
 }
 
 .connection-msg-icon {

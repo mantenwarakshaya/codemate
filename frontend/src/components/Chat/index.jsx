@@ -1,174 +1,59 @@
-// import { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import { createSocketConnection } from "../../utils/socket";
-// import { useSelector } from "react-redux";
-// import axios from "axios";
-// import "./index.css";
-
-// const BASE_URL = "/api";
-    
-// const Chat = () => {
-//   const { targetUserId } = useParams();
-//   const [messages, setMessages] = useState([]);
-//   const [newMessage, setNewMessage] = useState("");
-//   const user = useSelector((store) => store.user);
-//   const userId = user?._id;
-
-//   console.log("Chat Component Render - User:", user);
-
-//   const fetchChatMessages = async () => {
-//     try{
-//     const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
-//       withCredentials: true,
-//     });
-
-//     console.log(chat.data.messages);
-
-//     const chatMessages = chat?.data?.messages?.map((msg) => {
-//       const { senderId, text } = msg;
-//       return {
-//         firstName: senderId?.firstName || "User",
-//         lastName: senderId?.lastName || "",
-//         text,
-//       };
-//     }) || [];
-//     setMessages(chatMessages);}catch(err){console.log("Error fetching essages: ",err)}
-//   };
-// useEffect(() => {
-//     if (userId) {
-//       fetchChatMessages();
-//     }
-//   }, [targetUserId, userId]);
-
-//   useEffect(() => {
-//     if (!userId || !user) {
-//       return;
-//     }
-//     const socket = createSocketConnection();
-//     // As soon as the page loaded, the socket connection is made and joinChat event is emitted
-//     socket.emit("joinChat", {
-//       firstName: user.firstName,
-//       userId,
-//       targetUserId,
-//     });
-
-//     socket.on("messageReceived", ({ firstName, lastName, text }) => {
-//       console.log(firstName + " :  " + text);
-//       setMessages((prev) => [...prev, { firstName, lastName, text }]);
-//     });
-
-//     return () => {
-//       socket.disconnect();
-//     };
-//   }, [userId, targetUserId]);
-
-//   const sendMessage = () => {
-//     if (!user || !newMessage.trim()) return;
-//     const socket = createSocketConnection();
-//     socket.emit("sendMessage", {
-//       firstName: user.firstName,
-//       lastName: user.lastName,
-//       userId,
-//       targetUserId,
-//       text: newMessage,
-//     });
-//     setNewMessage("");
-//   };
-// if (!user) {
-//     return (
-//       <div className="chat-container">
-//         <div className="loading-state">
-//           <h2>Loading Chat...</h2>
-//           <p>Verifying session... If this stays, please log in again.</p>
-//           <button onClick={() => navigate("/login")}>Go to Login</button>
-//         </div>
-//       </div>
-//     );
-//   }
-//   return (
-//     <div className="chat-container">
-//       <h1 className="chat-heading">Chat</h1>
-
-//       <div className="messages-container">
-//         {messages.map((msg, index) => {
-//           const isOwnMessage = user.firstName === msg.firstName;
-
-//           return (
-//             <div
-//               key={index}
-//               className={isOwnMessage ? "message-right" : "message-left"}
-//             >
-//               <div className="message-name">
-//                 {msg.firstName} {msg.lastName}
-//               </div>
-//               <div className="message-text">{msg.text}</div>
-//             </div>
-//           );
-//         })}
-//       </div>
-
-//       <div className="input-container">
-//         <input
-//           value={newMessage}
-//           onChange={(e) => setNewMessage(e.target.value)}
-//           className="message-input"
-//           placeholder="Type a message..."
-//         />
-//         <button onClick={sendMessage} className="send-button">
-//           Send
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-// export default Chat;
-
-import { useEffect, useState, useRef } from "react"; 
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { createSocketConnection } from "../../utils/socket";
-import { useSelector } from "react-redux";
 import axios from "axios";
+import io from "socket.io-client";
+import { useSelector } from "react-redux"; // Using Redux to get logged-in user
 import "./index.css";
-
-const BASE_URL = "/api";
 
 const Chat = () => {
   const { targetUserId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  
+  // ✅ Get the logged-in user from Redux (matches your App.js syncUser)
   const user = useSelector((store) => store.user);
-  const socketRef = useRef(null); // Keep track of the socket
+  const socketRef = useRef(null);
 
-  const fetchChatMessages = async () => {
+  // ✅ 1. Fetch Message History
+  const fetchMessages = async () => {
     try {
-      const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, { withCredentials: true });
-      const chatMessages = chat?.data?.messages.map((msg) => ({
-        firstName: msg.senderId?.firstName || msg.firstName || "User",
-        lastName: msg.senderId?.lastName || msg.lastName || "",
-        text: msg.text,
-      })) || [];
-      setMessages(chatMessages);
-    } catch (err) { console.error(err); }
+      // Updated URL to match the new backend route
+      const res = await axios.get(`/api/messages/${targetUserId}`, {
+        withCredentials: true,
+      });
+      setMessages(res.data || []);
+    } catch (err) {
+      console.error("Error fetching messages:", err);
+    }
   };
 
   useEffect(() => {
-    fetchChatMessages();
+    if (targetUserId) {
+      fetchMessages();
+    }
   }, [targetUserId]);
 
+  // ✅ 2. Socket Setup (The Handshake)
   useEffect(() => {
     if (!user?._id) return;
 
-    // Connect once
-    socketRef.current = createSocketConnection();
-    
-    socketRef.current.emit("joinChat", {
-      firstName: user.firstName,
-      userId: user._id,
-      targetUserId,
+    // Connect with the userId in the query
+    socketRef.current = io("http://localhost:7777", {
+      query: { userId: user._id },
+      transports: ["websocket"],
+      withCredentials: true,
     });
 
-    socketRef.current.on("messageReceived", ({ firstName, lastName, text }) => {
-      setMessages((prev) => [...prev, { firstName, lastName, text }]);
+    socketRef.current.on("connect", () => {
+      console.log("Connected to Socket! ID:", socketRef.current.id);
+    });
+
+    // Listen for incoming messages
+    socketRef.current.on("newMessage", (message) => {
+      // Only add message if it belongs to this conversation
+      if (message.senderId === targetUserId || message.senderId === user._id) {
+        setMessages((prev) => [...prev, message]);
+      }
     });
 
     return () => {
@@ -176,55 +61,66 @@ const Chat = () => {
     };
   }, [user?._id, targetUserId]);
 
-  const sendMessage = () => {
-    if (!newMessage.trim() || !socketRef.current) return;
+  // ✅ 3. Send Message
+  const sendMessage = async () => {
+    if (!newMessage.trim()) return;
 
-    socketRef.current.emit("sendMessage", {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      userId: user._id,
-      targetUserId,
-      text: newMessage,
-    });
-    setNewMessage("");
+    try {
+      const res = await axios.post(
+        `/api/messages/send/${targetUserId}`,
+        { text: newMessage },
+        { withCredentials: true }
+      );
+
+      // Add my own message to the UI immediately
+      setMessages((prev) => [...prev, res.data]);
+      setNewMessage("");
+    } catch (err) {
+      console.error("Error sending message:", err);
+    }
   };
 
-  if (!user) return <div>Loading...</div>;
+  if (!user) return <div className="p-10 text-center">Loading user...</div>;
 
   return (
-    <div className="chat-container">
-       <h1 className="chat-heading">Chat</h1>
+    <div className="chat-container h-[90vh] flex flex-col p-4">
+      <h1 className="text-2xl font-bold mb-4">Chat</h1>
 
-       <div className="messages-container">
+      <div className="messages-container flex-grow overflow-y-auto bg-base-200 p-4 rounded-lg">
+        {messages.length === 0 && (
+          <p className="text-center text-gray-500">No messages yet. Say hi!</p>
+        )}
         {messages.map((msg, index) => {
-          const isOwnMessage = user.firstName === msg.firstName;
+          // Check if I sent the message
+          const isOwn = (msg.senderId?._id || msg.senderId) === user._id;
 
           return (
-            <div
-              key={index}
-              className={isOwnMessage ? "message-right" : "message-left"}
-            >
-              <div className="message-name">
-                {msg.firstName} {msg.lastName}
+            <div key={index} className={`chat ${isOwn ? "chat-end" : "chat-start"}`}>
+              <div className="chat-bubble">
+                {msg.text}
               </div>
-              <div className="message-text">{msg.text}</div>
+              <div className="chat-footer opacity-50 text-xs">
+                {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </div>
             </div>
           );
         })}
       </div>
 
-      <div className="input-container">
+      <div className="input-container flex mt-4 gap-2">
         <input
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          className="message-input"
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          className="input input-bordered flex-grow"
           placeholder="Type a message..."
         />
-        <button onClick={sendMessage} className="send-button">
+        <button onClick={sendMessage} className="btn btn-primary">
           Send
         </button>
       </div>
     </div>
   );
 };
+
 export default Chat;

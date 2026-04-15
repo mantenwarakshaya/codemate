@@ -6,11 +6,11 @@ import { MdMessage } from "react-icons/md";
 
 import { LoaderView, ErrorView, EmptyView } from "../Common";
 
-const BASE_URL =
-  location.hostname === "localhost"
-    ? "http://localhost:7777"
+const BASE_URL = 
+  process.env.NODE_ENV === "production"
+    ? "http://localhost:7777/api"
     : "/api";
-    
+
 const apiStatusConstants = {
   initial: "INITIAL",
   success: "SUCCESS",
@@ -92,7 +92,11 @@ class Feed extends Component {
       <div className="feed-container">
         <div className="user-card">
           <div className="image-ring">
-            <img src={user.photoUrl} alt="profile" className="profile-img" />
+            <img 
+              src={user.profilePic || "/avatar.png"} 
+              alt={`${user.firstName}'s profile`} 
+              className="profile-img" 
+            />
           </div>
 
           <h2 className="feed-user-name">
@@ -103,7 +107,7 @@ class Feed extends Component {
 
           <div className="tags">
             <span className="tag">
-              experience : {user.experience}{" "}
+              experience : {user.experience || 0}{" "}
               {user.experience === 1 ? "year" : "years"}
             </span>
           </div>
@@ -134,7 +138,7 @@ class Feed extends Component {
             )}
           </div>
 
-          <p className="bio-box">{user.about ? user.about : " "}</p>
+          <p className="bio-box">{user.about ? user.about : "No bio provided"}</p>
 
           <div className="skills">
             {user.skills?.map((skill, i) => (
@@ -145,10 +149,6 @@ class Feed extends Component {
           </div>
 
           <div className="action-footer">
-            <button className="icon-btn" title="Message">
-              <MdMessage size={22} />
-            </button>
-
             <button
               className="btn-ignore"
               onClick={() => this.handleSwipe("left")}

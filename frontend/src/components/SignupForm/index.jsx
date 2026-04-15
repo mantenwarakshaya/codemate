@@ -5,9 +5,9 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import './index.css'
 import navlogo from "../../assets/navlogo.png";
 
-const BASE_URL =
-  location.hostname === "localhost"
-    ? "http://localhost:7777"
+const BASE_URL = 
+  process.env.NODE_ENV === "production"
+    ? "http://localhost:7777/api"
     : "/api";
 
 class SignupForm extends Component {

@@ -56,7 +56,8 @@ class LoginForm extends Component {
     event.preventDefault()
     const { emailId, password } = this.state
     const userDetails = { emailId, password }
-    const url = `${BASE_URL}/login`;
+    const url = `${BASE_URL}/api/login`;
+    // const url = `${BASE_URL}/login`;
 
     const options = {
       method: 'POST',

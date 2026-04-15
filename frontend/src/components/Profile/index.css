@@ -28,7 +28,7 @@
 }
 
 /* Image Section */
-.profile-image-section {
+/* .profile-image-section {
   border: 1px dashed #d1d5db;
   padding: 25px;
   text-align: center;
@@ -42,6 +42,79 @@
   border-radius: 50%;
   border: 3px solid #0967d2;
   object-fit: cover;
+} */
+
+/* Container and Layout */
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem; /* 16px */
+}
+
+.avatar-wrapper {
+  position: relative;
+}
+
+/* The Image */
+.profile-avatar {
+  width: 8rem;   /* 128px - equivalent to size-32 */
+  height: 8rem;
+  border-radius: 9999px;
+  object-fit: cover;
+  border: 4px solid #e5e7eb; /* Default light border */
+}
+
+/* The Camera Button */
+.upload-button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #1f2937; /* base-content dark color */
+  padding: 0.5rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-button:hover {
+  transform: scale(1.05);
+}
+
+/* Icon Styling */
+.camera-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #f3f4f6; /* base-200 light color */
+}
+
+/* Loading / Disabled State */
+.upload-loading {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  pointer-events: none;
+}
+
+/* Text Styling */
+.status-text {
+  font-size: 0.875rem;
+  color: #a1a1aa; /* zinc-400 */
+}
+
+.hidden-input {
+  display: none;
+}
+
+/* Pulse Animation Logic */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
 }
 
 /* Sections */

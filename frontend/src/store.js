@@ -1,21 +1,21 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { legacy_createStore as createStore } from 'redux';
 
-// Simple user reducer (you can expand later)
-const userReducer = (state = null, action) => {
+// 1. Define an initial state
+const initialState = {
+  user: null,
+};
+
+// 2. Define a reducer to handle the "SET_USER" action you called in App.js
+const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SET_USER":
-      return action.payload;
-    case "REMOVE_USER":
-      return null;
+      return { ...state, user: action.payload };
     default:
       return state;
   }
 };
 
-const store = configureStore({
-  reducer: {
-    user: userReducer,
-  },
-});
+// 3. Create the store
+const store = createStore(userReducer);
 
 export default store;

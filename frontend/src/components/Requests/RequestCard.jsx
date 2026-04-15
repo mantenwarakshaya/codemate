@@ -12,20 +12,30 @@ class RequestCard extends Component {
     // Null check for user data
     if (!fromUser) return null;
 
-    const { firstName, lastName, photoUrl, skills = [], _id } = fromUser;
+    const { firstName, lastName, profilePic, skills = [], _id } = fromUser;
 
     return (
       <div className="request-card">
         <div className="request-card-left">
-          <img
-            src={photoUrl}
-            alt={`${firstName} ${lastName}`}
-            className="request-profile-img"
-          />
+          <Link 
+            to={`/profile/${_id}`} 
+            state={{ requestId: request._id, fromRequestPage: true }}
+            className="request-avatar-link"
+          >
+            <img
+              src={profilePic || "/avatar.png"}
+              alt={`${firstName} ${lastName}`}
+              className="request-profile-img"
+            />
+          </Link>
 
           <div className="request-user-info">
             <h2 className="request-user-name">
-              <Link to={`/profile/${_id}`} className="request-user-link">
+              <Link 
+                to={`/profile/${_id}`} 
+                state={{ requestId: request._id, fromRequestPage: true }} 
+                className="request-user-link"
+              >
                 {firstName} {lastName}
               </Link>
             </h2>

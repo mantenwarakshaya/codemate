@@ -7,21 +7,20 @@ const messageSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    receiverId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     text: {
       type: String,
       required: true,
+    },
+    image: {
+      type: String,
     },
   },
   { timestamps: true }
 );
 
-const chatSchema = new mongoose.Schema({
-  participants: [
-    { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  ],
-  messages: [messageSchema],
-});
-
-const Chat = mongoose.model("Chat", chatSchema);
-
-module.exports = { Chat };
+module.exports = mongoose.model("Message", messageSchema);

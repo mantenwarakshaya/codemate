@@ -4,7 +4,7 @@ import "./index.css";
 
 class ConnectionCard extends Component {
   render() {
-    const { user, navigate } = this.props;
+    const { user } = this.props; // navigate prop is available via the wrapper if needed
 
     // Safety check for user data
     if (!user) return null;
@@ -12,7 +12,7 @@ class ConnectionCard extends Component {
     const {
       firstName = "",
       lastName = "",
-      photoUrl = "",
+      profilePic = "", // Updated from photoUrl to profilePic
       skills = [],
       _id,
     } = user;
@@ -22,23 +22,23 @@ class ConnectionCard extends Component {
     return (
       <div className="connection-card">
         <div className="connection-card-left">
-          <img
-            src={photoUrl}
-            alt={`${firstName} ${lastName}`}
-            className="connection-profile-img"
-          />
+          {/* ✅ Wrapped Image in Link for navigation */}
+          <Link to={`/profile/${_id}`} className="connection-avatar-link">
+            <img
+              src={profilePic || "/avatar.png"} // Added fallback
+              alt={`${firstName} ${lastName}`}
+              className="connection-profile-img"
+            />
+          </Link>
 
           <div className="connection-user-info">
             <h2 className="connection-user-name">
               <Link to={`/profile/${_id}`} className="connection-user-link">
-                {firstName || lastName
-                  ? `${firstName} ${lastName}`
-                  : "Unknown User"}
+                {firstName} {lastName}
               </Link>
             </h2>
 
             <div className="connection-skills">
-              {/* Render only first 5 skills for UI cleanliness */}
               {safeSkills.slice(0, 5).map((skill, index) => (
                 <span key={index} className="connection-skill-badge">
                   {skill}
@@ -53,7 +53,6 @@ class ConnectionCard extends Component {
           </div>
         </div>
 
-        
         <Link to={`/chat/${_id}`} className="connection-message-btn">
           <span className="connection-msg-text">Message</span>
         </Link>
@@ -62,7 +61,6 @@ class ConnectionCard extends Component {
   }
 }
 
-// Wrapper to inject navigate hook into the class component
 const ConnectionCardWithNavigate = (props) => {
   const navigate = useNavigate();
   return <ConnectionCard {...props} navigate={navigate} />;
