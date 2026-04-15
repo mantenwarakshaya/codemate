@@ -51,53 +51,43 @@ const userSchema = new mongoose.Schema(
     },
     github: {
       type: String,
-      validate(value) {
-        if (value && !validator.isURL(value)) {
-          throw new Error("Invalid GitHub URL");
-        }
-      },
+      validate: (v) => !v || validator.isURL(v),
     },
     linkedin: {
       type: String,
-      validate(value) {
-        if (value && !validator.isURL(value)) {
-          throw new Error("Invalid LinkedIn URL");
-        }
-      },
+      validate: (v) => !v || validator.isURL(v),
     },
     twitter: {
-      type: String,
-      validate(value) {
-        if (value && !validator.isURL(value)) {
-          throw new Error("Invalid Leetcode URL");
-        }
-      },
+      type: String, 
+      validate: (v) => !v || validator.isURL(v),
     },
     discord: {
-      type: String,
-      validate(value) {
-        if (value && !validator.isURL(value)) {
-          throw new Error("Invalid Resume URL");
-        }
-      },
+      type: String, 
+      validate: (v) => !v || validator.isURL(v),
     },
 
-    photoUrl: {
+    profilePic: {
       type: String,
-      default: "https://geographyandyou.com/images/user-profile.png",
+      default: "",
       validate(value) {
-        if (!validator.isURL(value)) {
-          throw new Error("Invalid Photo URL");
+        if (value && !validator.isURL(value)) {
+          throw new Error("Invalid Profile Picture URL");
         }
       },
     },
 
     about: {
       type: String,
-      default: "",
+      default: "Hey there! I am using CodeMate.",
+      maxLength: 500,
     },
     skills: {
       type: [String],
+      validate(value) {
+        if (value.length > 10) {
+          throw new Error("You can only add up to 10 skills");
+        }
+      },
     },
   },
   { timestamps: true }
