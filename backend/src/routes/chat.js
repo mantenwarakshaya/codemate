@@ -54,4 +54,37 @@ chatRouter.post("/messages/send/:id", userAuth, async (req, res) => {
   }
 });
 
+// GET unread messages count + grouped users
+chatRouter.get("/messages/unread", userAuth, async (req, res) => {
+  try {
+    const myId = req.user._id;
+
+    const unreadMessages = await Message.find({
+      receiverId: myId,
+      seen: false,
+    }).populate("senderId", "firstName lastName profilePic");
+
+    // Group by sender
+    const grouped = {};
+
+    unreadMessages.forEach((msg) => {
+      const senderId = msg.senderId._id.toString();
+
+      if (!grouped[senderId]) {
+        grouped[senderId] = {
+          user: msg.senderId,
+          count: 0,
+          lastMessage: msg.text,
+        };
+      }
+
+      grouped[senderId].count += 1;
+    });
+
+    res.json({ data: Object.values(grouped) });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching unread messages" });
+  }
+});
+
 module.exports = chatRouter;
