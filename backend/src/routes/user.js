@@ -4,6 +4,7 @@ const userRouter = express.Router();
 const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
+const ProfileView = require("../models/profileView");
 
 const USER_SAFE_DATA = 
   "firstName lastName emailId profilePic about skills experience github linkedin twitter discord";
@@ -23,7 +24,7 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
       data: connectionRequests,
     });
   } catch (err) {
-    req.statusCode(400).send("ERROR: " + err.message);
+    res.statusCode(400).send("ERROR: " + err.message);
   }
 });
 
@@ -109,15 +110,30 @@ userRouter.get("/users/all", userAuth, async (req, res) => {
   }
 });
 
-// backend/routes/user.js
 userRouter.get("/user/:id", userAuth, async (req, res) => {
   try {
     const { id } = req.params;
+    const myId = req.user._id;
 
     const user = await User.findById(id).select(USER_SAFE_DATA);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
+    }
+
+    // ✅ TRACK PROFILE VIEW
+    if (myId.toString() !== id) {
+      await ProfileView.findOneAndUpdate(
+        { viewerId: myId, viewedUserId: id },
+        {
+          viewerId: myId,
+          viewedUserId: id,
+        },
+        {
+          upsert: true,
+          new: true,
+        }
+      );
     }
 
     res.json({
@@ -126,6 +142,26 @@ userRouter.get("/user/:id", userAuth, async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+userRouter.get("/user/profile-views", userAuth, async (req, res) => {
+  try {
+    const myId = req.user._id;
+
+    const views = await ProfileView.find({
+      viewedUserId: myId,
+    })
+      .populate("viewerId", "firstName lastName profilePic")
+      .sort({ updatedAt: -1 })
+      .limit(10);
+
+    res.json({
+      message: "Profile views fetched",
+      data: views,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 

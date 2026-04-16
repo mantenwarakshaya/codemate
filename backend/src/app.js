@@ -6,7 +6,7 @@ const path = require("path");
 const cors = require("cors");
 const http = require("http");
 require("dotenv").config();
-
+process.env.BASE_URL = "http://localhost:5173";
 // ✅ Middlewares
 app.use(express.json());
 app.use(cookieParser());
