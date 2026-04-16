@@ -4,7 +4,7 @@ import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { SiDiscord } from "react-icons/si";
 import { MdMessage } from "react-icons/md";
 
-import { LoaderView, ErrorView, EmptyView } from "../Common";
+import { LoaderView, ErrorView, EmptyView } from "../../Common";
 
 const BASE_URL = 
   process.env.NODE_ENV === "production"

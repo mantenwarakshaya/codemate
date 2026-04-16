@@ -67,6 +67,11 @@ class Header extends Component {
                   Requests
                 </Link>
               </li>
+              <li>
+                <Link to="/chat" className="nav-link" onClick={this.closeMenu}>
+                  Messenger
+                </Link>
+              </li>
             </ul>
 
             <button className="nav-logout-btn" onClick={this.onClickLogout}>

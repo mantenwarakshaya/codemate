@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import Feed from "../Feed";
-import Header from "../Header";
-import ConnectionsChatList from "../ConnectionsChatList"; // 👈 left sidebar
-import ProfileCard from "../ProfileCard"; // 👈 create this next
+import Header from "../../Header";
+import ProfileCard from "../ProfileCard"; 
 import "./index.css";
 
 class Home extends Component {
@@ -12,11 +11,7 @@ class Home extends Component {
         <Header />
 
         <div className="home-container">
-          {/* LEFT - CHAT */}
-          <div className="left-sidebar">
-            <ConnectionsChatList />
-          </div>
-
+          <ProfileCard />
           {/* CENTER - FEED */}
           <div className="center-content">
             <Feed />
@@ -24,7 +19,7 @@ class Home extends Component {
 
           {/* RIGHT - PROFILE + STATS */}
           <div className="right-sidebar">
-            <ProfileCard />
+            <div>hi</div>
           </div>
         </div>
       </>

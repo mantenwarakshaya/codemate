@@ -5,12 +5,12 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import LoginForm from "./components/LoginForm";
 import SignupForm from "./components/SignupForm";
-import Home from "./components/Home";
+import Home from "./components/HomeContainer/Home";
 import Profile from "./components/Profile";
 import Connections from "./components/Connections";
 import Requests from "./components/Requests";
 import ShowProfile from "./components/ShowProfile";
-import Chat from "./components/Chat";
+import Chat from "./components/ChatContainer/Chat";
 import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -86,6 +86,15 @@ const App = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route
+      path="/chat"
+      element={
+        <ProtectedRoute>
+          <Chat />
+        </ProtectedRoute>
+      }
+    />
 
       <Route
         path="/chat/:targetUserId"
