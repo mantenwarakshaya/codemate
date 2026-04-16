@@ -109,7 +109,6 @@ userRouter.get("/users/all", userAuth, async (req, res) => {
   }
 });
 
-// ✅ New Route: Fetch single user by ID
 // backend/routes/user.js
 userRouter.get("/user/:id", userAuth, async (req, res) => {
   try {
