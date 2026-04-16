@@ -6,8 +6,8 @@ const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 
 const USER_SAFE_DATA = 
-  "firstName lastName emailId photoUrl about skills experience github linkedin twitter discord";
-// Get all the pending connection request for the loggedIn user
+  "firstName lastName emailId profilePic about skills experience github linkedin twitter discord";
+  // Get all the pending connection request for the loggedIn user
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
