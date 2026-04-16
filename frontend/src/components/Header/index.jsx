@@ -36,11 +36,11 @@ class Header extends Component {
         <div className="nav-content">
           {/* LOGO */}
           <Link to="/">
-            <img className="website-logo" src={navlogo} alt="website logo" />
+            <img className="nav-website-logo" src={navlogo} alt="website logo" />
           </Link>
 
           {/* HAMBURGER ICON (MOBILE) */}
-          <div className="menu-icon" onClick={this.toggleMenu}>
+          <div className="nav-menu-icon" onClick={this.toggleMenu}>
             {isOpen ? <FaTimes /> : <FaBars />}
           </div>
 
@@ -69,7 +69,7 @@ class Header extends Component {
               </li>
             </ul>
 
-            <button className="logout-btn" onClick={this.onClickLogout}>
+            <button className="nav-logout-btn" onClick={this.onClickLogout}>
               Logout
             </button>
           </div>

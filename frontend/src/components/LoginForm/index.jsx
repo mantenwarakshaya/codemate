@@ -92,21 +92,21 @@ class LoginForm extends Component {
     }
 
     return (
-      <div className="login-form-container">
-        <form className="form-container" onSubmit={this.submitForm}>
+      <div className="loginform-main-container">
+        <form className="loginform-container" onSubmit={this.submitForm}>
           <img
             src={navlogo}
-            className="login-website-logo-desktop-img"
+            className="loginform-website-logo-desktop-img"
             alt="website logo"
           />
 
-          <div className="input-container">
-            <label htmlFor="email" className="input-label">EMAIL</label>
+          <div className="loginform-input-container">
+            <label htmlFor="email" className="loginform-input-label">EMAIL</label>
             <input
               id="email"
               name="email"
               type="email"
-              className="username-input-field"
+              className="loginform-username-input-field"
               value={emailId}
               onChange={this.onChangeEmail}
               placeholder="Enter your email"
@@ -114,21 +114,21 @@ class LoginForm extends Component {
             />
           </div>
 
-          <div className="input-container password-container">
-            <label htmlFor="password" className="input-label">PASSWORD</label>
-            <div className="sub-password-container">
+          <div className="loginform-input-container loginform-password-container">
+            <label htmlFor="password" className="loginform-input-label">PASSWORD</label>
+            <div className="loginform-sub-password-container">
               <input
                 id="password"
                 name="password"
                 type={showPassword ? 'text' : 'password'}
-                className="password-input-field"
+                className="loginform-password-input-field"
                 value={password}
                 onChange={this.onChangePassword}
                 placeholder="Enter your password"
                 autoComplete="current-password"
               />
               <span
-                className="password-toggle-icon"
+                className="loginform-password-toggle-icon"
                 onClick={this.togglePasswordVisibility}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -136,18 +136,18 @@ class LoginForm extends Component {
             </div>
           </div>
 
-          <button type="submit" className="login-button">
+          <button type="submit" className="loginform-button">
             Login
           </button>
 
           {showSubmitError && (
-            <p className="error-message">* {errorMsg}</p>
+            <p className="loginform-error-message">* {errorMsg}</p>
           )}
 
-          <div className="signup-desc">
+          <div className="loginform-desc">
             <p>
               New User? Signup Here{" "}
-              <Link to="/signup" className="signup-link">
+              <Link to="/signup" className="loginform-link">
                 Signup
               </Link>
             </p>

@@ -15,40 +15,40 @@ class RequestCard extends Component {
     const { firstName, lastName, profilePic, skills = [], _id } = fromUser;
 
     return (
-      <div className="request-card">
-        <div className="request-card-left">
+      <div className="requestcard-card">
+        <div className="requestcard-card-left">
           <Link 
             to={`/profile/${_id}`} 
             state={{ requestId: request._id, fromRequestPage: true }}
-            className="request-avatar-link"
+            className="requestcard-avatar-link"
           >
             <img
               src={profilePic || "/avatar.png"}
               alt={`${firstName} ${lastName}`}
-              className="request-profile-img"
+              className="requestcard-profile-img"
             />
           </Link>
 
-          <div className="request-user-info">
-            <h2 className="request-user-name">
+          <div className="requestcard-user-info">
+            <h2 className="requestcard-user-name">
               <Link 
                 to={`/profile/${_id}`} 
                 state={{ requestId: request._id, fromRequestPage: true }} 
-                className="request-user-link"
+                className="requestcard-user-link"
               >
                 {firstName} {lastName}
               </Link>
             </h2>
 
-            <div className="request-skills">
+            <div className="requestcard-skills">
               {/* Rendering only the first 5 skills */}
               {skills.slice(0, 5).map((skill, index) => (
-                <span key={index} className="request-skill-badge">
+                <span key={index} className="requestcard-skill-badge">
                   {skill}
                 </span>
               ))}
               {skills.length > 5 && (
-                <span className="request-skill-more">
+                <span className="requestcard-skill-more">
                   +{skills.length - 5} more
                 </span>
               )}
@@ -56,22 +56,22 @@ class RequestCard extends Component {
           </div>
         </div>
 
-        <div className="request-action-buttons">
+        <div className="requestcard-action-buttons">
           <button
-            className="request-accept-btn"
+            className="requestcard-accept-btn"
             // Invoking parent method via props
             onClick={() => onAction(request._id, "accepted")}
           >
-            <span className="request-btn-text">Accept</span>
-            <FaCheck className="request-btn-icon" />
+            <span className="requestcard-btn-text">Accept</span>
+            <FaCheck className="requestcard-btn-icon" />
           </button>
 
           <button
-            className="request-reject-btn"
+            className="requestcard-reject-btn"
             onClick={() => onAction(request._id, "rejected")}
           >
-            <span className="request-btn-text">Reject</span>
-            <FaTimes className="request-btn-icon" />
+            <span className="requestcard-btn-text">Reject</span>
+            <FaTimes className="requestcard-btn-icon" />
           </button>
         </div>
       </div>

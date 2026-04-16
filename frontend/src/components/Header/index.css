@@ -20,7 +20,7 @@
 }
 
 /* LOGO */
-.website-logo {
+.nav-website-logo {
   width: 160px;
 }
 
@@ -52,7 +52,7 @@
 }
 
 /* LOGOUT BUTTON */
-.logout-btn {
+.nav-logout-btn {
   background: #0967d2;
   color: #ffffff;
   border: none;
@@ -63,7 +63,7 @@
 }
 
 /* HAMBURGER ICON */
-.menu-icon {
+.nav-menu-icon {
   display: none;
   font-size: 22px;
   cursor: pointer;
@@ -74,11 +74,11 @@
 ========================= */
 @media screen and (max-width: 768px) {
 
-  .menu-icon {
+  .nav-menu-icon {
     display: block;
   }
 
-  .nav-content-sub {
+  .nav-nav-content-sub {
     position: absolute;
     top: 70px;
     right: 0;
@@ -105,7 +105,7 @@
     font-size: 18px;
   }
 
-  .logout-btn {
+  .nav-logout-btn {
     width: 90%;
     max-width: 200px;
   }

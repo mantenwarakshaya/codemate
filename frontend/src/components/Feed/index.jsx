@@ -90,12 +90,12 @@ class Feed extends Component {
 
     return (
       <div className="feed-container">
-        <div className="user-card">
-          <div className="image-ring">
+        <div className="feed-user-card">
+          <div className="feed-image-ring">
             <img 
               src={user.profilePic || "/avatar.png"} 
               alt={`${user.firstName}'s profile`} 
-              className="profile-img" 
+              className="feed-profile-img" 
             />
           </div>
 
@@ -103,16 +103,16 @@ class Feed extends Component {
             {user.firstName} {user.lastName}
           </h2>
 
-          <p className="user-email">{user.emailId}</p>
+          <p className="feed-user-email">{user.emailId}</p>
 
-          <div className="tags">
-            <span className="tag">
+          <div className="feed-tags">
+            <span className="feed-tag">
               experience : {user.experience || 0}{" "}
               {user.experience === 1 ? "year" : "years"}
             </span>
           </div>
 
-          <div className="social-bar">
+          <div className="feed-social-bar">
             {user.github && (
               <a href={user.github} target="_blank" rel="noreferrer">
                 <FaGithub size={22} />
@@ -138,26 +138,26 @@ class Feed extends Component {
             )}
           </div>
 
-          <p className="bio-box">{user.about ? user.about : "No bio provided"}</p>
+          <p className="feed-bio-box">{user.about ? user.about : "No bio provided"}</p>
 
-          <div className="skills">
+          <div className="feed-skills">
             {user.skills?.map((skill, i) => (
-              <span key={i} className="skill">
+              <span key={i} className="feed-skill">
                 {skill}
               </span>
             ))}
           </div>
 
-          <div className="action-footer">
+          <div className="feed-action-footer">
             <button
-              className="btn-ignore"
+              className="feed-btn-ignore"
               onClick={() => this.handleSwipe("left")}
             >
               Ignore
             </button>
 
             <button
-              className="btn-connect"
+              className="feed-btn-connect"
               onClick={() => this.handleSwipe("right")}
             >
               Connect

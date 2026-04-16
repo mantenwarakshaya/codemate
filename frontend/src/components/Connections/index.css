@@ -1,7 +1,44 @@
 /* =========================
-   CONNECTION CARD WRAPPER
+   CONNECTION PAGE (connection- prefix)
 ========================= */
-.connection-card {
+.connection-page-container {
+  min-height: 90vh;
+  background-color: rgb(243, 243, 243);
+  padding: 40px 16px;
+}
+
+.connection-content-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.connection-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.connection-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #475569;
+  margin-right: 10px;
+}
+
+.connection-badge {
+  background-color: #0967d2;
+  color: #ffffff;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+/* =========================
+   CONNECTION CARD (connectioncard- prefix)
+========================= */
+.connectioncard-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,23 +50,17 @@
   transition: all 0.2s ease;
 }
 
-.connection-card:hover {
+.connectioncard-card:hover {
   background-color: #e6f6ff;
 }
 
-/* =========================
-   LEFT SECTION
-========================= */
-.connection-card-left {
+.connectioncard-card-left {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-/* =========================
-   PROFILE IMAGE
-========================= */
-.connection-profile-img {
+.connectioncard-profile-img {
   width: 75px;
   height: 75px;
   border-radius: 50%;
@@ -37,40 +68,34 @@
   border: 3px solid #bfdbfe;
 }
 
-/* =========================
-   USER INFO
-========================= */
-.connection-user-info {
+.connectioncard-user-info {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.connection-user-name {
+.connectioncard-user-name {
   font-size: 18px;
   font-weight: 600;
   margin: 0;
 }
 
-.connection-user-link {
+.connectioncard-user-link {
   text-decoration: none;
   color: #0967d2;
 }
 
-.connection-user-link:hover {
+.connectioncard-user-link:hover {
   text-decoration: underline;
 }
 
-/* =========================
-   SKILLS
-========================= */
-.connection-skills {
+.connectioncard-skills {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-.connection-skill-badge {
+.connectioncard-skill-badge {
   background-color: #e6f6ff;
   color: #0967d2;
   padding: 4px 10px;
@@ -79,106 +104,74 @@
   border: 1px solid #bfdbfe;
 }
 
-.connection-skill-more {
+.connectioncard-skill-more {
   font-size: 12px;
   color: #475569;
 }
 
-/* =========================
-   MESSAGE BUTTON (DESKTOP)
-========================= */
-.connection-message-btn {
+.connectioncard-message-btn {
   text-decoration: none;
   background-color: #0967d2;
   color: #ffffff;
-  border: none;
   padding: 10px 18px;
   border-radius: 10px;
-  cursor: pointer;
   font-weight: 600;
-
   display: flex;
   align-items: center;
   gap: 8px;
   transition: 0.2s;
 }
 
-.connection-message-btn:hover {
+.connectioncard-message-btn:hover {
   opacity: 0.9;
 }
 
-.connection-msg-icon {
-  font-size: 18px;
-}
-
-.connection-msg-text {
+.connectioncard-msg-text {
   display: inline;
 }
 
-/* =========================
-   TABLET VIEW
-========================= */
+/* RESPONSIVE */
 @media (max-width: 768px) {
-  .connection-card {
+  .connectioncard-card {
     padding: 16px;
   }
-
-  .connection-profile-img {
+  .connectioncard-profile-img {
     width: 60px;
     height: 60px;
   }
-
-  .connection-user-name {
+  .connectioncard-user-name {
     font-size: 16px;
   }
-
-  .connection-message-btn {
+  .connectioncard-message-btn {
     padding: 8px 14px;
     font-size: 14px;
   }
 }
 
-/* =========================
-   MOBILE VIEW
-========================= */
 @media (max-width: 480px) {
-  .connection-card {
+  .connectioncard-card {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-
-  .connection-card-left {
+  .connectioncard-card-left {
     width: 100%;
-    gap: 12px;
   }
-
-  .connection-profile-img {
+  .connectioncard-profile-img {
     width: 50px;
     height: 50px;
   }
-
-  .connection-user-name {
-    font-size: 15px;
-  }
-
-
-  .connection-message-btn {
+  .connectioncard-message-btn {
     align-self: flex-end;
-
     width: 42px;
     height: 42px;
     padding: 0;
-
     border-radius: 50%;
-
     background-color: #e5e7eb;
     color: #6b7280;
-
     justify-content: center;
   }
-
-  .connection-msg-text {
+  .connectioncard-msg-text {
     display: none;
   }
 }

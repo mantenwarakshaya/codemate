@@ -96,97 +96,186 @@ class SignupForm extends Component {
     }
 
     return (
-      <div className="login-form-container">
-        <form className="form-container" onSubmit={this.submitForm}>
-          <img
-            src={navlogo}
-            className="login-website-logo-desktop-img"
-            alt="website logo"
-          />
+      // <div className="signupform-form-container">
+      //   <form className="signupform-form-container" onSubmit={this.submitForm}>
+      //     <img
+      //       src={navlogo}
+      //       className="signupform-website-logo-desktop-img"
+      //       alt="website logo"
+      //     />
 
-          <div className="input-container">
-            <label htmlFor="firstName" className="input-label">FIRST NAME</label>
-            <input
-              id="firstName"
-              name="firstName"
-              type="text"
-              className="username-input-field"
-              value={firstName}
-              onChange={this.onChangeFirstName}
-              placeholder="Enter First Name"
-              autoComplete="given-name"
-            />
-          </div>
+      //     <div className="signupform-input-container">
+      //       <label htmlFor="firstName" className="signupform-input-label">FIRST NAME</label>
+      //       <input
+      //         id="firstName"
+      //         name="firstName"
+      //         type="text"
+      //         className="signupform-username-input-field"
+      //         value={firstName}
+      //         onChange={this.onChangeFirstName}
+      //         placeholder="Enter First Name"
+      //         autoComplete="given-name"
+      //       />
+      //     </div>
 
-          <div className="input-container">
-            <label htmlFor="lastName" className="input-label">LAST NAME</label>
-            <input
-              id="lastName"
-              name="lastName"
-              type="text"
-              className="username-input-field"
-              value={lastName}
-              onChange={this.onChangeLastName}
-              placeholder="Enter Last Name"
-              autoComplete="family-name"
-            />
-          </div>
+      //     <div className="signupform-input-container">
+      //       <label htmlFor="lastName" className="signupform-input-label">LAST NAME</label>
+      //       <input
+      //         id="lastName"
+      //         name="lastName"
+      //         type="text"
+      //         className="signupform-username-input-field"
+      //         value={lastName}
+      //         onChange={this.onChangeLastName}
+      //         placeholder="Enter Last Name"
+      //         autoComplete="family-name"
+      //       />
+      //     </div>
 
-          <div className="input-container">
-            <label htmlFor="email" className="input-label">EMAIL</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              className="username-input-field"
-              value={emailId}
-              onChange={this.onChangeEmail}
-              placeholder="Enter Email"
-              autoComplete="email"
-            />
-          </div>
+      //     <div className="signupform-input-container">
+      //       <label htmlFor="email" className="signupform-input-label">EMAIL</label>
+      //       <input
+      //         id="email"
+      //         name="email"
+      //         type="email"
+      //         className="signupform-username-input-field"
+      //         value={emailId}
+      //         onChange={this.onChangeEmail}
+      //         placeholder="Enter Email"
+      //         autoComplete="email"
+      //       />
+      //     </div>
 
-          <div className="input-container">
-            <label htmlFor="password" className="input-label">PASSWORD</label>
-            <div className="sub-password-container">
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                className="password-input-field"
-                value={password}
-                onChange={this.onChangePassword}
-                placeholder="Enter your password"
-                autoComplete="new-password"
-              />
-              <span
-                className="password-toggle-icon"
-                onClick={this.togglePasswordVisibility}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
-            </div>
-          </div>
+      //     <div className="signupform-input-container">
+      //       <label htmlFor="password" className="signupform-input-label">PASSWORD</label>
+      //       <div className="signupform-sub-password-container">
+      //         <input
+      //           id="password"
+      //           name="password"
+      //           type={showPassword ? 'text' : 'password'}
+      //           className="signupform-password-input-field"
+      //           value={password}
+      //           onChange={this.onChangePassword}
+      //           placeholder="Enter your password"
+      //           autoComplete="new-password"
+      //         />
+      //         <span
+      //           className="signupform-password-toggle-icon"
+      //           onClick={this.togglePasswordVisibility}
+      //         >
+      //           {showPassword ? <FaEyeSlash /> : <FaEye />}
+      //         </span>
+      //       </div>
+      //     </div>
 
-          <button type="submit" className="login-button">
-            Signup
-          </button>
+      //     <button type="submit" className="signupform-button">
+      //       Signup
+      //     </button>
 
-          {/* Conditional error message rendering */}
-          {showSubmitError && (
-            <p className="error-message">*{errorMsg}</p>
-          )}
+      //     {showSubmitError && (
+      //       <p className="signupform-error-message">*{errorMsg}</p>
+      //     )}
 
-          <div className="login-desc">
-            <p>
-              Existing User? Login Here{' '}
-              <Link to="/login" className="login-link">
-                Login
-              </Link>
-            </p>
-          </div>
-        </form>
+      //     <div className="signupform-login-desc">
+      //       <p>
+      //         Existing User? Login Here{' '}
+      //         <Link to="/login" className="signupform-link">
+      //           Login
+      //         </Link>
+      //       </p>
+      //     </div>
+      //   </form>
+      // </div>
+      <div className="signupform-main-container">
+  <form className="signupform-container" onSubmit={this.submitForm}>
+    <img
+      src={navlogo}
+      className="signupform-website-logo-desktop-img"
+      alt="website logo"
+    />
+
+    <div className="signupform-input-container">
+      <label htmlFor="firstName" className="signupform-input-label">FIRST NAME</label>
+      <input
+        id="firstName"
+        name="firstName"
+        type="text"
+        className="signupform-username-input-field"
+        value={firstName}
+        onChange={this.onChangeFirstName}
+        placeholder="Enter First Name"
+        autoComplete="given-name"
+      />
+    </div>
+
+    <div className="signupform-input-container">
+      <label htmlFor="lastName" className="signupform-input-label">LAST NAME</label>
+      <input
+        id="lastName"
+        name="lastName"
+        type="text"
+        className="signupform-username-input-field"
+        value={lastName}
+        onChange={this.onChangeLastName}
+        placeholder="Enter Last Name"
+        autoComplete="family-name"
+      />
+    </div>
+
+    <div className="signupform-input-container">
+      <label htmlFor="email" className="signupform-input-label">EMAIL</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        className="signupform-username-input-field"
+        value={emailId}
+        onChange={this.onChangeEmail}
+        placeholder="Enter Email"
+        autoComplete="email"
+      />
+    </div>
+
+    <div className="signupform-input-container">
+      <label htmlFor="password" className="signupform-input-label">PASSWORD</label>
+      <div className="signupform-sub-password-container">
+        <input
+          id="password"
+          name="password"
+          type={showPassword ? 'text' : 'password'}
+          className="signupform-password-input-field"
+          value={password}
+          onChange={this.onChangePassword}
+          placeholder="Enter your password"
+          autoComplete="new-password"
+        />
+        <span
+          className="signupform-password-toggle-icon"
+          onClick={this.togglePasswordVisibility}
+        >
+          {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </span>
       </div>
+    </div>
+
+    <button type="submit" className="signupform-button">
+      Signup
+    </button>
+
+    {showSubmitError && (
+      <p className="signupform-error-message">* {errorMsg}</p>
+    )}
+
+    <div className="signupform-login-desc">
+      <p>
+        Existing User? Login Here{' '}
+        <Link to="/login" className="signupform-link">
+          Login
+        </Link>
+      </p>
+    </div>
+  </form>
+</div>
     )
   }
 }

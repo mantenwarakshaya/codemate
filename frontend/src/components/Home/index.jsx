@@ -1,15 +1,32 @@
-import React, { Component } from 'react';
-import Feed from '../Feed';
-import Header from '../Header';
-import './index.css';
+import React, { Component } from "react";
+import Feed from "../Feed";
+import Header from "../Header";
+import ConnectionsChatList from "../ConnectionsChatList"; // 👈 left sidebar
+import ProfileCard from "../ProfileCard"; // 👈 create this next
+import "./index.css";
 
 class Home extends Component {
-  // The render method is required for class components to return JSX
   render() {
     return (
       <>
         <Header />
-        <Feed />
+
+        <div className="home-container">
+          {/* LEFT - CHAT */}
+          <div className="left-sidebar">
+            <ConnectionsChatList />
+          </div>
+
+          {/* CENTER - FEED */}
+          <div className="center-content">
+            <Feed />
+          </div>
+
+          {/* RIGHT - PROFILE + STATS */}
+          <div className="right-sidebar">
+            <ProfileCard />
+          </div>
+        </div>
       </>
     );
   }

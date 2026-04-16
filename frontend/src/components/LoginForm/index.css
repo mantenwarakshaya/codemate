@@ -1,55 +1,51 @@
-.login-form-container {
+.loginform-main-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   width: 100%;
   padding: 20px;
+  background-color: #f8fafc; 
+  font-family: "Roboto";
 }
 
-/* FORM */
-.form-container {
+.loginform-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 1110px;
+  max-width: 430px;
   padding: 30px 24px;
   background-color: #ffffff;
   border-radius: 10px;
 }
 
-/* Desktop shadow */
 @media screen and (min-width: 992px) {
-  .form-container {
+  .loginform-container {
     max-width: 430px;
     padding: 30px 40px;
     box-shadow: 0px 8px 40px rgba(7, 7, 7, 0.08);
   }
 }
 
-.login-website-logo-desktop-img {
+.loginform-website-logo-desktop-img {
   width: 150px;
 }
 
-/* INPUT CONTAINER */
-.input-container {
+.loginform-input-container {
   display: flex;
   flex-direction: column;
   margin-top: 18px;
   width: 100%;
 }
 
-/* LABEL */
-.input-label {
+.loginform-input-label {
   font-weight: 600;
   font-size: 12px;
   color: #475569;
 }
 
-/* INPUTS */
-.username-input-field,
-.password-input-field {
+.loginform-username-input-field {
   font-size: 14px;
   height: 44px; 
   border: 1px solid #d7dfe9;
@@ -61,8 +57,21 @@
   outline: none;
   width: 100%;
 }
-/* BUTTON */
-.login-button {
+
+.loginform-password-input-field {
+  font-size: 14px;
+  height: 44px;
+  width: 100%;
+  padding: 10px 40px 10px 12px;
+  border: 1px solid #cbd5e1;
+  background-color: #e6f6ff;
+  color: #475569;
+  border-radius: 4px;
+  margin-top: 6px;
+  outline: none;
+}
+
+.loginform-button {
   font-weight: bold;
   font-size: 15px;
   color: #ffffff;
@@ -75,40 +84,30 @@
   cursor: pointer;
 }
 
-/* ERROR */
-.error-message {
+.loginform-error-message {
   align-self: flex-start;
   font-size: 12px;
   margin-top: 6px;
   color: #ff0b37;
 }
 
-/* SIGNUP */
-.signup-desc {
+.loginform-desc {
   margin-top: 15px;
   font-size: 14px;
 }
 
-.signup-link {
+.loginform-link {
   text-decoration: none;
   color: #0967d2;
 }
 
-.sub-password-container {
+.loginform-sub-password-container {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.password-input-field {
-  width: 100%;
-  padding: 10px 40px 10px 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  outline: none;
-}
-
-.password-toggle-icon {
+.loginform-password-toggle-icon {
   position: absolute;
   right: 12px;
   display: flex;

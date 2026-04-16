@@ -67,10 +67,10 @@ class Connections extends Component {
     }
 
     return (
-      <div className="content-wrapper">
-        <div className="header">
-          <h1 className="title">My Connections</h1>
-          <span className="badge">{connections.length}</span>
+      <div className="connection-content-wrapper">
+        <div className="connection-header">
+          <h1 className="connection-title">My Connections</h1>
+          <span className="connection-badge">{connections.length}</span>
         </div>
 
         {connections.map((user) =>
@@ -107,7 +107,7 @@ class Connections extends Component {
     return (
       <>
         <Header />
-        <div className="page-container">{this.renderConnections()}</div>
+        <div className="connection-page-container">{this.renderConnections()}</div>
       </>
     );
   }

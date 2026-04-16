@@ -1,0 +1,186 @@
+.right-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* COMMON CARD */
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* PROFILE */
+.profile-card {
+  text-align: center;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-bottom: 8px;
+}
+
+.email {
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* STATS */
+.stats-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat {
+  flex: 1;
+  text-align: center;
+}
+
+.number {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.stat span {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.divider {
+  width: 1px;
+  height: 30px;
+  background: #e2e8f0;
+}
+
+/* LINKS */
+.links-card h4 {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.link-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.link-item a {
+  color: #0967d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.empty {
+  color: #94a3b8;
+}
+.links-card h4 {
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+/* FLEX WRAP LIKE TAGS */
+.links-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* BUTTON STYLE */
+.link-btn {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #e6f6ff;
+  color: #0967d2;
+  font-size: 12px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.link-btn:hover {
+  background: #bfdbfe;
+}
+
+/* EMPTY STATE */
+.no-links {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* CARD BASE */
+.card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* PROFILE CARD */
+.profile-card {
+  text-align: center;
+}
+
+.profile-card img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+/* STATS CARD */
+.stats-card h4 {
+  margin-bottom: 12px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+/* 🔥 SOCIAL CARD (SAME AS SHOWPROFILE) */
+.social-pill-grid {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 10px;
+  border-radius: 10px;
+
+  text-decoration: none;
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  color: #374151;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  transition: all 0.25s ease;
+}
+
+.social-button:hover {
+  background: #e6f6ff;
+  transform: translateY(-2px);
+}
+
+.no-links {
+  font-size: 12px;
+  color: #94a3b8;
+  text-align: center;
+}

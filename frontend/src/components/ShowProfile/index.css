@@ -1,44 +1,27 @@
-/* RESET */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body, #root {
-  height: 100%;
-  font-family: 'Roboto', sans-serif;
-  background-color: #f3f3f3;
-}
-
 /* CONTAINER */
-.show-feed-container {
+.showprofile-feed-container {
   background-color: #f3f3f3;
   min-height: calc(100vh - 70px);
   padding: 60px;
-
   display: flex;
   justify-content: center;
   align-items: flex-start;
 }
 
 /* MAIN CARD */
-.show-user-card {
+.showprofile-user-card {
   width: 95%;
   max-width: 1200px;
   background: #ffffff;
-
   border-radius: 24px;
   padding: 50px;
-
   display: flex;
   gap: 60px;
-
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
 }
 
 /* LEFT SIDE */
-.show-left {
+.showprofile-left {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -46,7 +29,7 @@ body, #root {
 }
 
 /* RIGHT SIDE */
-.show-right {
+.showprofile-right {
   flex: 2;
   display: flex;
   flex-direction: column;
@@ -54,19 +37,18 @@ body, #root {
 }
 
 /* PROFILE IMAGE */
-.show-image-ring {
+.showprofile-image-ring {
   width: 180px;
   height: 180px;
   border-radius: 50%;
   padding: 6px;
   background: #bfdbfe;
-
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.show-profile-img {
+.showprofile-profile-img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -75,24 +57,24 @@ body, #root {
 }
 
 /* NAME */
-.show-feed-user-name {
+.showprofile-feed-user-name {
   font-size: 32px;
   font-weight: 700;
   color: #0967d2;
 }
 
 /* EMAIL */
-.show-user-email {
+.showprofile-user-email {
   color: #475569;
   font-size: 15px;
 }
 
 /* TAG */
-.show-tags {
+.showprofile-tags {
   margin-top: 10px;
 }
 
-.show-tag {
+.showprofile-tag {
   background: #e6f6ff;
   color: #0967d2;
   padding: 8px 16px;
@@ -102,25 +84,24 @@ body, #root {
 }
 
 /* BIO */
-.show-bio-box {
+.showprofile-bio-box {
   background: #f9fafb;
   border-left: 5px solid #0967d2;
   padding: 18px;
   border-radius: 8px;
-
   font-size: 15px;
   color: #475569;
   line-height: 1.7;
 }
 
 /* SKILLS */
-.show-skills {
+.showprofile-skills {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.show-skill {
+.showprofile-skill {
   background: #e6f6ff;
   color: #0967d2;
   padding: 8px 14px;
@@ -130,88 +111,78 @@ body, #root {
 }
 
 /* SOCIAL BUTTONS */
-.show-social-pill-grid {
+.showprofile-social-pill-grid {
   margin-top: 25px;
   width: 100%;
-
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.show-social-button {
+.showprofile-social-button {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-
   padding: 12px;
   border-radius: 10px;
-
   text-decoration: none;
   background: #f9fafb;
   border: 1px solid #d1d5db;
   color: #374151;
-
   font-size: 14px;
   font-weight: 500;
-
   transition: all 0.25s ease;
 }
 
-.show-social-button:hover {
+.showprofile-social-button:hover {
   background: #e6f6ff;
   transform: translateY(-2px);
 }
 
-/* BUTTON */
-.show-action-footer {
-    margin-top: 25px;
+/* ACTION FOOTER & BUTTONS */
+.showprofile-action-footer {
+  margin-top: 25px;
 }
 
-.show-icon-btn {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-
-    width: 240px;
-    background: #0967d2;
-    color: white;
-    border: none;
-
-    padding: 14px;
-    border-radius: 10px;
-
-    font-size: 16px;
-    font-weight: 600;
-
-    cursor: pointer;
-    transition: all 0.3s ease;
+.showprofile-icon-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: #0967d2;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.show-icon-btn:hover {
+.showprofile-icon-btn:hover {
   opacity: 0.9;
   transform: scale(1.03);
 }
-.show-message-link {
+
+.showprofile-message-link {
   text-decoration: none;
   display: inline-block;
   width: 100%; 
 }
-/* Container for the buttons on the Profile page */
-.show-request-actions {
+
+.showprofile-request-actions {
   display: flex;
   gap: 15px;
   width: 100%;
   margin-top: 20px;
 }
 
-/* Base button styles */
-.show-accept-btn, 
-.show-reject-btn {
+.showprofile-accept-btn, 
+.showprofile-reject-btn {
   flex: 1;
   padding: 12px 20px;
   border: none;
@@ -226,28 +197,23 @@ body, #root {
   transition: all 0.2s ease-in-out;
 }
 
-.show-accept-btn {
+.showprofile-accept-btn {
   background-color: #0967d2;
   color: #ffffff;
 }
 
-.show-accept-btn:hover {
-  opacity: 0.9;
-}
-
-.show-reject-btn {
+.showprofile-reject-btn {
   background-color: transparent;
   color: #0967d2;
   border: 2px solid #0967d2;
 }
 
-.show-reject-btn:hover {
+.showprofile-reject-btn:hover {
   background-color: #e6f6ff;
 }
 
-/* Disabled state - Using your Light Blues (#bfdbfe) */
-.show-accept-btn:disabled, 
-.show-reject-btn:disabled {
+.showprofile-accept-btn:disabled, 
+.showprofile-reject-btn:disabled {
   background-color: #bfdbfe; 
   color: #0967d2;
   cursor: not-allowed;
@@ -255,44 +221,15 @@ body, #root {
   border: none;
 }
 
-/* Message button - Matching your Primary Blue */
-.show-icon-btn {
-  background-color: #0967d2;
-  color: #ffffff;
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-}
-
-/* STATES */
-.show-loading-text,
-.show-error-text,
-.show-no-user-text {
-  text-align: center;
-  margin-top: 60px;
-  font-size: 18px;
-  color: #475569;
-}
-
-/* 🔥 RESPONSIVE (VERY IMPORTANT) */
+/* RESPONSIVE */
 @media (max-width: 900px) {
-  .show-user-card {
+  .showprofile-show-user-card {
     flex-direction: column;
     align-items: center;
     text-align: center;
   }
 
-  .show-right {
+  .showprofile-show-right {
     align-items: center;
-  }
-
-  .show-icon-btn {
-    width: 100%;
   }
 }

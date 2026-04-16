@@ -92,102 +92,100 @@ class ShowProfile extends Component {
     }
 
     return (
-      <div className="show-feed-container">
-        <div className="show-user-card">
-          {/* LEFT SECTION */}
-          <div className="show-left">
-            <div className="show-image-ring">
-              <img
-                src={user.profilePic || "/avatar.png"}
-                alt={`${user.firstName}'s profile`}
-                className="show-profile-img"
-              />
-            </div>
-
-            <div className="show-social-pill-grid">
-              {user.github && (
-                <a href={user.github} target="_blank" rel="noreferrer" className="show-social-button">
-                  <FaGithub /> GitHub
-                </a>
-              )}
-              {user.linkedin && (
-                <a href={user.linkedin} target="_blank" rel="noreferrer" className="show-social-button">
-                  <FaLinkedin /> LinkedIn
-                </a>
-              )}
-              {user.twitter && (
-                <a href={user.twitter} target="_blank" rel="noreferrer" className="show-social-button">
-                  <FaTwitter /> Twitter
-                </a>
-              )}
-              {user.discord && (
-                <a href={user.discord} target="_blank" rel="noreferrer" className="show-social-button">
-                  <SiDiscord /> Discord
-                </a>
-              )}
-            </div>
-          </div>
-
-          {/* RIGHT SECTION */}
-          <div className="show-right">
-            <h2 className="show-feed-user-name">
-              {user.firstName} {user.lastName}
-            </h2>
-
-            {user.emailId && (
-              <p className="show-user-email">{user.emailId}</p>
-            )}
-
-            <div className="show-tags">
-              <span className="show-tag">
-                Experience: {user.experience ?? 0}{" "}
-                {user.experience === 1 ? "year" : "years"}
-              </span>
-            </div>
-
-            <p className="show-bio-box">
-              {user.about || "Full Stack Developer ready to collaborate."}
-            </p>
-
-            <div className="show-skills">
-              {user.skills?.map((skill, i) => (
-                <span key={i} className="show-skill">
-                  {skill}
-                </span>
-              ))}
-            </div>
-
-            <div className="show-action-footer">
-              {fromRequestPage && requestId ? (
-                /* ✅ CASE 1: Came from Requests Page - Show Accept/Reject */
-                <div className="show-request-actions">
-                  <button 
-                    className="show-accept-btn" 
-                    onClick={() => this.handleRequestAction("accepted")}
-                    disabled={isProcessingAction}
-                  >
-                    <FaCheck /> {isProcessingAction ? "..." : "Accept"}
-                  </button>
-                  <button 
-                    className="show-reject-btn" 
-                    onClick={() => this.handleRequestAction("rejected")}
-                    disabled={isProcessingAction}
-                  >
-                    <FaTimes /> {isProcessingAction ? "..." : "Reject"}
-                  </button>
-                </div>
-              ) : (
-                /* ✅ CASE 2: Normal connection view - Show Message */
-                <Link to={`/chat/${user._id}`} className="show-message-link">
-                  <button className="show-icon-btn">
-                    <MdMessage /> Message
-                  </button>
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
+      <div className="showprofile-feed-container">
+  <div className="showprofile-user-card">
+    {/* LEFT SECTION */}
+    <div className="showprofile-left">
+      <div className="showprofile-image-ring">
+        <img
+          src={user.profilePic || "/avatar.png"}
+          alt={`${user.firstName}'s profile`}
+          className="showprofile-profile-img"
+        />
       </div>
+
+      <div className="showprofile-social-pill-grid">
+        {user.github && (
+          <a href={user.github} target="_blank" rel="noreferrer" className="showprofile-social-button">
+            <FaGithub /> GitHub
+          </a>
+        )}
+        {user.linkedin && (
+          <a href={user.linkedin} target="_blank" rel="noreferrer" className="showprofile-social-button">
+            <FaLinkedin /> LinkedIn
+          </a>
+        )}
+        {user.twitter && (
+          <a href={user.twitter} target="_blank" rel="noreferrer" className="showprofile-social-button">
+            <FaTwitter /> Twitter
+          </a>
+        )}
+        {user.discord && (
+          <a href={user.discord} target="_blank" rel="noreferrer" className="showprofile-social-button">
+            <SiDiscord /> Discord
+          </a>
+        )}
+      </div>
+    </div>
+
+    {/* RIGHT SECTION */}
+    <div className="showprofile-right">
+      <h2 className="showprofile-feed-user-name">
+        {user.firstName} {user.lastName}
+      </h2>
+
+      {user.emailId && (
+        <p className="showprofile-user-email">{user.emailId}</p>
+      )}
+
+      <div className="showprofile-tags">
+        <span className="showprofile-tag">
+          Experience: {user.experience ?? 0}{" "}
+          {user.experience === 1 ? "year" : "years"}
+        </span>
+      </div>
+
+      <p className="showprofile-bio-box">
+        {user.about || "Full Stack Developer ready to collaborate."}
+      </p>
+
+      <div className="showprofile-skills">
+        {user.skills?.map((skill, i) => (
+          <span key={i} className="showprofile-skill">
+            {skill}
+          </span>
+        ))}
+      </div>
+
+      <div className="showprofile-action-footer">
+        {fromRequestPage && requestId ? (
+          <div className="showprofile-request-actions">
+            <button 
+              className="showprofile-accept-btn" 
+              onClick={() => this.handleRequestAction("accepted")}
+              disabled={isProcessingAction}
+            >
+              <FaCheck /> {isProcessingAction ? "..." : "Accept"}
+            </button>
+            <button 
+              className="showprofile-reject-btn" 
+              onClick={() => this.handleRequestAction("rejected")}
+              disabled={isProcessingAction}
+            >
+              <FaTimes /> {isProcessingAction ? "..." : "Reject"}
+            </button>
+          </div>
+        ) : (
+          <Link to={`/chat/${user._id}`} className="showprofile-message-link">
+            <button className="showprofile-icon-btn">
+              <MdMessage /> Message
+            </button>
+          </Link>
+        )}
+      </div>
+    </div>
+  </div>
+</div>
     );
   };
 

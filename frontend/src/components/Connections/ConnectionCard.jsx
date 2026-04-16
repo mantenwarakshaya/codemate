@@ -20,32 +20,32 @@ class ConnectionCard extends Component {
     const safeSkills = Array.isArray(skills) ? skills : [];
 
     return (
-      <div className="connection-card">
-        <div className="connection-card-left">
+      <div className="connectioncard-card">
+        <div className="connectioncard-card-left">
           {/* ✅ Wrapped Image in Link for navigation */}
-          <Link to={`/profile/${_id}`} className="connection-avatar-link">
+          <Link to={`/profile/${_id}`} className="connectioncard-avatar-link">
             <img
               src={profilePic || "/avatar.png"} // Added fallback
               alt={`${firstName} ${lastName}`}
-              className="connection-profile-img"
+              className="connectioncard-profile-img"
             />
           </Link>
 
-          <div className="connection-user-info">
-            <h2 className="connection-user-name">
-              <Link to={`/profile/${_id}`} className="connection-user-link">
+          <div className="connectioncard-user-info">
+            <h2 className="connectioncard-user-name">
+              <Link to={`/profile/${_id}`} className="connectioncard-user-link">
                 {firstName} {lastName}
               </Link>
             </h2>
 
             <div className="connection-skills">
               {safeSkills.slice(0, 5).map((skill, index) => (
-                <span key={index} className="connection-skill-badge">
+                <span key={index} className="connectioncard-skill-badge">
                   {skill}
                 </span>
               ))}
               {safeSkills.length > 5 && (
-                <span className="connection-skill-more">
+                <span className="connectioncard-skill-more">
                   +{safeSkills.length - 5} more
                 </span>
               )}
@@ -53,8 +53,8 @@ class ConnectionCard extends Component {
           </div>
         </div>
 
-        <Link to={`/chat/${_id}`} className="connection-message-btn">
-          <span className="connection-msg-text">Message</span>
+        <Link to={`/chat/${_id}`} className="connectioncard-message-btn">
+          <span className="connectioncard-msg-text">Message</span>
         </Link>
       </div>
     );
