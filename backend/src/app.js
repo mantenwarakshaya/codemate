@@ -6,21 +6,21 @@ const path = require("path");
 const cors = require("cors");
 const http = require("http");
 require("dotenv").config();
-process.env.BASE_URL = "http://localhost:5173";
+// process.env.BASE_URL = "http://localhost:5173";
 // ✅ Middlewares
 app.use(express.json());
 app.use(cookieParser());
 
 
-// app.use(cors());
+app.use(cors());
 
 // ✅ CORS (simple since same domain)
-app.use(
-  cors({
-    origin: process.env.BASE_URL || "http://localhost:5173",
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: process.env.BASE_URL || "http://localhost:5173",
+//     credentials: true,
+//   })
+// );
 // ✅ Routes
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
