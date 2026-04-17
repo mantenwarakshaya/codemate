@@ -61,27 +61,34 @@ chatRouter.get("/messages/unread", userAuth, async (req, res) => {
 
     const unreadMessages = await Message.find({
       receiverId: myId,
-      seen: false,
+      seen: false, // Ensure this field exists and is false in your DB
     }).populate("senderId", "firstName lastName profilePic");
 
-    // Group by sender
     const grouped = {};
 
     unreadMessages.forEach((msg) => {
+      if (!msg.senderId || !msg.senderId._id) return; 
+
       const senderId = msg.senderId._id.toString();
 
       if (!grouped[senderId]) {
         grouped[senderId] = {
           user: msg.senderId,
           count: 0,
-          lastMessage: msg.text,
+          lastMessage: msg.text || "Sent a message",
+          updatedAt: msg.createdAt,
         };
       }
 
       grouped[senderId].count += 1;
+
+      if (new Date(msg.createdAt) > new Date(grouped[senderId].updatedAt)) {
+        grouped[senderId].lastMessage = msg.text;
+        grouped[senderId].updatedAt = msg.createdAt;
+      }
     });
 
-    res.json({ data: Object.values(grouped) });
+    res.json({ data: Object.values(grouped) }); // Correctly wrapped in 'data'
   } catch (err) {
     res.status(500).json({ message: "Error fetching unread messages" });
   }

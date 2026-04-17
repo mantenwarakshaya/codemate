@@ -145,23 +145,22 @@ userRouter.get("/user/:id", userAuth, async (req, res) => {
   }
 });
 
+// GET profile views
 userRouter.get("/user/profile-views", userAuth, async (req, res) => {
   try {
-    const myId = req.user._id;
+    if (!req.user?._id) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
 
     const views = await ProfileView.find({
-      viewedUserId: myId,
+      viewedUserId: req.user._id,
     })
-      .populate("viewerId", "firstName lastName profilePic")
-      .sort({ updatedAt: -1 })
-      .limit(10);
+      .populate("viewerId", "firstName profilePic") // Field must exist in ProfileView Schema
+      .sort({ createdAt: -1 });
 
-    res.json({
-      message: "Profile views fetched",
-      data: views,
-    });
+    res.json({ data: views || [] }); // Always return an array
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
