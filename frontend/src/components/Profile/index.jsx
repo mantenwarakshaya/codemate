@@ -1,307 +1,3 @@
-// import React, { Component } from "react";
-// import Header from "../Header";
-// import { Camera } from "lucide-react";
-// import "./index.css";
-
-// import { LoaderView, ErrorView } from "../Common";
-
-// const BASE_URL = 
-//   process.env.NODE_ENV === "production"
-//     ? "/api"
-//     : "http://localhost:7777/api";
-
-// const apiStatusConstants = {
-//   initial: "INITIAL",
-//   success: "SUCCESS",
-//   failure: "FAILURE",
-//   inProgress: "IN_PROGRESS",
-// };
-
-// const SKILLS_OPTIONS = ["AWS", "Bootstrap", "C", "C++", "CSS", "Cyber Security", "Docker", "Django", "Express.js", "Firebase", "Git", "GraphQL", "HTML", 
-//   "Java", "JavaScript", "Jest", "Kubernetes", "MongoDB", "Next.js", "Node.js", "PostgreSQL", "Python", "React", "Redux", "REST APIs", "Tailwind CSS", "TypeScript"];
-
-// const GENDER_OPTIONS = [
-//   { label: "Male", value: "male" },
-//   { label: "Female", value: "female" },
-//   { label: "Other", value: "other" },
-// ];
-
-// class Profile extends Component {
-//   state = {
-//     user: {},
-//     selectedSkills: [],
-//     apiStatus: apiStatusConstants.initial,
-//     isUpdatingProfile: false,
-//     previewImg: null, // Holds the base64 string for preview and upload
-//   };
-
-//   componentDidMount() {
-//     this.getProfile();
-//   }
-
-//   getProfile = async () => {
-//     this.setState({ apiStatus: apiStatusConstants.inProgress });
-//     try {
-//       const res = await fetch(`${BASE_URL}/profile/view`, {
-//         credentials: "include",
-//       });
-//       if (!res.ok) throw new Error("Failed to fetch profile");
-//       const data = await res.json();
-//       this.setState({
-//         user: data,
-//         selectedSkills: data.skills || [],
-//         apiStatus: apiStatusConstants.success,
-//       });
-//     } catch (err) {
-//       console.error(err);
-//       this.setState({ apiStatus: apiStatusConstants.failure });
-//     }
-//   };
-
-//   handleChange = (e) => {
-//     const { name, value } = e.target;
-//     this.setState((prevState) => ({
-//       user: { ...prevState.user, [name]: value },
-//     }));
-//   };
-
-//   handleImageUpload = (e) => {
-//     const file = e.target.files[0];
-//     if (!file) return;
-
-//     const reader = new FileReader();
-//     reader.readAsDataURL(file);
-//     reader.onload = () => {
-//       // Update state with base64 for preview
-//       this.setState({ previewImg: reader.result });
-//     };
-//   };
-
-//   handleAddSkill = (e) => {
-//     const skill = e.target.value;
-//     const { selectedSkills } = this.state;
-//     if (skill && !selectedSkills.includes(skill)) {
-//       this.setState({ selectedSkills: [...selectedSkills, skill] });
-//     }
-//   };
-
-//   handleRemoveSkill = (skillToRemove) => {
-//     this.setState((prevState) => ({
-//       selectedSkills: prevState.selectedSkills.filter(
-//         (skill) => skill !== skillToRemove
-//       ),
-//     }));
-//   };
-
-//   handleSave = async () => {
-//     const { user, selectedSkills, previewImg } = this.state;
-//     this.setState({ isUpdatingProfile: true });
-
-//     try {
-//       const updatedData = {
-//         firstName: user.firstName,
-//         lastName: user.lastName,
-//         gender: user.gender,
-//         age: user.age,
-//         about: user.about,
-//         skills: selectedSkills,
-//         experience: user.experience,
-//         github: user.github,
-//         linkedin: user.linkedin,
-//         twitter: user.twitter,
-//         discord: user.discord,
-//         profilePic: previewImg || user.profilePic,
-//       };
-
-//       const res = await fetch(`${BASE_URL}/profile/edit`, {
-//         method: "PATCH",
-//         credentials: "include",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(updatedData),
-//       });
-
-//       const data = await res.json();
-//       if (!res.ok) throw new Error(data.error || "Unknown error");
-
-//       alert("Profile updated successfully!");
-//       this.setState({ 
-//         user: data.data, 
-//         isUpdatingProfile: false, 
-//         previewImg: null // Reset preview after successful save
-//       });
-//     } catch (err) {
-//       alert("Error updating profile: " + err.message);
-//       this.setState({ isUpdatingProfile: false });
-//     }
-//   };
-
-//   renderProfile = () => {
-//     const { user, selectedSkills, isUpdatingProfile, previewImg } = this.state;
-
-//     return (
-//       <div className="profile-main-container">
-//         <div className="profile-card">
-//           <h1 className="profile-title">Edit Profile</h1>
-//           <p className="profile-subtitle">Update your developer presence.</p>
-
-//           {/* Avatar Upload Section */}
-//           <div className="profile-container">
-//             <div className="profile-avatar-wrapper">
-//               <img
-//                 src={previewImg || user.profilePic || "/avatar.png"}
-//                 alt="Profile"
-//                 className="profile-avatar"
-//               />
-//               <label
-//                 htmlFor="profile-avatar-upload"
-//                 className={`profile-upload-button ${isUpdatingProfile ? "profile-upload-loading" : ""}`}
-//               >
-//                 <Camera className="profile-camera-icon" />
-//                 <input
-//                   type="file"
-//                   id="avatar-upload"
-//                   className="profile-hidden-input"
-//                   accept="image/*"
-//                   onChange={this.handleImageUpload}
-//                   disabled={isUpdatingProfile}
-//                 />
-//               </label>
-//             </div>
-//             <p className="profile-status-text">
-//               {isUpdatingProfile ? "Processing..." : "Click the camera to change photo"}
-//             </p>
-//           </div>
-
-//           <h2 className="profile-section-title">Personal Details</h2>
-//           <div className="profile-form-row">
-//             <input
-//               name="firstName"
-//               className="profile-input"
-//               placeholder="First Name"
-//               value={user.firstName || ""}
-//               onChange={this.handleChange}
-//             />
-//             <input
-//               name="lastName"
-//               className="profile-input"
-//               placeholder="Last Name"
-//               value={user.lastName || ""}
-//               onChange={this.handleChange}
-//             />
-//           </div>
-
-//           <div className="profile-form-row">
-//             <input
-//               className="profile-input profile-readonly-input"
-//               placeholder="Email"
-//               value={user.emailId || ""}
-//               readOnly
-//             />
-//             <input
-//               name="age"
-//               type="number"
-//               className="profile-input"
-//               placeholder="Age"
-//               value={user.age || ""}
-//               onChange={this.handleChange}
-//             />
-//           </div>
-
-//           <div className="profile-form-row">
-//             <select
-//               name="gender"
-//               className="profile-input"
-//               value={user.gender || ""}
-//               onChange={this.handleChange}
-//             >
-//               <option value="" disabled>Select Gender</option>
-//               {GENDER_OPTIONS.map((g) => (
-//                 <option key={g.value} value={g.value}>{g.label}</option>
-//               ))}
-//             </select>
-//             <input
-//               name="experience"
-//               type="number"
-//               className="profile-input"
-//               placeholder="Years of Experience"
-//               value={user.experience || ""}
-//               onChange={this.handleChange}
-//             />
-//           </div>
-
-//           <h2 className="profile-section-title">About</h2>
-//           <div className="profile-form-row">
-//             <textarea
-//               name="about"
-//               className="profile-textarea profile-about"
-//               placeholder="Tell us about yourself..."
-//               value={user.about || ""}
-//               onChange={this.handleChange}
-//             />
-//           </div>
-
-//           <h2 className="profile-section-title">Skills</h2>
-//           <div className="profile-form-row">
-//             <select className="profile-skills-select" onChange={this.handleAddSkill} defaultValue="">
-//               <option value="" disabled>Add a skill</option>
-//               {SKILLS_OPTIONS.map((skill) => (
-//                 <option key={skill} value={skill}>{skill}</option>
-//               ))}
-//             </select>
-//           </div>
-//           <div className="profile-skills-container">
-//             {selectedSkills.map((skill) => (
-//               <div key={skill} className="profile-skill-tag">
-//                 {skill}
-//                 <span className="profile-skill-remove" onClick={() => this.handleRemoveSkill(skill)}>×</span>
-//               </div>
-//             ))}
-//           </div>
-
-//           <h2 className="profile-section-title">Social Links</h2>
-//           <div className="profile-form-row">
-//             <input name="github" className="profile-input" placeholder="GitHub URL" value={user.github || ""} onChange={this.handleChange} />
-//             <input name="linkedin" className="profile-input" placeholder="LinkedIn URL" value={user.linkedin || ""} onChange={this.handleChange} />
-//           </div>
-//           <div className="profile-form-row">
-//             <input name="twitter" className="profile-input" placeholder="Twitter URL" value={user.twitter || ""} onChange={this.handleChange} />
-//             <input name="discord" className="profile-input" placeholder="Discord URL" value={user.discord || ""} onChange={this.handleChange} />
-//           </div>
-
-//           <button 
-//             className="profile-save-btn" 
-//             onClick={this.handleSave} 
-//             disabled={isUpdatingProfile}
-//           >
-//             {isUpdatingProfile ? "Saving..." : "Save Changes"}
-//           </button>
-//         </div>
-//       </div>
-//     );
-//   };
-
-//   renderContent = () => {
-//     const { apiStatus } = this.state;
-//     switch (apiStatus) {
-//       case apiStatusConstants.inProgress: return <LoaderView />;
-//       case apiStatusConstants.failure: return <ErrorView message="Failed to load profile" onRetry={this.getProfile} />;
-//       case apiStatusConstants.success: return this.renderProfile();
-//       default: return null;
-//     }
-//   };
-
-//   render() {
-//     return (
-//       <div className="profile-app-container">
-//         <Header />
-//         {this.renderContent()}
-//       </div>
-//     );
-//   }
-// }
-
-// export default Profile;
-
 import React, { Component } from "react";
 import Header from "../Header";
 import { Camera } from "lucide-react";
@@ -337,6 +33,7 @@ class Profile extends Component {
     apiStatus: apiStatusConstants.initial,
     isUpdatingProfile: false,
     previewImg: null, 
+    activeTab: "general",
   };
 
   componentDidMount() {
@@ -436,153 +133,167 @@ class Profile extends Component {
       alert("Error updating profile: " + err.message);
       this.setState({ isUpdatingProfile: false });
     }
-  };
+  };  
 
   renderProfile = () => {
-    const { user, selectedSkills, isUpdatingProfile, previewImg } = this.state;
+    const { user, selectedSkills, isUpdatingProfile, previewImg, activeTab = 'general' } = this.state;
 
     return (
-      <div className="profile-main-container">
-        <div className="profile-card">
-          <h1 className="profile-title">Edit Profile</h1>
-          <p className="profile-subtitle">Update your developer presence.</p>
-
-          {/* Avatar Upload Section */}
-          <div className="profile-container">
-            <div className="profile-avatar-wrapper">
-              <img
-                src={previewImg || user.profilePic || "/avatar.png"}
-                alt="Profile"
-                className="profile-avatar"
-              />
-              <label
-                htmlFor="profile-avatar-upload"
-                className={`profile-upload-button ${isUpdatingProfile ? "profile-upload-loading" : ""}`}
-              >
-                <Camera className="profile-camera-icon" />
-                <input
-                  type="file"
-                  id="profile-avatar-upload"
-                  className="profile-hidden-input"
-                  accept="image/*"
-                  onChange={this.handleImageUpload}
-                  disabled={isUpdatingProfile}
+      <div className="profile-dashboard-layout">
+        {/* 1. Header & Identity Surface (Always Visible) */}
+        <section className="profile-identity-header">
+          <div className="identity-flex-container">
+            <div className="avatar-interaction-group">
+              <div className="avatar-squircle">
+                <img
+                  src={previewImg || user.profilePic || "/avatar.png"}
+                  alt="Profile"
                 />
-              </label>
-            </div>
-            <p className="profile-status-text">
-              {isUpdatingProfile ? "Processing..." : "Click the camera to change photo"}
-            </p>
-          </div>
-
-          <h2 className="profile-section-title">Personal Details</h2>
-          <div className="profile-form-row">
-            <input
-              name="firstName"
-              className="profile-input"
-              placeholder="First Name"
-              value={user.firstName || ""}
-              onChange={this.handleChange}
-            />
-            <input
-              name="lastName"
-              className="profile-input"
-              placeholder="Last Name"
-              value={user.lastName || ""}
-              onChange={this.handleChange}
-            />
-          </div>
-
-          <div className="profile-form-row">
-            <input
-              className="profile-input profile-readonly-input"
-              placeholder="Email"
-              value={user.emailId || ""}
-              readOnly
-            />
-            <input
-              name="age"
-              type="number"
-              className="profile-input"
-              placeholder="Age"
-              value={user.age || ""}
-              onChange={this.handleChange}
-            />
-          </div>
-
-          <div className="profile-form-row">
-            <select
-              name="gender"
-              className="profile-input"
-              value={user.gender || ""}
-              onChange={this.handleChange}
-            >
-              <option value="" disabled>Select Gender</option>
-              {GENDER_OPTIONS.map((g) => (
-                <option key={g.value} value={g.value}>{g.label}</option>
-              ))}
-            </select>
-            <input
-              name="experience"
-              type="number"
-              className="profile-input"
-              placeholder="Years of Experience"
-              value={user.experience || ""}
-              onChange={this.handleChange}
-            />
-          </div>
-
-          <h2 className="profile-section-title">About</h2>
-          <div className="profile-form-row">
-            <textarea
-              name="about"
-              className="profile-textarea profile-about"
-              placeholder="Tell us about yourself..."
-              value={user.about || ""}
-              onChange={this.handleChange}
-            />
-          </div>
-
-          <h2 className="profile-section-title">Skills</h2>
-          <div className="profile-form-row">
-            <select className="profile-skills-select" onChange={this.handleAddSkill} defaultValue="">
-              <option value="" disabled>Add a skill</option>
-              {SKILLS_OPTIONS.map((skill) => (
-                <option key={skill} value={skill}>{skill}</option>
-              ))}
-            </select>
-          </div>
-          <div className="profile-skills-container">
-            {selectedSkills.map((skill) => (
-              <div key={skill} className="profile-skill-tag">
-                {skill}
-                <span className="profile-skill-remove" onClick={() => this.handleRemoveSkill(skill)}>×</span>
+                <label htmlFor="avatar-upload" className="avatar-edit-trigger">
+                  <Camera size={16} />
+                  <input type="file" id="avatar-upload" hidden onChange={this.handleImageUpload} />
+                </label>
               </div>
-            ))}
+              <div className="identity-meta">
+                <h1 className="user-full-name">{user.firstName} {user.lastName}</h1>
+                <span className="user-email-badge">{user.emailId}</span>
+              </div>
+            </div>
+            <button 
+              className={`sync-profile-btn ${isUpdatingProfile ? 'is-loading' : ''}`} 
+              onClick={this.handleSave} 
+              disabled={isUpdatingProfile}
+            >
+              {isUpdatingProfile ? "Saving Changes..." : "Save Profile"}
+            </button>
           </div>
 
-          <h2 className="profile-section-title">Social Links</h2>
-          <div className="profile-form-row">
-            <input name="github" className="profile-input" placeholder="GitHub URL" value={user.github || ""} onChange={this.handleChange} />
-            <input name="linkedin" className="profile-input" placeholder="LinkedIn URL" value={user.linkedin || ""} onChange={this.handleChange} />
-          </div>
-          <div className="profile-form-row">
-            <input name="twitter" className="profile-input" placeholder="Twitter URL" value={user.twitter || ""} onChange={this.handleChange} />
-            <input name="discord" className="profile-input" placeholder="Discord URL" value={user.discord || ""} onChange={this.handleChange} />
-          </div>
+          {/* 2. Navigation Tabs */}
+          <nav className="profile-navigation-tabs">
+            <button 
+              className={`tab-link ${activeTab === 'general' ? 'active' : ''}`}
+              onClick={() => this.setState({ activeTab: 'general' })}
+            >
+              General
+            </button>
+            <button 
+              className={`tab-link ${activeTab === 'pro' ? 'active' : ''}`}
+              onClick={() => this.setState({ activeTab: 'pro' })}
+            >
+              Professional
+            </button>
+            <button 
+              className={`tab-link ${activeTab === 'social' ? 'active' : ''}`}
+              onClick={() => this.setState({ activeTab: 'social' })}
+            >
+              Social Presence
+            </button>
+          </nav>
+        </section>
 
-          <button 
-            className="profile-save-btn" 
-            onClick={this.handleSave} 
-            disabled={isUpdatingProfile}
-          >
-            {isUpdatingProfile ? "Saving..." : "Save Changes"}
-          </button>
-        </div>
+        {/* 3. Form Content Area (Changes based on activeTab) */}
+        <section className="profile-form-surface">
+          
+          {/* --- GENERAL TAB --- */}
+          {activeTab === 'general' && (
+            <div className="animate-fade-in">
+              <div className="form-section-header">
+                <h3>Personal Information</h3>
+                <p>Update your photo and personal details here.</p>
+              </div>
+
+              <div className="form-grid-layout">
+                <div className="field-container">
+                  <label>First Name</label>
+                  <input name="firstName" value={user.firstName || ""} onChange={this.handleChange} placeholder="e.g. Akshaya" />
+                </div>
+                <div className="field-container">
+                  <label>Last Name</label>
+                  <input name="lastName" value={user.lastName || ""} onChange={this.handleChange} placeholder="e.g. Mantenwar" />
+                </div>
+                <div className="field-container">
+                  <label>Age</label>
+                  <input name="age" type="number" value={user.age || ""} onChange={this.handleChange} />
+                </div>
+                <div className="field-container">
+                  <label>Gender</label>
+                  <select name="gender" value={user.gender || ""} onChange={this.handleChange}>
+                    <option value="" disabled>Select gender</option>
+                    {GENDER_OPTIONS.map((g) => <option key={g.value} value={g.value}>{g.label}</option>)}
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* --- PROFESSIONAL TAB --- */}
+          {activeTab === 'pro' && (
+            <div className="animate-fade-in">
+              <div className="form-section-header">
+                <h3>Professional Bio</h3>
+                <p>This will be displayed on your public profile.</p>
+              </div>
+              
+              <div className="field-container full-span">
+                <label>About Me</label>
+                <textarea name="about" value={user.about || ""} onChange={this.handleChange} rows="5" />
+                <span className="field-hint">Brief description for your profile. URLs are allowed.</span>
+              </div>
+
+              <div className="form-divider" />
+
+              <div className="form-section-header">
+                <h3>Skills & Tech Stack</h3>
+              </div>
+              
+              <div className="skills-management-box">
+                <select className="skills-dropdown" onChange={this.handleAddSkill} defaultValue="">
+                  <option value="" disabled>Add a technology...</option>
+                  {SKILLS_OPTIONS.map((skill) => <option key={skill} value={skill}>{skill}</option>)}
+                </select>
+                <div className="skills-pill-cloud">
+                  {selectedSkills.map((skill) => (
+                    <div key={skill} className="skill-pill">
+                      {skill}
+                      <button className="skill-del-btn" onClick={() => this.handleRemoveSkill(skill)}>×</button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* --- SOCIAL TAB --- */}
+          {activeTab === 'social' && (
+            <div className="animate-fade-in">
+              <div className="form-section-header">
+                <h3>Social & Portfolios</h3>
+                <p>Connect your professional networks.</p>
+              </div>
+              <div className="form-grid-layout">
+                <div className="field-container">
+                  <label>GitHub URL</label>
+                  <input name="github" value={user.github || ""} onChange={this.handleChange} placeholder="https://github.com/..." />
+                </div>
+                <div className="field-container">
+                  <label>LinkedIn URL</label>
+                  <input name="linkedin" value={user.linkedin || ""} onChange={this.handleChange} placeholder="https://linkedin.com/in/..." />
+                </div>
+                <div className="field-container">
+                  <label>Twitter (X)</label>
+                  <input name="twitter" value={user.twitter || ""} onChange={this.handleChange} />
+                </div>
+                <div className="field-container">
+                  <label>Discord</label>
+                  <input name="discord" value={user.discord || ""} onChange={this.handleChange} />
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
       </div>
     );
   };
-
   renderContent = () => {
     const { apiStatus } = this.state;
     switch (apiStatus) {

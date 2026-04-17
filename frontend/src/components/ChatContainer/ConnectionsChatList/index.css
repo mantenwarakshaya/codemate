@@ -39,13 +39,11 @@
   transition: all 0.2s ease;
 }
 
-/* HOVER */
 .ConnectionsChatList-user-card:hover {
   background: #e6f6ff;
   transform: translateX(2px);
 }
 
-/* ACTIVE CHAT (optional enhancement) */
 .ConnectionsChatList-user-card.active {
   background: #dbeafe;
 }

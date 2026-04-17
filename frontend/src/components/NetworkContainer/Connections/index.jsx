@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { useNavigate } from "react-router-dom";
 import ConnectionCard from "./ConnectionCard";
-import Header from "../Header";
 import "./index.css";
-import { LoaderView, ErrorView, EmptyView } from "../Common";
+import { LoaderView, ErrorView, EmptyView } from "../../Common";
 
 const BASE_URL = 
   process.env.NODE_ENV === "production"
@@ -18,13 +17,11 @@ const apiStatusConstants = {
 };
 
 class Connections extends Component {
-  // Initialize state equivalent to useState hooks
   state = {
     connections: [],
     apiStatus: apiStatusConstants.initial,
   };
 
-  // Replaces useEffect with empty dependency array
   componentDidMount() {
     this.fetchConnections();
   }
@@ -54,7 +51,7 @@ class Connections extends Component {
 
   renderSuccessView = () => {
     const { connections } = this.state;
-    const { navigate } = this.props; // Accessing navigate from props via HOC
+    const { navigate } = this.props;
 
     if (connections.length === 0) {
       return (
@@ -106,14 +103,12 @@ class Connections extends Component {
   render() {
     return (
       <>
-        <Header />
         <div className="connection-page-container">{this.renderConnections()}</div>
       </>
     );
   }
 }
 
-// HOC Wrapper to allow use of useNavigate hook in a class component
 const ConnectionsWithNavigate = (props) => {
   const navigate = useNavigate();
   return <Connections {...props} navigate={navigate} />;

@@ -1,0 +1,67 @@
+.network-page-wrapper {
+  background-color: rgb(243, 243, 243);
+  min-height: auto;
+  padding-bottom: 40px;
+}
+
+.network-container {
+  max-width: 850px; 
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* Card Container */
+.tabs-navigation-card {
+  background-color: #ffffff;
+  border: 1px solid #f1f5f9; 
+  border-radius: 16px; 
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+/* Horizontal Tabs */
+.tabs-header {
+  display: flex;
+  background: #fafbfc; 
+  border-bottom: 1px solid #f1f5f9;
+  padding: 0 20px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  padding: 18px 24px;
+  font-size: 14px; 
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  position: relative;
+  transition: 0.2s;
+}
+
+.tab-btn:hover {
+  background-color: #e6f6ff;
+  color: #0967d2;
+}
+
+/* Active State Underline */
+.tab-btn.active {
+  color: #0967d2;
+}
+
+.tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 20%; 
+  right: 20%;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background-color: #0967d2;
+}
+
+.tab-content-area {
+  padding: 24px; 
+  min-height: 650px;
+  max-height: 90vh;
+}

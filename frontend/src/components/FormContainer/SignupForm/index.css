@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+.signupform-main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 20px;
+  background-color: #f8fafc;
+  font-family: 'Inter', sans-serif;
+}
+
+.signupform-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.signupform-website-logo-desktop-img {
+  width: 140px;
+  margin: 0 auto 24px auto;
+  display: block;
+}
+
+.signupform-input-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.signupform-input-label {
+  font-weight: 500;
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+.signupform-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.signupform-field-icon {
+  position: absolute;
+  left: 12px;
+  color: #94a3b8;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.signupform-input-field {
+  font-size: 14px;
+  height: 44px;
+  width: 100%;
+  padding: 10px 14px 10px 40px; 
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: #1e293b;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.signupform-input-field:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.signupform-password-toggle-icon {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  color: #64748b;
+  font-size: 18px;
+  display: flex;
+}
+
+.signupform-button {
+  font-weight: 600;
+  font-size: 15px;
+  color: #ffffff;
+  height: 44px;
+  width: 100%;
+  margin-top: 12px;
+  background-color: #2563eb;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.signupform-button:hover {
+  background-color: #1d4ed8;
+}
+
+.signupform-button:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.signupform-error-message {
+  font-size: 13px;
+  margin-top: 16px;
+  color: #e11d48;
+  background-color: #fff1f2;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ffe4e6;
+  text-align: center;
+}
+
+.signupform-login-desc {
+  margin-top: 24px;
+  font-size: 14px;
+  text-align: center;
+  color: #64748b;
+}
+
+.signupform-link {
+  text-decoration: none;
+  color: #2563eb;
+  font-weight: 600;
+}

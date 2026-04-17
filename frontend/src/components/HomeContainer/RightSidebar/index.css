@@ -1,0 +1,124 @@
+.rightbar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* CARD */
+.rightbar-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+  transition: 0.2s;
+}
+
+.rightbar-card:hover {
+  transform: translateY(-2px);
+}
+
+/* TITLE */
+.rightbar-card h4 {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #475569;
+  font-weight: 600;
+}
+
+/* ITEM */
+.rightbar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 8px; 
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid transparent;
+}
+
+.rightbar-item:hover {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+/* IMAGE */
+.rightbar-item img {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px; 
+  object-fit: cover;
+  border: none;
+  background: #f1f5f9;
+}
+
+/* TEXT */
+.rightbar-item p {
+  font-size: 13.5px;
+  font-weight: 600; 
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.rightbar-item span {
+  font-size: 11px;
+  color: #94a3b8; 
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+/* BADGE */
+.badge {
+  background: #ef4444; 
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  height: 20px;
+  min-width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 0 6px;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
+
+/* EMPTY */
+.empty {
+  font-size: 12px;
+  color: #94a3b8;
+  text-align: center;
+  padding: 20px 10px;
+  border: 1px dashed #e2e8f0;
+  border-radius: 12px;
+  margin: 5px 0;
+}
+
+.rightbar-item span {
+  font-size: 11px;
+  color: #64748b;
+  display: block;
+}
+
+.more-text {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 6px;
+  border-radius: 8px;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 700;
+  transition: 0.2s;
+}
+
+.more-text:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  text-decoration: none;
+}

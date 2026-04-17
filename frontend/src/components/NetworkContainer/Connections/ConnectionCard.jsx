@@ -4,15 +4,13 @@ import "./index.css";
 
 class ConnectionCard extends Component {
   render() {
-    const { user } = this.props; // navigate prop is available via the wrapper if needed
-
-    // Safety check for user data
+    const { user } = this.props; 
     if (!user) return null;
 
     const {
       firstName = "",
       lastName = "",
-      profilePic = "", // Updated from photoUrl to profilePic
+      profilePic = "", 
       skills = [],
       _id,
     } = user;
@@ -25,7 +23,7 @@ class ConnectionCard extends Component {
           {/* ✅ Wrapped Image in Link for navigation */}
           <Link to={`/profile/${_id}`} className="connectioncard-avatar-link">
             <img
-              src={profilePic || "/avatar.png"} // Added fallback
+              src={profilePic || "/avatar.png"} 
               alt={`${firstName} ${lastName}`}
               className="connectioncard-profile-img"
             />
@@ -38,7 +36,7 @@ class ConnectionCard extends Component {
               </Link>
             </h2>
 
-            <div className="connection-skills">
+            <div className="connectioncard-skills">
               {safeSkills.slice(0, 5).map((skill, index) => (
                 <span key={index} className="connectioncard-skill-badge">
                   {skill}

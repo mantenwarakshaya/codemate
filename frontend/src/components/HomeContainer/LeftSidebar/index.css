@@ -1,0 +1,233 @@
+.profilecard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* --- BASE CARD STYLES --- */
+.profilecard-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
+  animation: profileFade 0.4s ease forwards;
+}
+
+.profilecard-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* --- PROFILE SECTION --- */
+.profilecard-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid #bfdbfe; 
+}
+
+.profilecard-avatar-wrapper {
+  position: relative;
+}
+
+.profilecard-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #e6f6ff;
+  object-fit: cover;
+}
+
+.profilecard-status-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid #ffffff;
+}
+
+.profilecard-userinfo h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.profilecard-userinfo p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* --- SECTION TITLES --- */
+.profilecard-title {
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+  font-size: 11px; 
+  font-weight: 800;
+  margin-bottom: 14px;
+  color: #64748b; 
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* --- QUICK ACTIONS --- */
+.profilecard-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profilecard-actions button {
+  padding: 10px 14px;
+  border: 1px solid #f1f5f9;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #334155; 
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profilecard-actions button:hover {
+  background: #ffffff;
+  border-color: #0967d2;
+  color: #0967d2;
+  box-shadow: 0 2px 8px rgba(9, 103, 210, 0.1);
+  transform: translateX(4px);
+
+}
+
+/* --- NETWORK STATS --- */
+.profilecard-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-radius: 8px;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.profilecard-stat span {
+  font-size: 14px;
+  color: #475569;
+  font-weight: 500;
+}
+
+.profilecard-stat strong {
+  color: #0967d2;
+  font-size: 13px;
+  background: #e6f6ff;
+  padding: 2px 10px;
+  border-radius: 12px; 
+  min-width: 28px;
+  text-align: center;
+}
+
+.profilecard-stat:hover {
+  background: #f8fafc;
+}
+
+.profilecard-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 8px 0;
+}
+
+/* --- SKILLS --- */
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  background: #eff6ff; 
+  color: #1e40af; 
+  border: 1px solid #dbeafe;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px; 
+  text-transform: capitalize;
+}
+
+.skill-tag:hover {
+  background: #e6f6ff;
+  border-color: #bfdbfe;
+  color: #0967d2;
+}
+
+/* --- SOCIAL LINKS --- */
+.profilecard-social-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profilecard-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #f8fafc; 
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.profilecard-btn svg {
+  font-size: 16px;
+  color: #0967d2;
+  transition: 0.3s;
+}
+
+.profilecard-btn:hover {
+  background: #0967d2;
+  color: #ffffff;
+  transform: translateX(5px);
+}
+
+.profilecard-btn:hover svg {
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.header-icon {
+  font-size: 14px;
+  color: #0967d2;
+}
+
+/* --- UTILS & ANIMATION --- */
+@keyframes profileFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .profilecard-avatar {
+    width: 56px;
+    height: 56px;
+  }
+  .profilecard-userinfo h4 {
+    font-size: 14px;
+  }
+}

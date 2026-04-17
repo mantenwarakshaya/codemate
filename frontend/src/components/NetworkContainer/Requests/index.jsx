@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../Header";
 import RequestCard from "./RequestCard";
 import "./index.css";
 
-import { LoaderView, ErrorView, EmptyView } from "../Common";
+import { LoaderView, ErrorView, EmptyView } from "../../Common";
 
 const BASE_URL = 
   process.env.NODE_ENV === "production"
@@ -19,13 +18,11 @@ const apiStatusConstants = {
 };
 
 class Requests extends Component {
-  // Initialize state replacing useState hooks
   state = {
     requests: [],
     apiStatus: apiStatusConstants.initial,
   };
 
-  // Replaces useEffect(() => { ... }, [])
   componentDidMount() {
     this.fetchRequests();
   }
@@ -69,7 +66,6 @@ class Requests extends Component {
 
       if (!res.ok) throw new Error("Failed to update request");
 
-      // Update state by filtering out the handled request
       this.setState((prevState) => ({
         requests: prevState.requests.filter((req) => req._id !== requestId),
       }));
@@ -81,7 +77,7 @@ class Requests extends Component {
   // 🟢 SUCCESS VIEW
   renderSuccessView = () => {
     const { requests } = this.state;
-    const { navigate } = this.props; // Access navigate from props
+    const { navigate } = this.props; 
 
     if (requests.length === 0) {
       return (
@@ -138,14 +134,12 @@ class Requests extends Component {
   render() {
     return (
       <>
-        <Header />
         <div className="request-page-container">{this.renderRequests()}</div>
       </>
     );
   }
 }
 
-// HOC Wrapper to allow use of useNavigate in a Class Component
 const RequestsWithNavigate = (props) => {
   const navigate = useNavigate();
   return <Requests {...props} navigate={navigate} />;

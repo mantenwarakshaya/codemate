@@ -2,37 +2,41 @@
    REQUEST PAGE (request- prefix)
 ========================= */
 .request-page-container {
-  min-height: 90vh;
-  background-color: rgb(243, 243, 243);
-  padding: 40px 16px;
+  min-height: auto;
+  background-color: transparent;
+  padding: 0;
 }
 
 .request-content-wrapper {
-  max-width: 1000px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
   display: flex;
   flex-direction: column;
 }
 
 .request-header {
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
   display: flex;
   align-items: center;
-  margin-bottom: 30px;
+  gap: 10px;
 }
 
 .request-title {
-  font-size: 28px;
-  font-weight: bold;
-  color: #475569;
-  margin-right: 10px;
+  font-size: 18px; 
+  font-weight: 800;
+  color: #334155;
+  margin: 0;
 }
 
 .request-badge {
   background-color: #0967d2;
   color: #ffffff;
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 14px;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 /* =====================================================
@@ -43,15 +47,18 @@
   justify-content: space-between;
   align-items: center;
   background-color: #ffffff;
-  padding: 24px;
-  margin-bottom: 16px;
-  border-radius: 16px;
-  border: 1px solid #bfdbfe;
-  transition: 0.2s;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: 1px solid #f1f5f9; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
 }
 
 .requestcard-card:hover {
-  transform: translateY(-2px);
+  transform: translateX(4px); 
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
 
 .requestcard-card-left {
@@ -61,11 +68,13 @@
 }
 
 .requestcard-profile-img {
-  width: 80px;
-  height: 80px;
+  width: 64px; 
+  height: 64px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #bfdbfe;
+  border: 2px solid #e6f6ff;
+  padding: o; 
+  background-color: #e6f6ff;
 }
 
 .requestcard-user-info {
@@ -75,17 +84,19 @@
 }
 
 .requestcard-user-name {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .requestcard-user-link {
   text-decoration: none;
-  color: #0967d2;
+  color: #1e293b; 
+  transition: color 0.2s;
 }
 
 .requestcard-user-link:hover {
-  text-decoration: underline;
+  color: #0967d2; 
+  text-decoration: none;
 }
 
 .requestcard-skills {
@@ -95,12 +106,13 @@
 }
 
 .requestcard-skill-badge {
-  padding: 4px 12px;
-  background-color: #e6f6ff;
-  color: #0967d2;
-  font-size: 12px;
-  border-radius: 9999px;
-  border: 1px solid #bfdbfe;
+  background-color: #f8fafc; 
+  color: #64748b;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
 }
 
 .requestcard-skill-more {
@@ -126,21 +138,32 @@
 
 .requestcard-accept-btn {
   background-color: #0967d2;
-  color: #ffffff;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  box-shadow: none;
+  color: #f1f5f9;
 }
 
 .requestcard-accept-btn:hover {
-  background-color: #0752a3;
+  background-color: #0856ad;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(9, 103, 210, 0.3);
 }
 
 .requestcard-reject-btn {
   background-color: transparent;
-  color: #0967d2;
-  border: 1px solid #bfdbfe;
+  color: #94a3b8; 
+  border: 1px solid #e2e8f0;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 13px;
 }
 
 .requestcard-reject-btn:hover {
-  background-color: #e6f6ff;
+  background-color: #f1f5f9;
+  color: #475569;
+  border-color: #cbd5e1;
 }
 
 .requestcard-btn-icon {
@@ -178,5 +201,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 45px; 
+    font-size: 20px;
   }
 }

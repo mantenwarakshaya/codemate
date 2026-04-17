@@ -1,14 +1,16 @@
+import { FaGithub, FaLinkedin, FaTwitter, FaUsers, FaLightbulb, FaBrain, FaShareAlt } from "react-icons/fa";
+import { HiLightningBolt } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./index.css";
 import { LoaderView, ErrorView } from "../../Common";
-import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { SiDiscord } from "react-icons/si";
+import { useNavigate } from "react-router-dom";
 
-const BASE_URL =
+const BASE_URL = 
   process.env.NODE_ENV === "production"
-    ? "/api"
-    : "http://localhost:7777/api";
+    ? "http://localhost:7777/api"
+    : "/api";
 
 const apiStatusConstants = {
   initial: "INITIAL",
@@ -17,11 +19,13 @@ const apiStatusConstants = {
   inProgress: "IN_PROGRESS",
 };
 
-const ProfileCard = () => {
+const LeftSidebar = () => {
   const [user, setUser] = useState(null);
   const [connectionsCount, setConnectionsCount] = useState(0);
   const [requestsCount, setRequestsCount] = useState(0);
   const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -71,22 +75,54 @@ const ProfileCard = () => {
           </div>
         </div>
 
+        {/* 🔹 QUICK ACTIONS */}
+        <div className="profilecard-card">
+          <h4 className="profilecard-title">
+            <HiLightningBolt className="header-icon" /> Quick Actions
+          </h4>
+          <div className="profilecard-actions">
+            <button onClick={() => navigate("/profile")}>View Profile</button>
+            <button onClick={() => navigate("/network", { state: { activeTab: "connections" } })}>Connections</button>
+            <button onClick={() => navigate("/network", { state: { activeTab: "requests" } })}>Requests</button>
+          </div>
+        </div>
+
         {/* 🔹 STATS */}
         <div className="profilecard-card profilecard-stats">
-          <h4 className="profilecard-title">🌐 Network</h4>
-
-          <div className="profilecard-stat">
+          <h4 className="profilecard-title">
+            <FaUsers className="header-icon" /> Network
+          </h4>
+          <div
+            className="profilecard-stat clickable"
+            onClick={() => navigate("/connections")}
+          >
             <span>Connections</span>
             <strong>{connectionsCount}</strong>
           </div>
 
           <div className="profilecard-divider" />
 
-          <div className="profilecard-stat">
+          <div
+            className="profilecard-stat clickable"
+            onClick={() => navigate("/requests")}
+          >
             <span>Requests</span>
             <strong>{requestsCount}</strong>
           </div>
         </div>
+
+        {/* 🔹 SKILLS */}
+        {user.skills?.length > 0 && (
+          <div className="profilecard-card">
+            <h4 className="profilecard-title">🧠 Skills</h4>
+
+            <div className="skills-list">
+              {user.skills.slice(0, 5).map((skill, i) => (
+                <span key={i} className="skill-tag">{skill}</span>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 🔹 SOCIAL */}
         <div className="profilecard-card profilecard-social">
@@ -130,18 +166,13 @@ const ProfileCard = () => {
   switch (apiStatus) {
     case apiStatusConstants.inProgress:
       return <LoaderView />;
-
     case apiStatusConstants.failure:
-      return (
-        <ErrorView message="Failed to load sidebar" onRetry={fetchData} />
-      );
-
+      return <ErrorView message="Failed to load sidebar" onRetry={fetchData} />;
     case apiStatusConstants.success:
       return renderContent();
-
     default:
       return null;
   }
 };
 
-export default ProfileCard;
+export default LeftSidebar;

@@ -5,11 +5,9 @@ import "./index.css";
 
 class RequestCard extends Component {
   render() {
-    // Accessing props in class component
     const { request, onAction } = this.props;
     const { fromUser } = request || {};
 
-    // Null check for user data
     if (!fromUser) return null;
 
     const { firstName, lastName, profilePic, skills = [], _id } = fromUser;
@@ -59,7 +57,6 @@ class RequestCard extends Component {
         <div className="requestcard-action-buttons">
           <button
             className="requestcard-accept-btn"
-            // Invoking parent method via props
             onClick={() => onAction(request._id, "accepted")}
           >
             <span className="requestcard-btn-text">Accept</span>

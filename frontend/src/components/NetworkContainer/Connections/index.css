@@ -1,0 +1,252 @@
+/* =========================
+   CONNECTION PAGE (connection- prefix)
+========================= */
+.connection-page-container {
+  background-color: transparent; 
+  padding: 0;
+}
+
+.connection-content-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.connection-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 10px;
+}
+
+.connection-title {
+  font-size: 18px; 
+  font-weight: 800;
+  color: #334155;
+  margin: 0;
+}
+
+.connection-badge {
+  background-color: #0967d2;
+  color: #ffffff;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+/* =========================
+   CONNECTION CARD (connectioncard- prefix)
+========================= */
+.connectioncard-card {
+  background-color: #ffffff;
+  padding: 16px 24px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: 1px solid #f1f5f9; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.connectioncard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+  border-color: #bfdbfe; 
+  background-color: #ffffff;
+}
+
+.connectioncard-card-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.connectioncard-profile-img {
+  width: 64px; 
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e6f6ff;
+}
+
+.connectioncard-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.connectioncard-user-name {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.connectioncard-user-link {
+  text-decoration: none;
+  color: #1e293b; 
+  transition: color 0.2s;
+}
+
+.connectioncard-user-link:hover {
+  color: #0967d2; 
+  text-decoration: none;
+}
+
+.connectioncard-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.connectioncard-skill-badge {
+  background-color: #f8fafc;
+  color: #64748b;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+}
+
+.connectioncard-skill-more {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.connectioncard-message-btn {
+  background-color: #e6f6ff; 
+  color: #0967d2;           
+  border: 1px solid #bfdbfe;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.connectioncard-message-btn:hover {
+  background-color: #0967d2;
+  color: #ffffff;
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.connectioncard-msg-text {
+  display: inline;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .connectioncard-card {
+    padding: 16px;
+  }
+  .connectioncard-profile-img {
+    width: 60px;
+    height: 60px;
+  }
+  .connectioncard-user-name {
+    font-size: 16px;
+  }
+  .connectioncard-message-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .connectioncard-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .connectioncard-card-left {
+    width: 100%;
+  }
+  .connectioncard-profile-img {
+    width: 50px;
+    height: 50px;
+  }
+  .connectioncard-message-btn {
+    align-self: flex-end;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: #e5e7eb;
+    color: #6b7280;
+    justify-content: center;
+  }
+  .connectioncard-msg-text {
+    display: none;
+  }
+}
+
+/* Tablet and Smaller Desktops */
+@media (max-width: 768px) {
+  .connection-content-wrapper {
+    padding: 0 16px;
+  }
+
+  .connectioncard-card {
+    padding: 16px;
+  }
+
+  .connectioncard-profile-img {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+/* Mobile Devices */
+@media (max-width: 580px) {
+  .connectioncard-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+  }
+
+  .connectioncard-card-left {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .connectioncard-user-info {
+    flex: 1;
+  }
+
+  .connectioncard-skills {
+    margin-top: 4px;
+  }
+
+  .connectioncard-message-btn {
+    width: 100%; 
+    text-align: center;
+    justify-content: center;
+    padding: 12px;
+  }
+ 
+}
+
+/* Extra Small Devices (Very old phones) */
+@media (max-width: 380px) {
+  .connectioncard-card-left {
+    gap: 12px;
+  }
+  
+  .connectioncard-profile-img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .connectioncard-user-name {
+    font-size: 15px;
+  }
+}

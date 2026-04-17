@@ -3,12 +3,14 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import LoginForm from "./components/LoginForm";
-import SignupForm from "./components/SignupForm";
+import LoginForm from "./components/FormContainer/LoginForm";
+import SignupForm from "./components/FormContainer/SignupForm";
 import Home from "./components/HomeContainer/Home";
 import Profile from "./components/Profile";
-import Connections from "./components/Connections";
-import Requests from "./components/Requests";
+import Connections from "./components/NetworkContainer/Connections";
+import Requests from "./components/NetworkContainer/Requests";
+import Notifications from "./components/Notifications";
+import Network from "./components/NetworkContainer/Network";
 import ShowProfile from "./components/ShowProfile";
 import Chat from "./components/ChatContainer/Chat";
 import NotFound from "./components/NotFound";
@@ -101,6 +103,24 @@ const App = () => {
         element={
           <ProtectedRoute>
             <Chat />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/chat/:targetUserId"
+        element={
+          <ProtectedRoute>
+            <Notifications />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/network"
+        element={
+          <ProtectedRoute>
+            <Network />
           </ProtectedRoute>
         }
       />

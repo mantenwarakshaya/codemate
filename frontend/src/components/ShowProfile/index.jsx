@@ -84,108 +84,104 @@ class ShowProfile extends Component {
 
   renderSuccessView = () => {
     const { user, isProcessingAction } = this.state;
-    // requestId and fromRequestPage are passed via Link state in RequestCard
     const { requestId, fromRequestPage } = this.props.locationState || {};
 
-    if (!user) {
-      return <EmptyView message="User not available." />;
-    }
+    if (!user) return <EmptyView message="User not available." />;
 
     return (
-      <div className="showprofile-feed-container">
-  <div className="showprofile-user-card">
-    {/* LEFT SECTION */}
-    <div className="showprofile-left">
-      <div className="showprofile-image-ring">
-        <img
-          src={user.profilePic || "/avatar.png"}
-          alt={`${user.firstName}'s profile`}
-          className="showprofile-profile-img"
-        />
-      </div>
-
-      <div className="showprofile-social-pill-grid">
-        {user.github && (
-          <a href={user.github} target="_blank" rel="noreferrer" className="showprofile-social-button">
-            <FaGithub /> GitHub
-          </a>
-        )}
-        {user.linkedin && (
-          <a href={user.linkedin} target="_blank" rel="noreferrer" className="showprofile-social-button">
-            <FaLinkedin /> LinkedIn
-          </a>
-        )}
-        {user.twitter && (
-          <a href={user.twitter} target="_blank" rel="noreferrer" className="showprofile-social-button">
-            <FaTwitter /> Twitter
-          </a>
-        )}
-        {user.discord && (
-          <a href={user.discord} target="_blank" rel="noreferrer" className="showprofile-social-button">
-            <SiDiscord /> Discord
-          </a>
-        )}
-      </div>
-    </div>
-
-    {/* RIGHT SECTION */}
-    <div className="showprofile-right">
-      <h2 className="showprofile-feed-user-name">
-        {user.firstName} {user.lastName}
-      </h2>
-
-      {user.emailId && (
-        <p className="showprofile-user-email">{user.emailId}</p>
-      )}
-
-      <div className="showprofile-tags">
-        <span className="showprofile-tag">
-          Experience: {user.experience ?? 0}{" "}
-          {user.experience === 1 ? "year" : "years"}
-        </span>
-      </div>
-
-      <p className="showprofile-bio-box">
-        {user.about || "Full Stack Developer ready to collaborate."}
-      </p>
-
-      <div className="showprofile-skills">
-        {user.skills?.map((skill, i) => (
-          <span key={i} className="showprofile-skill">
-            {skill}
-          </span>
-        ))}
-      </div>
-
-      <div className="showprofile-action-footer">
-        {fromRequestPage && requestId ? (
-          <div className="showprofile-request-actions">
-            <button 
-              className="showprofile-accept-btn" 
-              onClick={() => this.handleRequestAction("accepted")}
-              disabled={isProcessingAction}
-            >
-              <FaCheck /> {isProcessingAction ? "..." : "Accept"}
-            </button>
-            <button 
-              className="showprofile-reject-btn" 
-              onClick={() => this.handleRequestAction("rejected")}
-              disabled={isProcessingAction}
-            >
-              <FaTimes /> {isProcessingAction ? "..." : "Reject"}
-            </button>
+      <div className="profile-container">
+        <div className="profile-card">
+          {/* LEFT COLUMN: Identity */}
+          <div className="profile-sidebar">
+            <div className="profile-image-container">
+              <img
+                src={user.profilePic || "/avatar.png"}
+                alt="profile"
+                className="profile-avatar"
+              />
+            </div>
+            
+            <div className="social-links-grid">
+              {user.github && (
+                <a href={user.github} target="_blank" rel="noreferrer" className="social-pill">
+                  <FaGithub /> GitHub
+                </a>
+              )}
+              {user.linkedin && (
+                <a href={user.linkedin} target="_blank" rel="noreferrer" className="social-pill">
+                  <FaLinkedin /> LinkedIn
+                </a>
+              )}
+              {user.twitter && (
+                <a href={user.twitter} target="_blank" rel="noreferrer" className="social-pill">
+                  <FaTwitter /> Twitter
+                </a>
+              )}
+              {user.discord && (
+                <a href={user.discord} target="_blank" rel="noreferrer" className="social-pill">
+                  <SiDiscord /> Discord
+                </a>
+              )}
+            </div>
           </div>
-        ) : (
-          <Link to={`/chat/${user._id}`} className="showprofile-message-link">
-            <button className="showprofile-icon-btn">
-              <MdMessage /> Message
-            </button>
-          </Link>
-        )}
+
+          {/* RIGHT COLUMN: Content */}
+          <div className="profile-main">
+            <div className="profile-header">
+              <h2 className="user-name">{user.firstName} {user.lastName}</h2>
+              <div className="user-meta">
+                <span className="meta-item">{user.emailId}</span>
+                <span className="meta-divider">•</span>
+                <span className="meta-item experience-badge">
+                  {user.experience ?? 0} {user.experience === 1 ? "Year" : "Years"} Exp.
+                </span>
+              </div>
+            </div>
+
+            <div className="bio-section">
+              <p className="bio-text">
+                {user.about || "Full Stack Developer ready to collaborate."}
+              </p>
+            </div>
+
+            <div className="skills-section">
+              <h4 className="section-label">Technical Stack</h4>
+              <div className="skills-wrapper">
+                {user.skills?.map((skill, i) => (
+                  <span key={i} className="skill-tag">{skill}</span>
+                ))}
+              </div>
+            </div>
+
+            <div className="profile-actions">
+              {fromRequestPage && requestId ? (
+                <div className="request-controls">
+                  <button 
+                    className="btn-accept" 
+                    onClick={() => this.handleRequestAction("accepted")}
+                    disabled={isProcessingAction}
+                  >
+                    <FaCheck /> {isProcessingAction ? "Processing..." : "Accept Request"}
+                  </button>
+                  <button 
+                    className="btn-reject" 
+                    onClick={() => this.handleRequestAction("rejected")}
+                    disabled={isProcessingAction}
+                  >
+                    <FaTimes /> Reject
+                  </button>
+                </div>
+              ) : (
+                <Link to={`/chat/${user._id}`} className="message-link">
+                  <button className="btn-primary">
+                    <MdMessage /> Send Message
+                  </button>
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
     );
   };
 

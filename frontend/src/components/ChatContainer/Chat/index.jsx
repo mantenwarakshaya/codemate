@@ -9,7 +9,7 @@ import ConnectionsChatList from "../ConnectionsChatList";
 import Header from "../../Header";
 import navlogo from "../../../assets/navlogo.png";
 
-import { LoaderView, ErrorView, EmptyView } from "../../Common"; // ✅ IMPORTANT
+import { LoaderView, ErrorView, EmptyView } from "../../Common";
 
 import "./index.css";
 
@@ -23,25 +23,32 @@ const apiStatusConstants = {
 const Chat = () => {
   const { targetUserId } = useParams();
   const navigate = useNavigate();
-
   const user = useSelector((store) => store.user);
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
   const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial);
 
   const socketRef = useRef(null);
   const scrollRef = useRef(null);
 
-  // ✅ AUTO SCROLL
+  // Auto open/close sidebar based on route
+  useEffect(() => {
+    if (targetUserId) {
+      setIsSidebarOpen(false); // open chat
+    } else {
+      setIsSidebarOpen(true); // show sidebar
+    }
+  }, [targetUserId]);
+
+  // Auto scroll
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // ✅ FETCH USER + MESSAGES TOGETHER
+  // Fetch data
   useEffect(() => {
     const fetchChatData = async () => {
       if (!targetUserId) return;
@@ -50,17 +57,12 @@ const Chat = () => {
 
       try {
         const [userRes, msgRes] = await Promise.all([
-          axios.get(`/api/user/${targetUserId}`, {
-            withCredentials: true,
-          }),
-          axios.get(`/api/messages/${targetUserId}`, {
-            withCredentials: true,
-          }),
+          axios.get(`/api/user/${targetUserId}`, { withCredentials: true }),
+          axios.get(`/api/messages/${targetUserId}`, { withCredentials: true }),
         ]);
 
         setSelectedUser(userRes.data?.data);
         setMessages(msgRes.data || []);
-
         setApiStatus(apiStatusConstants.success);
       } catch (err) {
         console.error(err);
@@ -71,7 +73,7 @@ const Chat = () => {
     fetchChatData();
   }, [targetUserId]);
 
-  // ✅ SOCKET
+  // Socket
   useEffect(() => {
     if (!user?._id) return;
 
@@ -96,7 +98,7 @@ const Chat = () => {
     return () => socketRef.current?.disconnect();
   }, [user?._id, targetUserId]);
 
-  // ✅ SEND MESSAGE
+  // Send message
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
 
@@ -114,161 +116,126 @@ const Chat = () => {
     }
   };
 
-  // ✅ MAIN CONTENT SWITCH
   const renderChatContent = () => {
     if (!targetUserId) {
       return (
-        <div className="chat-empty chat-empty-container">
-          <div className="chat-empty-content chat-empty-wrapper">
-            <img
-              src={navlogo}
-              alt="Codemate"
-              className="chat-empty-logo chat-logo"
-            />
-
-            <h2 className="chat-empty-heading">
-              {isSidebarOpen
-                ? "Select a Connection"
-                : "Welcome to Codemate Chat"}
-            </h2>
-
-            <p className="chat-empty-text">
-              {isSidebarOpen
-                ? "Choose a connection from the sidebar to start chatting."
-                : "Collaborate, share ideas, and solve problems faster."}
-            </p>
-
-            {!isSidebarOpen && (
-              <button
-                className="chat-empty-btn chat-open-btn"
-                onClick={() => setIsSidebarOpen(true)}
-              >
-                Open Conversations
-              </button>
-            )}
+        <div className="chat-empty">
+          <div className="chat-empty-content">
+            <img src={navlogo} alt="Codemate" className="chat-empty-logo" />
+            <h2>Your Inbox is Quiet</h2>
+            <p>Connect with developers to start chatting.</p>
           </div>
         </div>
       );
     }
 
-    switch (apiStatus) {
-      case apiStatusConstants.inProgress:
-        return <LoaderView />;
+    if (apiStatus === apiStatusConstants.inProgress) return <LoaderView />;
+    if (apiStatus === apiStatusConstants.failure)
+      return <ErrorView message="Failed to load chat" onRetry={() => window.location.reload()} />;
 
-      case apiStatusConstants.failure:
-        return (
-          <ErrorView
-            message="Failed to load chat"
-            onRetry={() => window.location.reload()}
-          />
-        );
+    return (
+      <>
+        {/* HEADER */}
+        <div className="chat-header-main">
+          <div className="chat-header-left">
+            <button
+              className="chat-menu-btn"
+              onClick={() => setIsSidebarOpen(true)}
+            >
+              <Menu size={20} />
+            </button>
 
-      case apiStatusConstants.success:
-        return (
-          <>
-            {/* HEADER */}
-            <div className="chat-header-main">
-              <div className="chat-header-left">
-                <button
-                  className="chat-menu-btn"
-                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            <img
+              src={selectedUser?.profilePic || "/avatar.png"}
+              className="chat-header-avatar"
+              alt="user"
+            />
+
+            <h3 className="chat-header-name">
+              {selectedUser?.firstName} {selectedUser?.lastName}
+            </h3>
+          </div>
+
+          <button className="chat-close-btn" onClick={() => navigate("/chat")}>
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* MESSAGES */}
+        <div className="chat-messages-area">
+          {messages.length === 0 ? (
+            <EmptyView message="Start conversation 🚀" />
+          ) : (
+            messages.map((msg, index) => {
+              const isOwn = (msg.senderId?._id || msg.senderId) === user._id;
+
+              return (
+                <div
+                  key={index}
+                  className={`chat-row ${isOwn ? "chat-row-end" : "chat-row-start"}`}
                 >
-                  <Menu size={20} />
-                </button>
+                  {!isOwn && (
+                    <img
+                      src={selectedUser.profilePic || "/avatar.png"}
+                      className="chat-message-avatar"
+                      alt="user"
+                    />
+                  )}
 
-                <img
-                  src={selectedUser?.profilePic || "/avatar.png"}
-                  className="chat-header-avatar"
-                  alt="user"
-                />
-
-                <div className="chat-header-text">
-                  <h3 className="chat-header-name">
-                    {selectedUser?.firstName} {selectedUser?.lastName}
-                  </h3>
-                </div>
-              </div>
-
-              <button
-                className="chat-close-btn"
-                onClick={() => navigate("/chat")}
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* MESSAGES */}
-            <div className="chat-messages-area">
-              {messages.length === 0 ? (
-                <EmptyView message="No messages yet. Start the conversation!" />
-              ) : (
-                messages.map((msg, index) => {
-                  const isOwn =
-                    (msg.senderId?._id || msg.senderId) === user._id;
-
-                  return (
+                  <div className="chat-message-content">
                     <div
-                      key={index}
-                      className={`chat-row ${
-                        isOwn ? "chat-row-end" : "chat-row-start"
+                      className={`chat-bubble ${
+                        isOwn ? "chat-bubble-own" : "chat-bubble-target"
                       }`}
                     >
-                      {!isOwn ? (
-                        <>
-                          <img
-                            src={selectedUser.profilePic || "/avatar.png"}
-                            className="chat-message-avatar"
-                            alt="user"
-                          />
-                          <div className="chat-bubble chat-bubble-target">
-                            {msg.text}
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="chat-bubble chat-bubble-own">
-                            {msg.text}
-                          </div>
-                          <img
-                            src={user.profilePic || "/avatar.png"}
-                            className="chat-message-avatar"
-                            alt="me"
-                          />
-                        </>
-                      )}
+                      {msg.text}
                     </div>
-                  );
-                })
-              )}
-              <div ref={scrollRef} />
-            </div>
 
-            {/* INPUT */}
-            <div className="chat-footer-main">
-              <div className="chat-input-wrapper">
-                <input
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                  className="chat-input-field"
-                  placeholder="Type a message..."
-                />
+                    {/* ✅ TIMESTAMP */}
+                    <span className="chat-time">
+                      {new Date(msg.createdAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
 
-                <button className="chat-icon-btn">
-                  <ImageIcon size={20} />
-                </button>
+                  {isOwn && (
+                    <img
+                      src={user.profilePic || "/avatar.png"}
+                      className="chat-message-avatar"
+                      alt="me"
+                    />
+                  )}
+                </div>
+              );
+            })
+          )}
+          <div ref={scrollRef} />
+        </div>
 
-                <button onClick={sendMessage} className="chat-send-btn">
-                  <Send size={18} />
-                </button>
-              </div>
-            </div>
-          </>
-        );
+        {/* INPUT */}
+        <div className="chat-footer-main">
+          <div className="chat-input-wrapper">
+            <input
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+              className="chat-input-field"
+              placeholder="Type a message..."
+            />
 
-      default:
-        return null;
-    }
+            <button className="chat-icon-btn">
+              <ImageIcon size={20} />
+            </button>
+
+            <button onClick={sendMessage} className="chat-send-btn">
+              <Send size={18} />
+            </button>
+          </div>
+        </div>
+      </>
+    );
   };
 
   return (
@@ -278,18 +245,25 @@ const Chat = () => {
       <div className="chat-layout-container">
         {/* SIDEBAR */}
         <div
-          className={`chat-sidebar-container ${
-            isSidebarOpen ? "open" : "collapsed"
-          }`}
+          className={`chat-sidebar-container 
+            ${isSidebarOpen ? "open" : "collapsed"}
+          `}
         >
           <ConnectionsChatList
-            onSelectUser={(user) => navigate(`/chat/${user._id}`)}
+            onSelectUser={(u) => {
+              navigate(`/chat/${u._id}`);
+              setIsSidebarOpen(false); 
+            }}
             loggedInUserId={user?._id}
           />
         </div>
 
-        {/* MAIN */}
-        <div className="chat-main-container">
+        {/* CHAT */}
+        <div
+          className={`chat-main-container 
+            ${isSidebarOpen ? "mobile-hidden" : ""}
+          `}
+        >
           {renderChatContent()}
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./index.css";
 import { LoaderView, ErrorView, EmptyView } from "../../Common";
@@ -20,11 +21,13 @@ const ConnectionsChatList = ({ onSelectUser, loggedInUserId }) => {
   const [apiStatus, setApiStatus] = useState(apiStatusConstants.INITIAL);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
+const navigate = useNavigate();
+
   useEffect(() => {
     fetchConnections();
   }, []);
 
-  // 🔥 Fetch connections + last messages
+  // Fetch connections + last messages
   const fetchConnections = async () => {
     setApiStatus(apiStatusConstants.IN_PROGRESS);
 
@@ -76,7 +79,7 @@ const ConnectionsChatList = ({ onSelectUser, loggedInUserId }) => {
     }
   };
 
-  // 🔥 Format message preview
+  // Format message preview
   const formatMessage = (msg) => {
     if (!msg) return "Start a conversation";
 
@@ -93,13 +96,14 @@ const ConnectionsChatList = ({ onSelectUser, loggedInUserId }) => {
     return text;
   };
 
-  // ✅ Success UI
+  // Success UI
   const renderSuccessView = () => {
     if (chatData.length === 0) {
       return (
         <EmptyView
           message="No chats yet."
           actionText="Start Connecting"
+          onAction={() => navigate("/")}
         />
       );
     }
@@ -148,7 +152,7 @@ const ConnectionsChatList = ({ onSelectUser, loggedInUserId }) => {
     );
   };
 
-  // ✅ API State Handler
+  // API State Handler
   const renderContent = () => {
     switch (apiStatus) {
       case apiStatusConstants.IN_PROGRESS:

@@ -19,14 +19,12 @@ const apiStatusConstants = {
 };
 
 class Feed extends Component {
-  // Initialize state replacing useState hooks
   state = {
     feed: [],
     currentIndex: 0,
     apiStatus: apiStatusConstants.initial,
   };
 
-  // Replaces useEffect(() => { getFeed() }, [])
   componentDidMount() {
     this.getFeed();
   }
@@ -70,7 +68,6 @@ class Feed extends Component {
 
       if (!res.ok) throw new Error("Request failed");
 
-      // Updating index state using the previous state value
       this.setState((prevState) => ({
         currentIndex: prevState.currentIndex + 1,
       }));
@@ -115,25 +112,25 @@ class Feed extends Component {
           <div className="feed-social-bar">
             {user.github && (
               <a href={user.github} target="_blank" rel="noreferrer">
-                <FaGithub size={22} />
+                <FaGithub size={22} className="fa-github"/>
               </a>
             )}
 
             {user.linkedin && (
               <a href={user.linkedin} target="_blank" rel="noreferrer">
-                <FaLinkedin size={22} />
+                <FaLinkedin size={22} className="fa-linkedin"/>
               </a>
             )}
 
             {user.twitter && (
               <a href={user.twitter} target="_blank" rel="noreferrer">
-                <FaTwitter size={22} />
+                <FaTwitter size={22} className="fa-twitter"/>
               </a>
             )}
 
             {user.discord && (
               <a href={user.discord} target="_blank" rel="noreferrer">
-                <SiDiscord size={22} />
+                <SiDiscord size={22} className="fa-discord"/>
               </a>
             )}
           </div>

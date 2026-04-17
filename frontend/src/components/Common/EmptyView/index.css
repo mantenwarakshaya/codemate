@@ -1,5 +1,6 @@
 .empty-container {
-  height: 90vh;
+  min-height: 700px;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
