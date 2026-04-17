@@ -45,7 +45,7 @@ class LoginForm extends Component {
     const userDetails = { emailId, password }
     
     try {
-      const response = await fetch(`${BASE_URL}/api/login`, {
+      const response = await fetch(`${BASE_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

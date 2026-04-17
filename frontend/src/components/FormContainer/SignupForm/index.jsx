@@ -47,7 +47,7 @@ class SignupForm extends Component {
     const userDetails = {firstName, lastName, emailId, password}
 
     try {
-      const response = await fetch(`${BASE_URL}/api/signup`, {
+      const response = await fetch(`${BASE_URL}/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
