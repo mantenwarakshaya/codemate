@@ -9,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 
 const BASE_URL = 
   process.env.NODE_ENV === "production"
-    ? "http://localhost:7777/api"
-    : "/api";
+    ? "/api"
+    : "http://localhost:7777/api";
 
 const apiStatusConstants = {
   initial: "INITIAL",

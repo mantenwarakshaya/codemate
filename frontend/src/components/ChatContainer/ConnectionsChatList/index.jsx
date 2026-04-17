@@ -4,7 +4,7 @@ import axios from "axios";
 import "./index.css";
 import { LoaderView, ErrorView, EmptyView } from "../../Common";
 
-const BASE_URL =
+const BASE_URL = 
   process.env.NODE_ENV === "production"
     ? "/api"
     : "http://localhost:7777/api";

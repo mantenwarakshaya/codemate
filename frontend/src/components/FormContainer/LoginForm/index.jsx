@@ -6,8 +6,11 @@ import { MdEmail, MdLock } from 'react-icons/md'
 import './index.css'
 import navlogo from "../../../assets/navlogo.png";
 
-const BASE_URL = location.hostname === "localhost" ? "http://localhost:7777" : "/api";
-    
+const BASE_URL = 
+  process.env.NODE_ENV === "production"
+    ? "/api"
+    : "http://localhost:7777/api";
+        
 class LoginForm extends Component {
   constructor(props) {
     super(props)

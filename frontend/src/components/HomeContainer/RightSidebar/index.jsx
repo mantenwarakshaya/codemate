@@ -6,9 +6,8 @@ import { LoaderView, ErrorView } from "../../Common";
 
 const BASE_URL = 
   process.env.NODE_ENV === "production"
-    ? "http://localhost:7777/api"
-    : "/api";
-
+    ? "/api"
+    : "http://localhost:7777/api";
 const LIMIT = 3;
 
 const apiStatusConstants = {
