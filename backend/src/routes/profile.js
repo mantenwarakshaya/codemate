@@ -28,7 +28,7 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     if (profilePic) {
       try {
         const uploadResponse = await cloudinary.uploader.upload(profilePic, {
-          folder: "profile_pics", // Optional: organizes images in Cloudinary
+          folder: "profile_pics", // organizes images in Cloudinary
         });
         // Set the secure URL to the profilePic field before saving
         req.body.profilePic = uploadResponse.secure_url;
