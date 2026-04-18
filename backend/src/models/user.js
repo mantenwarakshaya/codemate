@@ -20,19 +20,17 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
-      validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error("Invalid email address: " + value);
-        }
+      validate: {
+        validator: (v) => validator.isEmail(v),
+        message: "Please enter a valid email address",
       },
     },
     password: {
       type: String,
       required: true,
-      validate(value) {
-        if (!validator.isStrongPassword(value)) {
-          throw new Error("Enter a Strong Password");
-        }
+      validate: {
+        validator: (v) => validator.isStrongPassword(v),
+        message: "Password must be strong (min 8 chars, uppercase, lowercase, number, symbol)",
       },
     },
     age: {
@@ -43,39 +41,46 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["male", "female", "other"],
     },
-
-    // ✅ NEW FIELDS
     experience: {
       type: Number,
       min: 0,
     },
     github: {
       type: String,
-      validate: (v) => !v || validator.isURL(v),
+      validate: {
+        validator: (v) => !v || validator.isURL(v),
+        message: "Please enter a valid GitHub URL",
+      },
     },
     linkedin: {
       type: String,
-      validate: (v) => !v || validator.isURL(v),
+      validate: {
+        validator: (v) => !v || validator.isURL(v),
+        message: "Please enter a valid LinkedIn URL",
+      },
     },
     twitter: {
-      type: String, 
-      validate: (v) => !v || validator.isURL(v),
+      type: String,
+      validate: {
+        validator: (v) => !v || validator.isURL(v),
+        message: "Please enter a valid Twitter URL",
+      },
     },
     discord: {
-      type: String, 
-      validate: (v) => !v || validator.isURL(v),
+      type: String,
+      validate: {
+        validator: (v) => !v || validator.isURL(v),
+        message: "Please enter a valid Discord URL",
+      },
     },
-
     profilePic: {
       type: String,
       default: "",
-      validate(value) {
-        if (value && !validator.isURL(value)) {
-          throw new Error("Invalid Profile Picture URL");
-        }
-      },
+      validate: {
+        validator: (v) => !v || validator.isURL(v),
+        message: "Please enter a valid profile picture URL",
+      }
     },
-
     about: {
       type: String,
       default: "Hey there! I am using CodeMate.",
@@ -83,11 +88,14 @@ const userSchema = new mongoose.Schema(
     },
     skills: {
       type: [String],
-      validate(value) {
-        if (value.length > 10) {
-          throw new Error("You can only add up to 10 skills");
-        }
+      validate: {
+        validator: (v) => v.length <= 10,
+        message: "You can only add up to 10 skills",
       },
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
@@ -103,6 +111,20 @@ userSchema.methods.getJWT = async function () {
 // Password check
 userSchema.methods.validatePassword = async function (passwordInput) {
   return bcrypt.compare(passwordInput, this.password);
+};
+
+userSchema.methods.getEmailVerificationToken = function () {
+  return jwt.sign(
+    { _id: this._id },
+    process.env.JWT_SECRET,
+    { expiresIn: "15m" } // expires in 15 mins
+  );
+};
+
+userSchema.methods.getResetPasswordToken = function () {
+  return jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: "15m", // expires in 15 mins
+  });
 };
 
 module.exports = mongoose.model("User", userSchema);
