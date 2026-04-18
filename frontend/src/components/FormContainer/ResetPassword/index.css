@@ -1,0 +1,135 @@
+/* ========================= */
+/* MAIN LAYOUT */
+/* ========================= */
+.rp-main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ========================= */
+/* CARD */
+/* ========================= */
+.rp-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  padding: 36px;
+  border-radius: 12px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================= */
+/* TITLE */
+/* ========================= */
+.rp-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #2563eb;
+  margin-bottom: 6px;
+}
+
+/* ========================= */
+/* SUBTITLE */
+/* ========================= */
+.rp-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* ========================= */
+/* FIELD */
+/* ========================= */
+.rp-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.rp-label {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+/* ========================= */
+/* INPUT */
+/* ========================= */
+.rp-input {
+  height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.rp-input::placeholder {
+  color: #94a3b8;
+}
+
+.rp-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* ========================= */
+/* BUTTON */
+/* ========================= */
+.rp-btn {
+  height: 44px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rp-btn:hover {
+  background: #1d4ed8;
+}
+
+.rp-btn:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+/* ========================= */
+/* MESSAGE */
+/* ========================= */
+.rp-message {
+  margin-top: 14px;
+  font-size: 13px;
+  text-align: center;
+  padding: 10px 12px;
+  border-radius: 6px;
+}
+
+/* SUCCESS */
+.rp-message.success {
+  color: #166534;
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+/* ERROR */
+.rp-message.error {
+  color: #b91c1c;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+}

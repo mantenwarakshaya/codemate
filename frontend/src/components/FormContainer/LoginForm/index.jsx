@@ -111,7 +111,11 @@ class LoginForm extends Component {
           <button type="submit" className="loginform-button" disabled={isLoading}>
             {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
-
+          <div className="loginform-forgot-row">
+              <Link to="/forgot-password" className="loginform-forgot-link">
+                Forgot password?
+              </Link>
+          </div>
           {showSubmitError && <p className="loginform-error-message">{errorMsg}</p>}
 
           <div className="loginform-desc">

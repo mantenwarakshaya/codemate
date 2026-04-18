@@ -5,6 +5,10 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import LoginForm from "./components/FormContainer/LoginForm";
 import SignupForm from "./components/FormContainer/SignupForm";
+import VerifyEmail from "./components/FormContainer/VerifyEmail";
+import ForgotPassword from "./components/FormContainer/ForgotPassword";
+import ResetPassword from "./components/FormContainer/ResetPassword";
+
 import Home from "./components/HomeContainer/Home";
 import Profile from "./components/Profile";
 import Connections from "./components/NetworkContainer/Connections";
@@ -23,15 +27,22 @@ const App = () => {
   useEffect(() => {
     const syncUser = async () => {
       try {
-        // This calls your existing profile/view route
-        const res = await axios.get("/api/profile/view", { withCredentials: true });
-        
-        // This fills Redux so the Chat component stops saying "Loading"
+        const res = await axios.get("/api/profile/view", {
+          withCredentials: true,
+        });
+
         dispatch({ type: "SET_USER", payload: res.data });
       } catch (err) {
-        console.log("No active session found");
+        // ✅ Ignore 401 (user not logged in)
+        if (err.response?.status === 401) {
+          return;
+        }
+
+        // ❗ Log only real errors
+        console.error("Profile fetch error:", err);
       }
     };
+
     syncUser();
   }, [dispatch]);
   return(
@@ -40,7 +51,9 @@ const App = () => {
       {/* Public */}
       <Route path="/login" element={<LoginForm />} />
       <Route path="/signup" element={<SignupForm />} />
-
+      <Route path="/verify-email/:token" element={<VerifyEmail />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
 
       {/* Protected */}
       <Route
@@ -108,7 +121,7 @@ const App = () => {
       />
 
       <Route
-        path="/chat/:targetUserId"
+        path="/notifications"
         element={
           <ProtectedRoute>
             <Notifications />

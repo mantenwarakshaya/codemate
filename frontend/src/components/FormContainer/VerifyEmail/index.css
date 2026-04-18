@@ -1,0 +1,97 @@
+/* ========================= */
+/* MAIN */
+/* ========================= */
+.ve-main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ========================= */
+/* CARD */
+/* ========================= */
+.ve-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  padding: 36px;
+  border-radius: 12px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+/* ========================= */
+/* LOGO */
+/* ========================= */
+.ve-logo {
+  width: 130px;
+  margin-bottom: 20px;
+}
+
+/* ========================= */
+/* TITLE */
+/* ========================= */
+.ve-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+/* SUCCESS */
+.ve-title.success {
+  color: #16a34a;
+}
+
+/* ERROR */
+.ve-title.error {
+  color: #dc2626;
+}
+
+/* ========================= */
+/* SUBTITLE */
+/* ========================= */
+.ve-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* ========================= */
+/* BUTTON */
+/* ========================= */
+.ve-btn {
+  display: inline-block;
+  padding: 10px 16px;
+  background: #2563eb;
+  color: #ffffff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.ve-btn:hover {
+  background: #1d4ed8;
+}
+
+/* ========================= */
+/* LINK */
+/* ========================= */
+.ve-link {
+  font-size: 14px;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.ve-link:hover {
+  text-decoration: underline;
+}

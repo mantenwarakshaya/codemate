@@ -105,6 +105,27 @@
   background-color: #1d4ed8;
 }
 
+/* Forgot Password Row */
+.loginform-forgot-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+/* Forgot Link */
+.loginform-forgot-link {
+  font-size: 13px;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.loginform-forgot-link:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
 .loginform-error-message {
   font-size: 13px;
   margin-top: 16px;

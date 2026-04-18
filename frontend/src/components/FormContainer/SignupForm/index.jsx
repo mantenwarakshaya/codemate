@@ -1,16 +1,16 @@
-import {Component} from 'react'
+import { Component } from 'react'
 import Cookies from 'js-cookie'
-import {Navigate, Link} from 'react-router-dom'
+import { Navigate, Link } from 'react-router-dom'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { MdEmail, MdLock, MdPerson } from 'react-icons/md'
 import './index.css'
 import navlogo from "../../../assets/navlogo.png";
 
-const BASE_URL = 
+const BASE_URL =
   process.env.NODE_ENV === "production"
     ? "/api"
     : "http://localhost:7777/api";
-    
+
 class SignupForm extends Component {
   state = {
     firstName: '',
@@ -21,30 +21,44 @@ class SignupForm extends Component {
     errorMsg: '',
     showPassword: false,
     isLoading: false,
+    isEmailSent: false,
   }
 
-  onChangeInput = event => {
-    this.setState({[event.target.id]: event.target.value})
+  onChangeInput = (event) => {
+    this.setState({ [event.target.id]: event.target.value })
   }
 
   togglePasswordVisibility = () => {
-    this.setState(prevState => ({ showPassword: !prevState.showPassword }))
+    this.setState(prev => ({ showPassword: !prev.showPassword }))
   }
 
   onSubmitSuccess = () => {
-    window.location.replace('/login')
+    this.setState({
+      isEmailSent: true,
+      isLoading: false,
+      showSubmitError: false,
+    })
   }
 
-  onSubmitFailure = errorMsg => {
-    this.setState({showSubmitError: true, errorMsg: errorMsg || "Something went wrong", isLoading: false})
+  onSubmitFailure = (errorMsg) => {
+    this.setState({
+      showSubmitError: true,
+      errorMsg: errorMsg || "Something went wrong",
+      isLoading: false,
+    })
   }
 
-  submitForm = async event => {
+  submitForm = async (event) => {
     event.preventDefault()
-    this.setState({isLoading: true, showSubmitError: false})
 
-    const {firstName, lastName, emailId, password} = this.state
-    const userDetails = {firstName, lastName, emailId, password}
+    const { firstName, lastName, emailId, password } = this.state
+
+    this.setState({
+      isLoading: true,
+      showSubmitError: false,
+    })
+
+    const userDetails = { firstName, lastName, emailId, password }
 
     try {
       const response = await fetch(`${BASE_URL}/signup`, {
@@ -57,26 +71,158 @@ class SignupForm extends Component {
       if (response.ok) {
         this.onSubmitSuccess()
       } else {
-        const data = await response.text()
-        this.onSubmitFailure(data)
+        let data
+        try {
+          data = await response.json()
+        } catch {
+          data = await response.text()
+        }
+        this.onSubmitFailure(data.message || data)
       }
     } catch (error) {
       this.onSubmitFailure("Server error. Please try again later.")
     }
   }
 
-  render() {
-    const {firstName, lastName, emailId, password, showSubmitError, errorMsg, showPassword, isLoading} = this.state
-    if (Cookies.get('jwt_token') !== undefined) return <Navigate to="/" replace />
+  resendVerificationEmail = async () => {
+    const { emailId } = this.state
 
+    if (!emailId) {
+      return this.setState({
+        showSubmitError: true,
+        errorMsg: "Email missing",
+      })
+    }
+
+    this.setState({
+      isLoading: true,
+      showSubmitError: false,
+    })
+
+    try {
+      const response = await fetch(`${BASE_URL}/resend-verification`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ emailId }),
+      })
+
+      const data = await response.text()
+
+      if (response.ok) {
+        this.setState({
+          showSubmitError: true,
+          errorMsg: "📩 Email sent again!",
+          isLoading: false,
+        })
+      } else {
+        this.setState({
+          showSubmitError: true,
+          errorMsg: data,
+          isLoading: false,
+        })
+      }
+    } catch (err) {
+      this.setState({
+        showSubmitError: true,
+        errorMsg: "Something went wrong",
+        isLoading: false,
+      })
+    }
+  }
+
+  render() {
+    const {
+      firstName,
+      lastName,
+      emailId,
+      password,
+      showSubmitError,
+      errorMsg,
+      showPassword,
+      isLoading,
+      isEmailSent,
+    } = this.state
+
+    // Redirect if already logged in
+    if (Cookies.get('jwt_token') && !isEmailSent) {
+      return <Navigate to="/" replace />
+    }
+
+    // =========================
+    // EMAIL SENT SCREEN
+    // =========================
+    if (isEmailSent) {
+      return (
+      <div className="signupform-main-container">
+        <div className="verify-card">
+
+          <img
+            src={navlogo}
+            alt="logo"
+            className="verify-logo"
+          />
+
+          <div className="verify-icon">📩</div>
+
+          <h2 className="verify-title">Verify your email</h2>
+
+          <p className="verify-text">
+            We’ve sent a verification link to
+          </p>
+
+          <p className="verify-email">{emailId}</p>
+
+          <p className="verify-subtext">
+            Please check your inbox and click the link to activate your account.
+          </p>
+
+          <button
+            type="button"
+            className="verify-btn"
+            onClick={this.resendVerificationEmail}
+            disabled={isLoading}
+          >
+            {isLoading ? "Sending..." : "Resend Email"}
+          </button>
+
+          <p className="verify-hint">
+            Didn’t receive the email? Check your spam folder.
+          </p>
+
+          {showSubmitError && (
+            <p className="verify-error">{errorMsg}</p>
+          )}
+
+          <p className="verify-footer">
+            After verification, you can{" "}
+            <Link to="/login" className="verify-link">
+              login here
+            </Link>
+          </p>
+
+        </div>
+      </div>
+      )
+    }
+
+    // =========================
+    // SIGNUP FORM
+    // =========================
     return (
       <div className="signupform-main-container">
         <form className="signupform-container" onSubmit={this.submitForm}>
-          <img src={navlogo} className="signupform-website-logo-desktop-img" alt="website logo" />
+          <img
+            src={navlogo}
+            className="signupform-website-logo-desktop-img"
+            alt="website logo"
+          />
 
-          {/* First Name */}
           <div className="signupform-input-container">
-            <label htmlFor="firstName" className="signupform-input-label">FIRST NAME</label>
+            <label htmlFor="firstName" className="signupform-input-label">
+              FIRST NAME
+            </label>
             <div className="signupform-input-wrapper">
               <MdPerson className="signupform-field-icon" />
               <input
@@ -91,9 +237,10 @@ class SignupForm extends Component {
             </div>
           </div>
 
-          {/* Last Name */}
           <div className="signupform-input-container">
-            <label htmlFor="lastName" className="signupform-input-label">LAST NAME</label>
+            <label htmlFor="lastName" className="signupform-input-label">
+              LAST NAME
+            </label>
             <div className="signupform-input-wrapper">
               <MdPerson className="signupform-field-icon" />
               <input
@@ -108,9 +255,10 @@ class SignupForm extends Component {
             </div>
           </div>
 
-          {/* Email */}
           <div className="signupform-input-container">
-            <label htmlFor="emailId" className="signupform-input-label">EMAIL</label>
+            <label htmlFor="emailId" className="signupform-input-label">
+              EMAIL
+            </label>
             <div className="signupform-input-wrapper">
               <MdEmail className="signupform-field-icon" />
               <input
@@ -125,9 +273,10 @@ class SignupForm extends Component {
             </div>
           </div>
 
-          {/* Password */}
           <div className="signupform-input-container">
-            <label htmlFor="password" className="signupform-input-label">PASSWORD</label>
+            <label htmlFor="password" className="signupform-input-label">
+              PASSWORD
+            </label>
             <div className="signupform-input-wrapper">
               <MdLock className="signupform-field-icon" />
               <input
@@ -139,17 +288,26 @@ class SignupForm extends Component {
                 placeholder="••••••••"
                 required
               />
-              <span className="signupform-password-toggle-icon" onClick={this.togglePasswordVisibility}>
+              <span
+                className="signupform-password-toggle-icon"
+                onClick={this.togglePasswordVisibility}
+              >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
           </div>
 
-          <button type="submit" className="signupform-button" disabled={isLoading}>
+          <button
+            type="submit"
+            className="signupform-button"
+            disabled={isLoading}
+          >
             {isLoading ? 'Creating account...' : 'Create Account'}
           </button>
 
-          {showSubmitError && <p className="signupform-error-message">{errorMsg}</p>}
+          {showSubmitError && (
+            <p className="signupform-error-message">{errorMsg}</p>
+          )}
 
           <div className="signupform-login-desc">
             Already have an account?{' '}
