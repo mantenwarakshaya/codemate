@@ -3,6 +3,8 @@
 /* ========================= */
 .nav-header {
   width: 100%;
+  height: 64px;
+  flex-shrink: 0; 
   background: #ffffff;
   border-bottom: 1px solid #f1f5f9;
   position: sticky;
@@ -206,7 +208,6 @@
     top: 64px;
     left: 0;
     width: 100%;
-    height: 100vh;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(2px);
     z-index: 90;

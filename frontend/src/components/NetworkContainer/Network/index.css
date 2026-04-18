@@ -1,13 +1,16 @@
 .network-page-wrapper {
-  background-color: rgb(243, 243, 243);
-  min-height: auto;
+  background-color: #f3f4f6;
   padding-bottom: 40px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .network-container {
   max-width: 850px; 
   margin: 30px auto;
   padding: 0 20px;
+  width: 100%;
 }
 
 /* Card Container */
