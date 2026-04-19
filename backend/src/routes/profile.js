@@ -3,6 +3,7 @@ const profileRouter = express.Router();
 const User = require("../models/user");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const cloudinary = require("cloudinary").v2;
 const { userAuth } = require("../middlewares/auth");
 const { validateEditProfileData } = require("../utils/validation");
 
@@ -51,17 +52,18 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
   }
 });
 
-profileRouter.post("/profile/password", userAuth, async (req, res) => {
+profileRouter.patch("/profile/password", userAuth, async (req, res) => {
   try {
-    const { emailId, newPassword } = req.body;
+    const loggedInUser = req.user;
+    const { oldPassword, newPassword } = req.body;
 
-    // 1. Check user exists
-    const user = await User.findOne({ emailId });
-    if (!user) {
-      throw new Error("User not found");
+    // 1. Check old password
+    const isMatch = await bcrypt.compare(oldPassword, loggedInUser.password);
+    if (!isMatch) {
+      throw new Error("Old password is incorrect");
     }
 
-    // 2. Validate password strength
+    // 2. Validate new password
     if (!validator.isStrongPassword(newPassword)) {
       throw new Error("Enter a strong password");
     }
@@ -69,14 +71,13 @@ profileRouter.post("/profile/password", userAuth, async (req, res) => {
     // 3. Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // 4. Update password
-    user.password = hashedPassword;
+    // 4. Save
+    loggedInUser.password = hashedPassword;
+    await loggedInUser.save();
 
-    await user.save();
+    res.json({ message: "Password updated successfully" });
 
-    res.send("Password updated successfully");
-
-  }catch (err) {
+  } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });

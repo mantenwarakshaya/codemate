@@ -77,8 +77,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
       validate: {
-        validator: (v) => !v || validator.isURL(v),
-        message: "Please enter a valid profile picture URL",
+        validator: (v) => !v || v.startsWith("http") || v.startsWith("data:image"),
+        message: "Invalid image format",
       }
     },
     about: {

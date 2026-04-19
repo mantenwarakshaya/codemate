@@ -41,7 +41,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
       .populate("fromUserId", USER_SAFE_DATA)
       .populate("toUserId", USER_SAFE_DATA);
 
-    console.log(connectionRequests);
+    // console.log(connectionRequests);
 
     const data = connectionRequests.map((row) => {
       if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
@@ -79,6 +79,7 @@ userRouter.get("/feed", userAuth, async (req, res) => {
       $and: [
         { _id: { $nin: Array.from(hideUsersFromFeed) } },
         { _id: { $ne: loggedInUser._id } },
+        { isVerified: true },
       ],
     })
       .select(USER_SAFE_DATA)
@@ -90,7 +91,6 @@ userRouter.get("/feed", userAuth, async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
-
 
 // Route: Fetch all users except logged-in user
 userRouter.get("/users/all", userAuth, async (req, res) => {

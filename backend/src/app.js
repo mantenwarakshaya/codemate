@@ -5,10 +5,19 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const cors = require("cors");
 const http = require("http");
+const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
 // process.env.BASE_URL = "http://localhost:5173";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 // ✅ Middlewares
-app.use(express.json());
+// app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
 
@@ -21,6 +30,7 @@ app.use(cors());
 //     credentials: true,
 //   })
 // );
+
 // ✅ Routes
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
@@ -29,7 +39,6 @@ const userRouter = require("./routes/user");
 const initializeSocket = require("./utils/socket");
 const chatRouter = require("./routes/chat");
 
-// 🔥 IMPORTANT: prefix with /api
 app.set("trust proxy", 1);
 app.use("/api", authRouter);
 app.use("/api", profileRouter);
@@ -41,15 +50,15 @@ const server = http.createServer(app);
 initializeSocket(server);
 
 if (process.env.NODE_ENV === "production"){
-  // 🔥 Serve frontend (React build)
+  // Serve frontend (React build)
   app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
-  // ✅ Use a Regex Literal (no quotes) instead of a string
+  // Use a Regex Literal (no quotes) instead of a string
   app.get(/.*/, (req, res) => {
     res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
   });
 }
-// ✅ Server
+// Server
 const PORT = process.env.PORT || 7777;
 
 connectDB()
