@@ -1,15 +1,59 @@
 import { Component } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { Users, MessageSquare, Bell, Home, ChevronDown } from 'lucide-react';
+import { Users, MessageSquare, Bell, Home, ChevronDown } from "lucide-react";
 import "./index.css";
 import navlogo from "../../assets/navlogo.png";
+
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "/api"
+    : "http://localhost:7777/api";
 
 class Header extends Component {
   state = {
     isOpen: false,
     showDropdown: false,
+    profilePic: "/avatar.png",
+    fetching: false,
+  };
+
+  componentDidMount() {
+    this.fetchProfile();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.location?.pathname !== this.props.location?.pathname
+    ) {
+      this.fetchProfile();
+    }
+  }
+
+  fetchProfile = async () => {
+    try {
+      if (this.state.fetching) return;
+
+      this.setState({ fetching: true });
+
+      const token = Cookies.get("jwt_token");
+
+      const response = await fetch(`${BASE_URL}/profile/view`, {
+        credentials: "include"
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        this.setState({
+          profilePic: data.profilePic || "/avatar.png",
+        });
+      }
+    } catch (error) {
+      console.log("Error fetching profile:", error);
+    } finally {
+      this.setState({ fetching: false });
+    }
   };
 
   toggleMenu = () => {
@@ -17,7 +61,7 @@ class Header extends Component {
   };
 
   toggleDropdown = (e) => {
-    e.stopPropagation(); // Prevents menu from closing when clicking profile
+    e.stopPropagation();
     this.setState((prev) => ({ showDropdown: !prev.showDropdown }));
   };
 
@@ -31,27 +75,31 @@ class Header extends Component {
   };
 
   render() {
-    const { isOpen, showDropdown } = this.state;
+    const { isOpen, showDropdown, profilePic } = this.state;
 
     return (
       <>
-        {isOpen && <div className="menu-backdrop" onClick={this.closeMenu}></div>}
-        
+        {isOpen && (
+          <div className="menu-backdrop" onClick={this.closeMenu}></div>
+        )}
+
         <nav className="nav-header">
           <div className="nav-content">
+
             {/* LOGO */}
             <NavLink to="/" className="nav-logo">
               <img src={navlogo} alt="logo" />
             </NavLink>
 
-            {/* MOBILE HAMBURGER */}
+            {/* HAMBURGER */}
             <div className="nav-menu-icon" onClick={this.toggleMenu}>
               {isOpen ? <FaTimes /> : <FaBars />}
             </div>
 
-            {/* NAV LINKS & ACTIONS */}
+            {/* NAV ITEMS */}
             <div className={`nav-right ${isOpen ? "active" : ""}`}>
               <ul className="nav-menu">
+
                 <li>
                   <NavLink to="/" className="nav-link" onClick={this.closeMenu}>
                     <div className="nav-item">
@@ -60,6 +108,7 @@ class Header extends Component {
                     </div>
                   </NavLink>
                 </li>
+
                 <li>
                   <NavLink to="/network" className="nav-link" onClick={this.closeMenu}>
                     <div className="nav-item">
@@ -68,6 +117,7 @@ class Header extends Component {
                     </div>
                   </NavLink>
                 </li>
+
                 <li>
                   <NavLink to="/chat" className="nav-link" onClick={this.closeMenu}>
                     <div className="nav-item">
@@ -76,40 +126,61 @@ class Header extends Component {
                     </div>
                   </NavLink>
                 </li>
+
                 <li>
                   <NavLink to="/notifications" className="nav-link" onClick={this.closeMenu}>
                     <div className="nav-item nav-notification">
                       <Bell size={22} strokeWidth={1.5} />
                       <span>Notifications</span>
-                      {/* <span className="nav-badge">3</span> */}
                     </div>
                   </NavLink>
                 </li>
+
               </ul>
-              {/* navactions */}
+
+              {/* ACTIONS */}
               <div className="nav-actions">
                 <div className="nav-profile" onClick={this.toggleDropdown}>
+
                   <div className="profile-info-wrapper">
-                    <img src="/avatar.png" alt="profile" className="profile-img" />
-                    <span className="mobile-profile-label">My Account</span> 
-                    <ChevronDown 
-                        size={18} 
-                        className={`chevron ${showDropdown ? "rotate" : ""}`} 
+                    <img
+                      src={profilePic || "/avatar.png"}
+                      alt="profile"
+                      className="profile-img"
+                    />
+
+                    <span className="mobile-profile-label">
+                      My Account
+                    </span>
+
+                    <ChevronDown
+                      size={18}
+                      className={`chevron ${showDropdown ? "rotate" : ""}`}
                     />
                   </div>
 
                   {showDropdown && (
                     <div className="nav-dropdown">
-                      <p className="dropdown-item" onClick={() => this.props.navigate("/profile")}>
+
+                      <p
+                        className="dropdown-item"
+                        onClick={() => this.props.navigate("/profile")}
+                      >
                         View Profile
                       </p>
-                      <p className="dropdown-item logout" onClick={this.onClickLogout}>
+
+                      <p
+                        className="dropdown-item logout"
+                        onClick={this.onClickLogout}
+                      >
                         Sign Out
                       </p>
+
                     </div>
                   )}
                 </div>
               </div>
+
             </div>
           </div>
         </nav>
@@ -118,9 +189,18 @@ class Header extends Component {
   }
 }
 
+/* Router wrapper */
 const HeaderWithNavigate = (props) => {
   const navigate = useNavigate();
-  return <Header {...props} navigate={navigate} />;
+  const location = useLocation();
+
+  return (
+    <Header
+      {...props}
+      navigate={navigate}
+      location={location}
+    />
+  );
 };
 
 export default HeaderWithNavigate;

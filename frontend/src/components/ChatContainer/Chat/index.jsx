@@ -19,6 +19,11 @@ const apiStatusConstants = {
   inProgress: "IN_PROGRESS",
 };
 
+const BASE_URL = 
+  process.env.NODE_ENV === "production"
+    ? "/api"
+    : "http://localhost:7777/api";
+
 const Chat = () => {
   const { targetUserId } = useParams();
   const navigate = useNavigate();
@@ -86,7 +91,7 @@ const Chat = () => {
   // ✅ SOCKET
   useEffect(() => {
     if (!user?._id) return;
-    socketRef.current = io("http://localhost:7777", {
+    socketRef.current = io(BASE_URL, {
       query: { userId: user._id },
       transports: ["websocket"],
       withCredentials: true,

@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import Header from "../Header";
+import { useNavigate } from "react-router-dom";
+import Header from "../../Header";
 import { Camera } from "lucide-react";
 import "./index.css";
 
-import { LoaderView, ErrorView } from "../Common";
+import { LoaderView, ErrorView } from "../../Common";
 
 const BASE_URL = 
   process.env.NODE_ENV === "production"
@@ -26,7 +27,7 @@ const GENDER_OPTIONS = [
   { label: "Other", value: "other" },
 ];
 
-class Profile extends Component {
+class EditProfile extends Component {
   state = {
     user: {},
     selectedSkills: [],
@@ -123,12 +124,15 @@ class Profile extends Component {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Unknown error");
 
-      alert("Profile updated successfully!");
       this.setState({ 
         user: data.data, 
         isUpdatingProfile: false, 
         previewImg: null 
       });
+      if (res.ok) {
+        alert("Profile updated successfully!");
+        this.props.navigate("/profile"); 
+      }
     } catch (err) {
       alert("Error updating profile: " + err.message);
       this.setState({ isUpdatingProfile: false });
@@ -139,28 +143,28 @@ class Profile extends Component {
     const { user, selectedSkills, isUpdatingProfile, previewImg, activeTab = 'general' } = this.state;
 
     return (
-      <div className="profile-dashboard-layout">
+      <div className="ep-profile-dashboard-layout">
         {/* 1. Header & Identity Surface (Always Visible) */}
-        <section className="profile-identity-header">
-          <div className="identity-flex-container">
-            <div className="avatar-interaction-group">
-              <div className="avatar-squircle">
+        <section className="ep-profile-identity-header">
+          <div className="ep-identity-flex-container">
+            <div className="ep-avatar-interaction-group">
+              <div className="ep-avatar-squircle">
                 <img
                   src={previewImg || user.profilePic || "/avatar.png"}
                   alt="Profile"
                 />
-                <label htmlFor="avatar-upload" className="avatar-edit-trigger">
+                <label htmlFor="avatar-upload" className="ep-avatar-edit-trigger">
                   <Camera size={16} />
                   <input type="file" id="avatar-upload" hidden onChange={this.handleImageUpload} />
                 </label>
               </div>
-              <div className="identity-meta">
-                <h1 className="user-full-name">{user.firstName} {user.lastName}</h1>
-                <span className="user-email-badge">{user.emailId}</span>
+              <div className="ep-identity-meta">
+                <h1 className="ep-user-full-name">{user.firstName} {user.lastName}</h1>
+                <span className="ep-user-email-badge">{user.emailId}</span>
               </div>
             </div>
             <button 
-              className={`sync-profile-btn ${isUpdatingProfile ? 'is-loading' : ''}`} 
+              className={`ep-sync-profile-btn ${isUpdatingProfile ? 'ep-is-loading' : ''}`} 
               onClick={this.handleSave} 
               disabled={isUpdatingProfile}
             >
@@ -169,21 +173,21 @@ class Profile extends Component {
           </div>
 
           {/* 2. Navigation Tabs */}
-          <nav className="profile-navigation-tabs">
+          <nav className="ep-profile-navigation-tabs">
             <button 
-              className={`tab-link ${activeTab === 'general' ? 'active' : ''}`}
+              className={`ep-tab-link ${activeTab === 'general' ? 'ep-active' : ''}`}
               onClick={() => this.setState({ activeTab: 'general' })}
             >
               General
             </button>
             <button 
-              className={`tab-link ${activeTab === 'pro' ? 'active' : ''}`}
+              className={`ep-tab-link ${activeTab === 'pro' ? 'ep-active' : ''}`}
               onClick={() => this.setState({ activeTab: 'pro' })}
             >
               Professional
             </button>
             <button 
-              className={`tab-link ${activeTab === 'social' ? 'active' : ''}`}
+              className={`ep-tab-link ${activeTab === 'social' ? 'ep-active' : ''}`}
               onClick={() => this.setState({ activeTab: 'social' })}
             >
               Social Presence
@@ -192,30 +196,30 @@ class Profile extends Component {
         </section>
 
         {/* 3. Form Content Area (Changes based on activeTab) */}
-        <section className="profile-form-surface">
+        <section className="ep-profile-form-surface">
           
           {/* --- GENERAL TAB --- */}
           {activeTab === 'general' && (
-            <div className="animate-fade-in">
-              <div className="form-section-header">
+            <div className="ep-animate-fade-in">
+              <div className="ep-form-section-header">
                 <h3>Personal Information</h3>
                 <p>Update your photo and personal details here.</p>
               </div>
 
-              <div className="form-grid-layout">
-                <div className="field-container">
+              <div className="ep-form-grid-layout">
+                <div className="ep-field-container">
                   <label>First Name</label>
                   <input name="firstName" value={user.firstName || ""} onChange={this.handleChange} placeholder="e.g. Akshaya" />
                 </div>
-                <div className="field-container">
+                <div className="ep-field-container">
                   <label>Last Name</label>
                   <input name="lastName" value={user.lastName || ""} onChange={this.handleChange} placeholder="e.g. Mantenwar" />
                 </div>
-                <div className="field-container">
+                <div className="ep-field-container">
                   <label>Age</label>
                   <input name="age" type="number" value={user.age || ""} onChange={this.handleChange} />
                 </div>
-                <div className="field-container">
+                <div className="ep-field-container">
                   <label>Gender</label>
                   <select name="gender" value={user.gender || ""} onChange={this.handleChange}>
                     <option value="" disabled>Select gender</option>
@@ -228,34 +232,34 @@ class Profile extends Component {
 
           {/* --- PROFESSIONAL TAB --- */}
           {activeTab === 'pro' && (
-            <div className="animate-fade-in">
-              <div className="form-section-header">
+            <div className="ep-animate-fade-in">
+              <div className="ep-form-section-header">
                 <h3>Professional Bio</h3>
                 <p>This will be displayed on your public profile.</p>
               </div>
               
-              <div className="field-container full-span">
+              <div className="ep-field-container ep-full-span">
                 <label>About Me</label>
                 <textarea name="about" value={user.about || ""} onChange={this.handleChange} rows="5" />
-                <span className="field-hint">Brief description for your profile. URLs are allowed.</span>
+                <span className="ep-field-hint">Brief description for your profile. URLs are allowed.</span>
               </div>
 
-              <div className="form-divider" />
+              <div className="ep-form-divider" />
 
-              <div className="form-section-header">
+              <div className="ep-form-section-header">
                 <h3>Skills & Tech Stack</h3>
               </div>
               
-              <div className="skills-management-box">
-                <select className="skills-dropdown" onChange={this.handleAddSkill} defaultValue="">
+              <div className="ep-skills-management-box">
+                <select className="ep-skills-dropdown" onChange={this.handleAddSkill} defaultValue="">
                   <option value="" disabled>Add a technology...</option>
                   {SKILLS_OPTIONS.map((skill) => <option key={skill} value={skill}>{skill}</option>)}
                 </select>
-                <div className="skills-pill-cloud">
+                <div className="ep-skills-pill-cloud">
                   {selectedSkills.map((skill) => (
-                    <div key={skill} className="skill-pill">
+                    <div key={skill} className="ep-skill-pill">
                       {skill}
-                      <button className="skill-del-btn" onClick={() => this.handleRemoveSkill(skill)}>×</button>
+                      <button className="ep-skill-del-btn" onClick={() => this.handleRemoveSkill(skill)}>×</button>
                     </div>
                   ))}
                 </div>
@@ -265,25 +269,25 @@ class Profile extends Component {
 
           {/* --- SOCIAL TAB --- */}
           {activeTab === 'social' && (
-            <div className="animate-fade-in">
-              <div className="form-section-header">
+            <div className="ep-animate-fade-in">
+              <div className="ep-form-section-header">
                 <h3>Social & Portfolios</h3>
                 <p>Connect your professional networks.</p>
               </div>
-              <div className="form-grid-layout">
-                <div className="field-container">
+              <div className="ep-form-grid-layout">
+                <div className="ep-field-container">
                   <label>GitHub URL</label>
                   <input name="github" value={user.github || ""} onChange={this.handleChange} placeholder="https://github.com/..." />
                 </div>
-                <div className="field-container">
+                <div className="ep-field-container">
                   <label>LinkedIn URL</label>
                   <input name="linkedin" value={user.linkedin || ""} onChange={this.handleChange} placeholder="https://linkedin.com/in/..." />
                 </div>
-                <div className="field-container">
+                <div className="ep-field-container">
                   <label>Twitter (X)</label>
                   <input name="twitter" value={user.twitter || ""} onChange={this.handleChange} />
                 </div>
-                <div className="field-container">
+                <div className="ep-field-container">
                   <label>Discord</label>
                   <input name="discord" value={user.discord || ""} onChange={this.handleChange} />
                 </div>
@@ -306,7 +310,7 @@ class Profile extends Component {
 
   render() {
     return (
-      <div className="profile-app-container">
+      <div className="ep-profile-app-container">
         <Header />
         {this.renderContent()}
       </div>
@@ -314,4 +318,9 @@ class Profile extends Component {
   }
 }
 
-export default Profile;
+const EditProfileWithNavigation = (props) => {
+  const navigate = useNavigate();
+  return <EditProfile {...props} navigate={navigate} />;
+};
+
+export default EditProfileWithNavigation;

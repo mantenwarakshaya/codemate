@@ -4,15 +4,15 @@ import { FaGithub, FaLinkedin, FaTwitter, FaCheck, FaTimes } from "react-icons/f
 import { SiDiscord } from "react-icons/si";
 import { MdMessage } from "react-icons/md";
 import "./index.css";
-import Header from "../Header";
+import Header from "../../Header";
 
-import { LoaderView, ErrorView, EmptyView } from "../Common";
+import { LoaderView, ErrorView, EmptyView } from "../../Common";
 
-const BASE_URL = 
+const BASE_URL =
   process.env.NODE_ENV === "production"
     ? "/api"
     : "http://localhost:7777/api";
-    
+
 const apiStatusConstants = {
   initial: "INITIAL",
   success: "SUCCESS",
@@ -32,22 +32,26 @@ class ShowProfile extends Component {
   }
 
   fetchUser = async () => {
-    const { id } = this.props.params; 
+    const { id } = this.props.params;
+
     this.setState({ apiStatus: apiStatusConstants.inProgress });
 
     try {
-      const res = await fetch(`${BASE_URL}/user/${id}`, {
+      const url = id
+        ? `${BASE_URL}/user/${id}`
+        : `${BASE_URL}/profile/view`;
+
+      const res = await fetch(url, {
         method: "GET",
         credentials: "include",
       });
 
-      if (!res.ok) {
-        throw new Error("User not found");
-      }
+      if (!res.ok) throw new Error("User not found");
 
       const data = await res.json();
+
       this.setState({
-        user: data?.data || null,
+        user: data?.data || data,
         apiStatus: apiStatusConstants.success,
       });
     } catch (err) {
@@ -59,23 +63,25 @@ class ShowProfile extends Component {
     }
   };
 
-  // Logic to handle Accept/Reject directly from the profile
   handleRequestAction = async (status) => {
     const { requestId } = this.props.locationState || {};
     if (!requestId) return;
 
     this.setState({ isProcessingAction: true });
+
     try {
-      // Logic uses your requestRouter.post("/request/review/:status/:requestId")
-      const res = await fetch(`${BASE_URL}/request/review/${status}/${requestId}`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${BASE_URL}/request/review/${status}/${requestId}`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+
       if (!res.ok) throw new Error("Action failed");
-      
-      alert(`Request ${status === 'accepted' ? 'Accepted' : 'Rejected'}!`);
-      // Redirect back to requests page after action to refresh the list
-      window.location.href = "/requests"; 
+
+      alert(`Request ${status === "accepted" ? "Accepted" : "Rejected"}!`);
+      window.location.href = "/requests";
     } catch (err) {
       alert(err.message);
       this.setState({ isProcessingAction: false });
@@ -85,86 +91,110 @@ class ShowProfile extends Component {
   renderSuccessView = () => {
     const { user, isProcessingAction } = this.state;
     const { requestId, fromRequestPage } = this.props.locationState || {};
+    const { id } = this.props.params;
+
+    const isOwnProfile = !id;
 
     if (!user) return <EmptyView message="User not available." />;
 
     return (
-      <div className="profile-container">
-        <div className="profile-card">
-          {/* LEFT COLUMN: Identity */}
-          <div className="profile-sidebar">
-            <div className="profile-image-container">
+      <div className="sp-profile-container">
+        <div className="sp-profile-card">
+          
+          {/* LEFT */}
+          <div className="sp-profile-sidebar">
+            <div className="sp-profile-image-container">
               <img
                 src={user.profilePic || "/avatar.png"}
                 alt="profile"
-                className="profile-avatar"
+                className="sp-profile-avatar"
               />
             </div>
-            
-            <div className="social-links-grid">
+
+            <div className="sp-social-links-grid">
               {user.github && (
-                <a href={user.github} target="_blank" rel="noreferrer" className="social-pill">
+                <a href={user.github} target="_blank" rel="noreferrer" className="sp-social-pill">
                   <FaGithub /> GitHub
                 </a>
               )}
               {user.linkedin && (
-                <a href={user.linkedin} target="_blank" rel="noreferrer" className="social-pill">
+                <a href={user.linkedin} target="_blank" rel="noreferrer" className="sp-social-pill">
                   <FaLinkedin /> LinkedIn
                 </a>
               )}
               {user.twitter && (
-                <a href={user.twitter} target="_blank" rel="noreferrer" className="social-pill">
+                <a href={user.twitter} target="_blank" rel="noreferrer" className="sp-social-pill">
                   <FaTwitter /> Twitter
                 </a>
               )}
               {user.discord && (
-                <a href={user.discord} target="_blank" rel="noreferrer" className="social-pill">
+                <a href={user.discord} target="_blank" rel="noreferrer" className="sp-social-pill">
                   <SiDiscord /> Discord
                 </a>
               )}
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Content */}
-          <div className="profile-main">
-            <div className="profile-header">
-              <h2 className="user-name">{user.firstName} {user.lastName}</h2>
-              <div className="user-meta">
-                <span className="meta-item">{user.emailId}</span>
-                <span className="meta-divider">•</span>
-                <span className="meta-item experience-badge">
-                  {user.experience ?? 0} {user.experience === 1 ? "Year" : "Years"} Exp.
+          {/* RIGHT */}
+          <div className="sp-profile-main">
+            <div className="sp-profile-header">
+              <h2 className="sp-user-name">
+                {user.firstName} {user.lastName}
+              </h2>
+
+              <div className="sp-user-meta">
+                <span>{user.emailId}</span>
+                <span className="sp-meta-divider">•</span>
+                <span className="sp-experience-badge">
+                  {user.experience ?? 0}{" "}
+                  {user.experience === 1 ? "Year" : "Years"} Exp.
                 </span>
               </div>
             </div>
 
-            <div className="bio-section">
-              <p className="bio-text">
+            <div className="sp-bio-section">
+              <p className="sp-bio-text">
                 {user.about || "Full Stack Developer ready to collaborate."}
               </p>
             </div>
 
-            <div className="skills-section">
-              <h4 className="section-label">Technical Stack</h4>
-              <div className="skills-wrapper">
+            <div className="sp-skills-section">
+              <h4 className="sp-section-label">Technical Stack</h4>
+              <div className="sp-skills-wrapper">
                 {user.skills?.map((skill, i) => (
-                  <span key={i} className="skill-tag">{skill}</span>
+                  <span key={i} className="sp-skill-tag">
+                    {skill}
+                  </span>
                 ))}
               </div>
             </div>
 
-            <div className="profile-actions">
-              {fromRequestPage && requestId ? (
-                <div className="request-controls">
-                  <button 
-                    className="btn-accept" 
+            {/* ACTIONS */}
+            <div className="sp-profile-actions">
+
+              {isOwnProfile ? (
+                <div className="sp-request-controls">
+                  <Link to="/profile/edit" className="sp-message-link">
+                    <button className="sp-btn-accept">✏️ Edit Profile</button>
+                  </Link>
+
+                  <Link to="/profile/password" className="sp-message-link">
+                    <button className="sp-btn-reject">🔐 Change Password</button>
+                  </Link>
+                </div>
+              ) : fromRequestPage && requestId ? (
+                <div className="sp-request-controls">
+                  <button
+                    className="sp-btn-accept"
                     onClick={() => this.handleRequestAction("accepted")}
                     disabled={isProcessingAction}
                   >
-                    <FaCheck /> {isProcessingAction ? "Processing..." : "Accept Request"}
+                    <FaCheck />{" "}
+                    {isProcessingAction ? "Processing..." : "Accept Request"}
                   </button>
-                  <button 
-                    className="btn-reject" 
+
+                  <button
+                    className="sp-btn-reject"
                     onClick={() => this.handleRequestAction("rejected")}
                     disabled={isProcessingAction}
                   >
@@ -172,8 +202,8 @@ class ShowProfile extends Component {
                   </button>
                 </div>
               ) : (
-                <Link to={`/chat/${user._id}`} className="message-link">
-                  <button className="btn-primary">
+                <Link to={`/chat/${user._id}`} className="sp-message-link">
+                  <button className="sp-btn-primary">
                     <MdMessage /> Send Message
                   </button>
                 </Link>
@@ -194,7 +224,7 @@ class ShowProfile extends Component {
       case apiStatusConstants.failure:
         return (
           <ErrorView
-            message="Unable to load this profile. Please try again."
+            message="Unable to load profile"
             onRetry={this.fetchUser}
           />
         );

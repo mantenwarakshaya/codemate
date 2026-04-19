@@ -10,13 +10,19 @@ import ForgotPassword from "./components/FormContainer/ForgotPassword";
 import ResetPassword from "./components/FormContainer/ResetPassword";
 
 import Home from "./components/HomeContainer/Home";
-import Profile from "./components/Profile";
+
+import ShowProfileWithParams from "./components/ProfileContainer/ShowProfile";
+import EditProfile from "./components/ProfileContainer/EditProfile";
+import ChangePassword from "./components/ProfileContainer/ChangePassword";
+
+import Network from "./components/NetworkContainer/Network";
 import Connections from "./components/NetworkContainer/Connections";
 import Requests from "./components/NetworkContainer/Requests";
+
 import Notifications from "./components/Notifications";
-import Network from "./components/NetworkContainer/Network";
-import ShowProfile from "./components/ShowProfile";
+
 import Chat from "./components/ChatContainer/Chat";
+
 import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -27,27 +33,23 @@ const App = () => {
   useEffect(() => {
     const syncUser = async () => {
       try {
-        const res = await axios.get("/api/profile/view", {
+        const res = await axios.get("/api/profile", {
           withCredentials: true,
         });
 
         dispatch({ type: "SET_USER", payload: res.data });
       } catch (err) {
-        // ✅ Ignore 401 (user not logged in)
-        if (err.response?.status === 401) {
-          return;
-        }
-
-        // ❗ Log only real errors
+        if (err.response?.status === 401) return;
         console.error("Profile fetch error:", err);
       }
     };
 
     syncUser();
   }, [dispatch]);
-  return(
-    <>
+
+  return (
     <Routes>
+
       {/* Public */}
       <Route path="/login" element={<LoginForm />} />
       <Route path="/signup" element={<SignupForm />} />
@@ -56,6 +58,7 @@ const App = () => {
       <Route path="/reset-password/:token" element={<ResetPassword />} />
 
       {/* Protected */}
+
       <Route
         path="/"
         element={
@@ -65,25 +68,44 @@ const App = () => {
         }
       />
 
+      {/*  MAIN PROFILE (SELF + OTHER) */}
       <Route
         path="/profile"
         element={
           <ProtectedRoute>
-            <Profile />
+            <ShowProfileWithParams />
           </ProtectedRoute>
         }
       />
 
-      {/* Dynamic profile view */}
       <Route
         path="/profile/:id"
         element={
           <ProtectedRoute>
-            <ShowProfile />
+            <ShowProfileWithParams />
           </ProtectedRoute>
         }
       />
 
+      <Route
+        path="/profile/edit"
+        element={
+          <ProtectedRoute>
+            <EditProfile />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/profile/password"
+        element={
+          <ProtectedRoute>
+            <ChangePassword />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* NETWORK */}
       <Route
         path="/connections"
         element={
@@ -103,13 +125,23 @@ const App = () => {
       />
 
       <Route
-      path="/chat"
-      element={
-        <ProtectedRoute>
-          <Chat />
-        </ProtectedRoute>
-      }
-    />
+        path="/network"
+        element={
+          <ProtectedRoute>
+            <Network />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* CHAT */}
+      <Route
+        path="/chat"
+        element={
+          <ProtectedRoute>
+            <Chat />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/chat/:targetUserId"
@@ -120,6 +152,7 @@ const App = () => {
         }
       />
 
+      {/* NOTIFICATIONS */}
       <Route
         path="/notifications"
         element={
@@ -129,21 +162,12 @@ const App = () => {
         }
       />
 
-      <Route
-        path="/network"
-        element={
-          <ProtectedRoute>
-            <Network />
-          </ProtectedRoute>
-        }
-      />
-
       {/* Fallback */}
       <Route path="/not-found" element={<NotFound />} />
       <Route path="*" element={<Navigate to="/not-found" />} />
+
     </Routes>
-    </>
-  )
+  );
 };
 
 export default App;

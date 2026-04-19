@@ -1,12 +1,12 @@
 /* =============
    1. DASHBOARD 
    ============= */
-.profile-app-container {
+.ep-profile-app-container {
   min-height: 100vh;
   background-color: #f9fafb; 
 }
 
-.profile-dashboard-layout {
+.ep-profile-dashboard-layout {
   max-width: 1000px;
   margin: 0 auto;
   padding: 40px 24px;
@@ -15,7 +15,7 @@
 /* ======================
    2. HEADER & IDENTITY 
    ===================== */
-.profile-identity-header {
+.ep-profile-identity-header {
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 12px 12px 0 0;
@@ -23,20 +23,20 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.identity-flex-container {
+.ep-identity-flex-container {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   margin-bottom: 32px;
 }
 
-.avatar-interaction-group {
+.ep-avatar-interaction-group {
   display: flex;
   align-items: center;
   gap: 24px;
 }
 
-.avatar-squircle {
+.ep-avatar-squircle {
   position: relative;
   width: 100px;
   height: 100px;
@@ -45,14 +45,14 @@
   border: 1px solid #e5e7eb;
 }
 
-.avatar-squircle img {
+.ep-avatar-squircle img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 20px;
 }
 
-.avatar-edit-trigger {
+.ep-avatar-edit-trigger {
   position: absolute;
   bottom: -8px;
   right: -8px;
@@ -67,14 +67,14 @@
   transition: all 0.2s;
 }
 
-.avatar-edit-trigger:hover {
+.ep-avatar-edit-trigger:hover {
   background: #f9fafb;
   transform: scale(1.1);
   border-color: #2563eb;
   color: #2563eb;
 }
 
-.user-full-name {
+.ep-user-full-name {
   font-size: 26px;
   font-weight: 800;
   color: #111827;
@@ -82,7 +82,7 @@
   margin: 0 0 4px 0;
 }
 
-.user-email-badge {
+.ep-user-email-badge {
   color: #6b7280;
   font-size: 15px;
 }
@@ -90,13 +90,13 @@
 /* ===================
    3. NAVIGATION TABS 
    =================== */
-.profile-navigation-tabs {
+.ep-profile-navigation-tabs {
   display: flex;
   gap: 32px;
   border-bottom: 1px solid #e5e7eb;
 }
 
-.tab-link {
+.ep-tab-link {
   background: none;
   border: none;
   padding: 14px 2px;
@@ -108,16 +108,16 @@
   transition: color 0.2s;
 }
 
-.tab-link:hover {
+.ep-tab-link:hover {
   color: #111827;
 }
 
 /* Active State indicator */
-.tab-link.active {
+.ep-tab-link.ep-active {
   color: #2563eb;
 }
 
-.tab-link.active::after {
+.ep-tab-link.ep-active::after {
   content: "";
   position: absolute;
   bottom: -1px; 
@@ -131,7 +131,7 @@
 /* =======================
    4. FORM AREA & CONTENT
    ======================= */
-.profile-form-surface {
+.ep-profile-form-surface {
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-top: none;
@@ -140,36 +140,36 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-.form-section-header {
+.ep-form-section-header {
   margin-bottom: 28px;
 }
 
-.form-section-header h3 {
+.ep-form-section-header h3 {
   font-size: 18px;
   font-weight: 700;
   color: #111827;
   margin: 0 0 6px 0;
 }
 
-.form-section-header p {
+.ep-form-section-header p {
   font-size: 14px;
   color: #6b7280;
 }
 
-.form-grid-layout {
+.ep-form-grid-layout {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 28px;
   margin-bottom: 32px;
 }
 
-.field-container {
+.ep-field-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.field-container label {
+.ep-field-container label {
   font-size: 13px;
   font-weight: 600;
   color: #374151;
@@ -177,9 +177,9 @@
   letter-spacing: 0.025em;
 }
 
-.field-container input, 
-.field-container select, 
-.field-container textarea {
+.ep-field-container input, 
+.ep-field-container select, 
+.ep-field-container textarea {
   padding: 12px 14px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
@@ -189,21 +189,21 @@
   transition: all 0.2s;
 }
 
-.field-container input:focus, 
-.field-container select:focus, 
-.field-container textarea:focus {
+.ep-field-container input:focus, 
+.ep-field-container select:focus, 
+.ep-field-container textarea:focus {
   outline: none;
   border-color: #2563eb;
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
 }
 
-.field-hint {
+.ep-field-hint {
   font-size: 12px;
   color: #9ca3af;
   margin-top: 4px;
 }
 
-.form-divider {
+.ep-form-divider {
   height: 1px;
   background: #f3f4f6;
   margin: 40px 0;
@@ -212,14 +212,14 @@
 /* ======================
    5. SKILLS MANAGEMENT 
    ======================= */
-.skills-management-box {
+.ep-skills-management-box {
   background: #f8fafc;
   padding: 24px;
   border-radius: 12px;
   border: 1px dashed #cbd5e1;
 }
 
-.skills-dropdown {
+.ep-skills-dropdown {
   width: 100%;
   max-width: 350px;
   padding: 12px 16px;
@@ -231,13 +231,13 @@
   margin-bottom: 20px;
 }
 
-.skills-pill-cloud {
+.ep-skills-pill-cloud {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.skill-pill {
+.ep-skill-pill {
   background: #ffffff;
   color: #1e293b;
   border: 1px solid #e2e8f0;
@@ -252,13 +252,13 @@
   transition: all 0.2s;
 }
 
-.skill-pill:hover {
+.ep-skill-pill:hover {
   border-color: #2563eb;
   color: #2563eb;
   transform: translateY(-1px);
 }
 
-.skill-del-btn {
+.ep-skill-del-btn {
   background: #f1f5f9;
   border: none;
   color: #94a3b8;
@@ -272,7 +272,7 @@
   border-radius: 4px;
 }
 
-.skill-del-btn:hover {
+.ep-skill-del-btn:hover {
   background: #fee2e2;
   color: #ef4444;
 }
@@ -280,7 +280,7 @@
 /* =================
    6. BUTTON STATES 
    ================= */
-.sync-profile-btn {
+.ep-sync-profile-btn {
   background: #2563eb;
   color: #ffffff;
   border: none;
@@ -295,28 +295,28 @@
   gap: 8px;
 }
 
-.sync-profile-btn:hover {
+.ep-sync-profile-btn:hover {
   background: #1d4ed8;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
-.sync-profile-btn:disabled {
+.ep-sync-profile-btn:disabled {
   background: #93c5fd;
   cursor: not-allowed;
 }
 
 /* Loading Spin Animation */
-.sync-profile-btn.is-loading::before {
+.ep-sync-profile-btn.ep-is-loading::before {
   content: "";
   width: 14px;
   height: 14px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-top-color: #ffffff;
   border-radius: 50%;
-  animation: sync-spin 0.8s linear infinite;
+  animation: ep-sync-spin 0.8s linear infinite;
 }
 
-@keyframes sync-spin {
+@keyframes ep-sync-spin {
   to { transform: rotate(360deg); }
 }
 
@@ -324,10 +324,10 @@
    7. RESPONSIVE DESIGN
    ====================== */
 @media (max-width: 768px) {
-  .profile-dashboard-layout { padding: 20px 16px; }
-  .form-grid-layout { grid-template-columns: 1fr; gap: 20px; }
-  .identity-flex-container { flex-direction: column; align-items: center; text-align: center; gap: 24px; }
-  .avatar-interaction-group { flex-direction: column; }
-  .profile-form-surface { padding: 24px; }
-  .sync-profile-btn { width: 100%; justify-content: center; }
+  .ep-profile-dashboard-layout { padding: 20px 16px; }
+  .ep-form-grid-layout { grid-template-columns: 1fr; gap: 20px; }
+  .ep-identity-flex-container { flex-direction: column; align-items: center; text-align: center; gap: 24px; }
+  .ep-avatar-interaction-group { flex-direction: column; }
+  .ep-profile-form-surface { padding: 24px; }
+  .ep-sync-profile-btn { width: 100%; justify-content: center; }
 }

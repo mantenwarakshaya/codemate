@@ -1,0 +1,212 @@
+/* =========================
+   PAGE BACKGROUND
+========================= */
+.change-password__container {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+
+  /* background: radial-gradient(circle at top, #e6f6ff, #f3f3f3); */
+  position: relative;
+  overflow: hidden;
+}
+
+/* floating background blobs */
+.change-password__container::before,
+.change-password__container::after {
+  content: "";
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.35;
+  z-index: 0;
+}
+
+.change-password__container::before {
+  top: -100px;
+  left: -100px;
+  background: #bfdbfe;
+}
+
+.change-password__container::after {
+  bottom: -120px;
+  right: -120px;
+  background: #0967d2;
+  opacity: 0.18;
+}
+
+/* =========================
+   CARD
+========================= */
+.change-password__card {
+  width: 100%;
+  max-width: 440px;
+
+  padding: 36px;
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(191, 219, 254, 0.6);
+
+  box-shadow:
+    0 12px 30px rgba(2, 6, 23, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  z-index: 1;
+  transition: all 0.25s ease;
+}
+
+.change-password__card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 45px rgba(2, 6, 23, 0.12);
+}
+
+/* =========================
+   TITLE
+========================= */
+.change-password__title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1e293b;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+.change-password__title::after {
+  content: "Secure your account";
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #475569;
+  margin-top: 4px;
+}
+
+/* =========================
+   INPUT GROUP
+========================= */
+.change-password__group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.change-password__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+/* =========================
+   INPUTS
+========================= */
+.change-password__input {
+  padding: 13px 14px;
+  border-radius: 12px;
+
+  border: 1px solid #bfdbfe;
+  background: #ffffff;
+
+  font-size: 14px;
+  color: #1e293b;
+
+  outline: none;
+
+  transition: all 0.25s ease;
+
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.change-password__input:focus {
+  border-color: #0967d2;
+  box-shadow: 0 0 0 4px rgba(9, 103, 210, 0.15);
+  transform: translateY(-1px);
+}
+
+/* =========================
+   BUTTON
+========================= */
+.change-password__button {
+  margin-top: 12px;
+  padding: 13px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: linear-gradient(135deg, #0967d2, #0b5ed7);
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+
+  box-shadow: 0 8px 20px rgba(9, 103, 210, 0.25);
+}
+
+.change-password__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(9, 103, 210, 0.35);
+}
+
+.change-password__button:active {
+  transform: scale(0.98);
+}
+
+.change-password__button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* =========================
+   MESSAGES
+========================= */
+.change-password__message {
+  margin-top: 10px;
+  padding: 10px 12px;
+
+  border-radius: 10px;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* success */
+.change-password__message--success {
+  background: #e6f6ff;
+  color: #0967d2;
+  border: 1px solid #bfdbfe;
+}
+
+/* error */
+.change-password__message--error {
+  background: #fff;
+  color: #475569;
+  border: 1px solid #bfdbfe;
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+@media (max-width: 480px) {
+  .change-password__card {
+    padding: 24px;
+    border-radius: 14px;
+  }
+
+  .change-password__title {
+    font-size: 20px;
+  }
+}
