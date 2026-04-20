@@ -31,7 +31,7 @@ authRouter.post("/signup", async (req, res) => {
     // 🔐 Generate verification token
     const token = user.getEmailVerificationToken();
 
-    const verifyLink = `${process.env.FRONTEND_URL}/verify-email/${token}`;
+    const verifyLink = `${process.env.BASE_URL}/verify-email/${token}`;
 
     try {
       await sendEmail(
