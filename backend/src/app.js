@@ -7,7 +7,7 @@ const cors = require("cors");
 const http = require("http");
 const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
-process.env.BASE_URL = "http://localhost:5173";
+// process.env.BASE_URL = "http://localhost:5173";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -21,15 +21,15 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
 
-// app.use(cors());
+app.use(cors());
 
 // ✅ CORS (simple since same domain)
-app.use(
-  cors({
-    origin: process.env.BASE_URL || "http://localhost:5173",
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: process.env.BASE_URL || "http://localhost:5173",
+//     credentials: true,
+//   })
+// );
 
 // ✅ Routes
 const authRouter = require("./routes/auth");
