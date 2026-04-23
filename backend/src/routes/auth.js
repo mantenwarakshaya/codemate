@@ -17,35 +17,36 @@ authRouter.post("/signup", async (req, res) => {
 
     const { firstName, lastName, emailId, password } = req.body;
 
+    const existingUser = await User.findOne({ emailId });
+    if (existingUser) {
+      throw new Error("Email already registered");
+    }
+
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const user = new User({
-      firstName,
-      lastName,
-      emailId,
-      password: passwordHash,
-    });
-
-    await user.save();
-
-    // 🔐 Generate verification token
-    const token = user.getEmailVerificationToken();
+    // 🔐 Create JWT token with user data
+    const token = jwt.sign(
+      {
+        firstName,
+        lastName,
+        emailId,
+        password: passwordHash,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
 
     const verifyLink = `${process.env.BASE_URL}/verify-email/${token}`;
 
-    try {
-      await sendEmail(
-        emailId,
-        "Verify your CodeMate account",
-        `
-          <h2>Welcome to CodeMate 🚀</h2>
-          <p>Click below to verify your email:</p>
-          <a href="${verifyLink}">Verify Email</a>
-        `
-      );
-    } catch (err) {
-      console.log("Email failed:", err.message);
-    }
+    await sendEmail(
+      emailId,
+      "Verify your CodeMate account",
+      `
+        <h2>Welcome to CodeMate 🚀</h2>
+        <p>Click below to verify your email:</p>
+        <a href="${verifyLink}">Verify Email</a>
+      `
+    );
 
     return res.json({
       message: "📩 Verification email sent! Please check your inbox.",
@@ -63,18 +64,27 @@ authRouter.get("/verify-email/:token", async (req, res) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await User.findById(decoded._id);
+    const { firstName, lastName, emailId, password } = decoded;
 
-    if (!user) {
-      return res.status(400).send("Invalid token");
+    const existingUser = await User.findOne({ emailId });
+    if (existingUser) {
+      return res.send("User already verified. Please login.");
     }
 
-    user.isVerified = true;
-    await user.save();
+    const newUser = new User({
+      firstName,
+      lastName,
+      emailId,
+      password,
+      isVerified: true,
+    });
 
-    return res.send("Email verified successfully!");
+    await newUser.save();
+
+    return res.send("✅ Email verified successfully! You can now login.");
+
   } catch (err) {
-    return res.status(400).send("Invalid or expired token");
+    return res.status(400).send("Invalid or expired link");
   }
 });
 
