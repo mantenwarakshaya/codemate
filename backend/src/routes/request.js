@@ -81,11 +81,12 @@ requestRouter.post(
         _id: requestId,
         toUserId: loggedInUser._id,
         status: "interested",
-      });
-      if (!connectionRequest) {
-        return res
-          .status(404)
-          .json({ message: "Connection request not found" });
+      }).populate("fromUserId", "firstName");
+
+      if (!connectionRequest || !connectionRequest.fromUserId) {
+        return res.status(404).json({ 
+          message: "Request no longer valid (User account deactivated)" 
+        });
       }
 
       connectionRequest.status = status;

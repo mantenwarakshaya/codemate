@@ -25,6 +25,8 @@ class ShowProfile extends Component {
     user: null,
     apiStatus: apiStatusConstants.initial,
     isProcessingAction: false,
+    deletePassword: "",
+    isDeleting: false,
   };
 
   componentDidMount() {
@@ -88,6 +90,40 @@ class ShowProfile extends Component {
     }
   };
 
+  handleDeleteAccount = async () => {
+    const { deletePassword } = this.state;
+
+    if (!deletePassword) {
+      alert("Please enter password");
+      return;
+    }
+
+    this.setState({ isDeleting: true });
+
+    try {
+      const res = await fetch(`${BASE_URL}/delete-account`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ password: deletePassword }),
+      });
+
+      const data = await res.text();
+
+      if (res.ok) {
+        alert(data);
+        window.location.href = "/login"; // logout
+      } else {
+        alert(data);
+        this.setState({ isDeleting: false });
+      }
+    } catch (err) {
+      alert("Something went wrong");
+      this.setState({ isDeleting: false });
+    }
+  };
   renderSuccessView = () => {
     const { user, isProcessingAction } = this.state;
     const { requestId, fromRequestPage } = this.props.locationState || {};
@@ -173,15 +209,68 @@ class ShowProfile extends Component {
             <div className="sp-profile-actions">
 
               {isOwnProfile ? (
-                <div className="sp-request-controls">
-                  <Link to="/profile/edit" className="sp-message-link">
-                    <button className="sp-btn-accept">✏️ Edit Profile</button>
-                  </Link>
+                <>
+                  <div className="sp-request-controls">
+                    <Link to="/profile/edit" className="sp-message-link">
+                      <button className="sp-btn-accept">✏️ Edit Profile</button>
+                    </Link>
 
-                  <Link to="/profile/password" className="sp-message-link">
-                    <button className="sp-btn-reject">🔐 Change Password</button>
-                  </Link>
-                </div>
+                    <Link to="/profile/password" className="sp-message-link">
+                      <button className="sp-btn-reject">🔐 Change Password</button>
+                    </Link>
+                  </div>
+                  <div className="sp-danger-zone">
+                    <h4>Danger Zone</h4>
+                    <p>Deleting your account will deactivate it for 7 days.</p>
+
+                    {!this.state.showConfirm ? (
+                      <button
+                        className="sp-danger-btn"
+                        onClick={() => this.setState({ showConfirm: true })}
+                      >
+                        Delete Account
+                      </button>
+                    ) : (
+                      <div className="sp-danger-confirm">
+                        <p className="sp-warning-text">
+                          ⚠️ Please confirm your password to continue
+                        </p>
+
+                        <input
+                          type="password"
+                          placeholder="Enter password"
+                          className="sp-danger-input"
+                          value={this.state.deletePassword}
+                          onChange={(e) =>
+                            this.setState({ deletePassword: e.target.value })
+                          }
+                        />
+
+                        <div className="sp-danger-actions">
+                          <button
+                            className="sp-cancel-btn"
+                            onClick={() =>
+                              this.setState({
+                                showConfirm: false,
+                                deletePassword: "",
+                              })
+                            }
+                          >
+                            Cancel
+                          </button>
+
+                          <button
+                            className="sp-danger-btn"
+                            onClick={this.handleDeleteAccount}
+                            disabled={this.state.isDeleting}
+                          >
+                            {this.state.isDeleting ? "Deleting..." : "Confirm Delete"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </>                
               ) : fromRequestPage && requestId ? (
                 <div className="sp-request-controls">
                   <button

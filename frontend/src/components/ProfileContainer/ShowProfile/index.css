@@ -208,3 +208,85 @@
     border-bottom: 1px solid #f1f5f9;
   }
 }
+
+/* 🔴 Danger Zone */
+.sp-danger-zone {
+  margin-top: 30px;
+  padding: 18px;
+  border: 1px solid #fecaca;
+  background-color: #fff1f2;
+  border-radius: 10px;
+}
+
+.sp-danger-zone h4 {
+  color: #dc2626;
+  margin-bottom: 6px;
+}
+
+.sp-danger-zone p {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 10px;
+}
+
+.sp-danger-input {
+  width: 100%;
+  padding: 9px;
+  border-radius: 6px;
+  border: 1px solid #cbd5f5;
+  margin-bottom: 10px;
+  outline: none;
+}
+
+.sp-danger-btn {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 9px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.sp-danger-btn:hover {
+  background-color: #b91c1c;
+}
+
+.sp-danger-confirm {
+  margin-top: 10px;
+}
+
+.sp-warning-text {
+  font-size: 13px;
+  color: #dc2626;
+  margin-bottom: 8px;
+}
+
+.sp-danger-actions {
+  display: flex;
+  /* justify-content: flex-end;  */
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.sp-cancel-btn {
+  background: transparent;
+  border: 1px solid #cbd5e1; /* subtle gray border */
+  color: #475569;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sp-cancel-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #1e293b;
+}
+
+.sp-cancel-btn:active {
+  transform: scale(0.96);
+}

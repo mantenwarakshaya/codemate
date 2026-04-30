@@ -21,6 +21,8 @@ class LoginForm extends Component {
       errorMsg: '',
       showPassword: false, 
       isLoading: false,
+      showRestore: false, 
+      isRestoring: false,
     }
   }
 
@@ -30,12 +32,76 @@ class LoginForm extends Component {
 
   onSubmitSuccess = () => window.location.replace('/')
 
-  onSubmitFailure = errorMsg => {
-    let message = errorMsg || "Something went wrong"
+  onSubmitFailure = (error) => {
+    let message = error?.message || error || "Something went wrong"
+
+    // ✅ HANDLE DEACTIVATED ACCOUNT CORRECTLY
+    if (error?.code === "ACCOUNT_DEACTIVATED") {
+      this.setState({
+        showRestore: true,
+        showSubmitError: false,
+        isLoading: false,
+      })
+      return
+    }
+
     if (message.toLowerCase().includes("verify")) {
       message = "📩 Please verify your email before logging in."
     }
-    this.setState({ showSubmitError: true, errorMsg: message, isLoading: false })
+
+    this.setState({
+      password: '',
+      showSubmitError: true,
+      errorMsg: message,
+      isLoading: false,
+    })
+  }
+
+  handleRestoreAccount = async () => {
+    const { emailId, password } = this.state
+
+    if (!emailId || !password) {
+      this.setState({
+        showSubmitError: true,
+        errorMsg: "Enter email & password to restore account",
+      })
+      return
+    }
+
+    this.setState({ isRestoring: true })
+
+    try {
+      const response = await fetch(`${BASE_URL}/restore-account`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ emailId, password }),
+      })
+
+      const data = await response.text()
+
+      if (response.ok) {
+        this.setState({
+          showRestore: false,
+          isRestoring: false,
+          showSubmitError: true,
+          errorMsg: "Account restored successfully. You can login now.",
+        })
+      } else {
+        this.setState({
+          showSubmitError: true,
+          errorMsg: data,
+          isRestoring: false,
+        })
+      }
+    } catch (err) {
+      this.setState({
+        showSubmitError: true,
+        errorMsg: "Restore failed. Try again.",
+        isRestoring: false,
+      })
+    }
   }
 
   submitForm = async event => {
@@ -54,7 +120,7 @@ class LoginForm extends Component {
       if (response.ok) {
         this.onSubmitSuccess()
       } else {
-        const data = await response.text()
+        const data = await response.json()
         this.onSubmitFailure(data)
       }
     } catch (error) {
@@ -111,6 +177,22 @@ class LoginForm extends Component {
           <button type="submit" className="loginform-button" disabled={isLoading}>
             {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
+          {this.state.showRestore && (
+            <div className="restore-box">
+              <p className="restore-text">
+                Your account is deactivated. You can restore it within 7 days.
+              </p>
+
+              <button
+                type="button"
+                className="restore-btn"
+                onClick={this.handleRestoreAccount}
+                disabled={this.state.isRestoring}
+              >
+                {this.state.isRestoring ? "Restoring..." : "Restore Account"}
+              </button>
+            </div>
+          )}
           <div className="loginform-forgot-row">
               <Link to="/forgot-password" className="loginform-forgot-link">
                 Forgot password?

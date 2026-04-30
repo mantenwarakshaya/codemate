@@ -149,3 +149,33 @@
   color: #2563eb;
   font-weight: 600;
 }
+
+.restore-box {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid #fde68a;
+  background-color: #fffbeb;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.restore-text {
+  font-size: 13px;
+  color: #92400e;
+  margin-bottom: 8px;
+}
+
+.restore-btn {
+  background-color: #0967d2;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.restore-btn:hover {
+  background-color: #0759b5;
+}

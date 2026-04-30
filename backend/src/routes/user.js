@@ -19,12 +19,15 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
     }).populate("fromUserId", USER_SAFE_DATA);
     // }).populate("fromUserId", ["firstName", "lastName"]);
 
+    //Remove requests from deleted users
+    const filteredData = connectionRequests.filter((req) => req.fromUserId !== null); 
+
     res.json({
       message: "Data fetched successfully",
-      data: connectionRequests,
+      data: filteredData,
     });
   } catch (err) {
-    res.statusCode(400).send("ERROR: " + err.message);
+    res.status(400).send("ERROR: " + err.message);
   }
 });
 
@@ -43,7 +46,11 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
 
     // console.log(connectionRequests);
 
-    const data = connectionRequests.map((row) => {
+    const activeConnections = connectionRequests.filter(
+      (row) => row.fromUserId !== null && row.toUserId !== null
+    );
+
+    const data = activeConnections.map((row) => {
       if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
         return row.toUserId;
       }
@@ -158,7 +165,9 @@ userRouter.get("/user/profile-views", userAuth, async (req, res) => {
       .populate("viewerId", "firstName profilePic") // Field must exist in ProfileView Schema
       .sort({ createdAt: -1 });
 
-    res.json({ data: views || [] }); // Always return an array
+    const activeViews = views.filter((v) => v.viewerId !== null);
+
+    res.json({ data: activeViews || [] }); // Always return an array
   } catch (err) {
     res.status(500).json({ message: "Internal Server Error" });
   }

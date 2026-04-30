@@ -1,4 +1,5 @@
 const express = require("express");
+const User = require("../models/user");
 const { userAuth } = require("../middlewares/auth");
 const Message = require("../models/message");
 const { getIO, getReceiverSocketId } = require("../utils/socket");
@@ -31,6 +32,11 @@ chatRouter.post("/messages/send/:id", userAuth, async (req, res) => {
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
+    const receiver = await User.findById(receiverId);
+    if (!receiver) {
+      return res.status(404).json({ message: "Cannot send message: User account deactivated" });
+    }
+    
     const newMessage = new Message({
       senderId,
       receiverId,

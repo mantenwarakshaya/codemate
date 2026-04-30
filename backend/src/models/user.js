@@ -97,6 +97,14 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );
@@ -126,5 +134,23 @@ userSchema.methods.getResetPasswordToken = function () {
     expiresIn: "15m", // expires in 15 mins
   });
 };
+
+userSchema.pre(/^find/, function (next) {
+  // 'this' refers to the query object
+  // We check if we explicitly want to see deleted users (for login/restore)
+  // Use 'this.getOptions()' to check for our custom flag
+  const options = this.getOptions();
+  
+  if (options && options.includeDeleted === true) {
+    return ;
+  }
+  
+  // 4. Default: Filter out deleted users
+  this.where({ isDeleted: { $ne: true } });
+  
+
+});
+
+userSchema.index({ deletedAt: 1 }, { expireAfterSeconds: 7 * 24 * 60 * 60 });
 
 module.exports = mongoose.model("User", userSchema);

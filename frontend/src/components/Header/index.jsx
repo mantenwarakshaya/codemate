@@ -166,7 +166,7 @@ class Header extends Component {
                         className="dropdown-item"
                         onClick={() => this.props.navigate("/profile")}
                       >
-                        View Profile
+                        Account Settings
                       </p>
 
                       <p

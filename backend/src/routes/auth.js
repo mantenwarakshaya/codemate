@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
 const sendEmail = require("../utils/sendEmail");
+const { userAuth } = require("../middlewares/auth");
+const ConnectionRequest = require("../models/connectionRequest");
 const { validateSignUpData } = require("../utils/validation");
 
 // =========================
@@ -203,19 +205,41 @@ authRouter.post("/login", async (req, res) => {
   try {
     const { emailId, password } = req.body;
 
-    const user = await User.findOne({ emailId });
+    const user = await User.findOne({ emailId }).setOptions({ includeDeleted: true });
 
     if (!user) {
-      return res.status(400).send("Invalid credentials");
+      console.log("!user");
+      return res.status(400).json({
+        message: "Invalid credentials"
+      });
+    }
+
+    // 🚫 If deleted
+    if (user.isDeleted) {
+      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+      // ❌ Too late
+      if (user.deletedAt < sevenDaysAgo) {
+        return res.status(403).json("Account permanently deleted");
+      }
+
+      // ⏳ Still recoverable
+      return res.status(403).json({
+        code: "ACCOUNT_DEACTIVATED",
+        message: "Your account is deactivated. You can restore it within 7 days."
+      });    
     }
 
     if (!user.isVerified) {
-      return res.status(403).send("Please verify your email first");
+      return res.status(403).json({
+        message: "Please verify your email first"
+      });
     }
 
     const isPasswordValid = await user.validatePassword(password);
 
     if (!isPasswordValid) {
+      console.log("!password");
       throw new Error("Invalid credentials");
     }
 
@@ -231,7 +255,9 @@ authRouter.post("/login", async (req, res) => {
 
     return res.send(user);
   } catch (err) {
-    return res.status(400).send(err.message);
+    return res.status(400).json({
+      message: err.message
+    });
   }
 });
 
@@ -248,6 +274,74 @@ authRouter.post("/logout", async (req, res) => {
   });
 
   res.send("Logout Successful!!");
+});
+
+authRouter.delete("/delete-account", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
+    const { password } = req.body;
+
+    // 🔐 Step 1: Verify password
+    const isMatch = await user.validatePassword(password);
+    if (!isMatch) {
+      return res.status(400).send("Incorrect password");
+    }
+
+    // 🪦 Step 2: Soft delete + timestamp
+    user.isDeleted = true;
+    user.deletedAt = new Date(); // ✅ IMPORTANT
+    await user.save();
+
+    // 🍪 Step 2: Clear cookie
+    res.cookie("jwt_token", null, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      expires: new Date(0),
+    });
+
+    return res.send("✅ Account deleted successfully");
+  } catch (err) {
+    return res.status(400).send(err.message);
+  }
+});
+
+authRouter.post("/restore-account", async (req, res) => {
+  try {
+    const { emailId, password } = req.body;
+
+    const user = await User.findOne({ emailId }).setOptions({ includeDeleted: true });
+
+    if (!user) {
+      return res.status(400).send("User not found");
+    }
+
+    if (!user.isDeleted) {
+      return res.status(400).send("Account is already active");
+    }
+
+    // 🔐 verify password
+    const isMatch = await user.validatePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Incorrect password" });
+    }
+
+    // ⏳ check 7 days
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+    if (user.deletedAt < sevenDaysAgo) {
+      return res.status(403).send("Recovery period expired");
+    }
+
+    // 🔄 restore
+    user.isDeleted = false;
+    user.deletedAt = null;
+    await user.save();
+
+    return res.send("✅ Account restored successfully");
+  } catch (err) {
+    return res.status(400).send(err.message);
+  }
 });
 
 module.exports = authRouter;

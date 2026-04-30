@@ -25,7 +25,8 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
 
     const loggedInUser = req.user;
     const { profilePic } = req.body;
-
+    delete req.body.isDeleted;
+    delete req.body.deletedAt;
     if (profilePic) {
       try {
         const uploadResponse = await cloudinary.uploader.upload(profilePic, {

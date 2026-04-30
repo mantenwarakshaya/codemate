@@ -17,6 +17,9 @@ const userAuth = async (req, res, next) => {
     if (!user) {
       throw new Error("User not found");
     }
+    if (user.isDeleted) {
+      return res.status(403).send("Account is deactivated. Please reactivate.");
+    }
 
     req.user = user;
     next();
