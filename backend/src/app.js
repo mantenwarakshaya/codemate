@@ -1,14 +1,20 @@
 const express = require("express");
+const http = require("http");
+const { initializeSocket } = require("./utils/socket");
 const connectDB = require("./config/database");
-const app = express();
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const cors = require("cors");
-const http = require("http");
+
+const app = express();
+const server = http.createServer(app);
+
+initializeSocket(server);
+
 const cloudinary = require("cloudinary").v2;
 const startCleanupTask = require("./utils/cleanup");
 require("dotenv").config();
-// process.env.BASE_URL = "http://localhost:5173";
+process.env.BASE_URL = "http://localhost:5173";
 
 
 startCleanupTask();
@@ -19,27 +25,26 @@ cloudinary.config({
 });
 // ✅ Middlewares
 // app.use(express.json());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
-app.use(cookieParser());
-
 
 app.use(cors());
 
 // ✅ CORS (simple since same domain)
 // app.use(
 //   cors({
-//     origin: process.env.BASE_URL || "http://localhost:5173",
+//     origin: "http://localhost:5173",
 //     credentials: true,
 //   })
 // );
+
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(cookieParser());
 
 // ✅ Routes
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
-const initializeSocket = require("./utils/socket");
 const chatRouter = require("./routes/chat");
 
 app.set("trust proxy", 1);
@@ -48,9 +53,6 @@ app.use("/api", profileRouter);
 app.use("/api", requestRouter);
 app.use("/api", userRouter);
 app.use("/api", chatRouter);
-
-const server = http.createServer(app);
-initializeSocket(server);
 
 if (process.env.NODE_ENV === "production"){
   // Serve frontend (React build)
