@@ -1,12 +1,66 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const User = require("../models/user");
 const { userAuth } = require("../middlewares/auth");
+const { getIo } = require("../utils/socket");
 const Message = require("../models/message");
-const { getIO, getReceiverSocketId } = require("../utils/socket");
 
 const chatRouter = express.Router();
 
-// ✅ 1. Get messages between two users
+/* ===========================
+   ✅ 1. UNREAD SUMMARY (KEEP THIS FIRST)
+=========================== */
+chatRouter.get("/messages/unread", userAuth, async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const messages = await Message.aggregate([
+      {
+        $match: {
+          receiverId: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      { $sort: { createdAt: -1 } },
+      {
+        $group: {
+          _id: "$senderId",
+          lastMessage: { $first: "$text" },
+          createdAt: { $first: "$createdAt" },
+          unseenCount: {
+            $sum: {
+              $cond: [{ $eq: ["$seen", false] }, 1, 0],
+            },
+          },
+        },
+      },
+    ]);
+
+    const populated = await User.populate(messages, {
+      path: "_id",
+      select: "firstName profilePic",
+    });
+
+    const formatted = populated.map((item) => ({
+      user: item._id,
+      text: item.lastMessage,
+      createdAt: item.createdAt,
+      count: item.unseenCount,
+      isRead: item.unseenCount === 0,
+    }));
+
+    res.status(200).json({
+      success: true,
+      messages: formatted,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
+});
+
+/* ===========================
+   ✅ 2. GET MESSAGES (KEEP AFTER unread)
+=========================== */
 chatRouter.get("/messages/:id", userAuth, async (req, res) => {
   try {
     const { id: userToChatId } = req.params;
@@ -17,86 +71,72 @@ chatRouter.get("/messages/:id", userAuth, async (req, res) => {
         { senderId: myId, receiverId: userToChatId },
         { senderId: userToChatId, receiverId: myId },
       ],
-    }).sort({ createdAt: 1 }); // Sort by time so chat flows correctly
+    }).sort({ createdAt: 1 });
 
     res.status(200).json(messages);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Error fetching messages" });
   }
 });
 
-// ✅ 2. Send a new message
+/* ===========================
+   ✅ 3. SEND MESSAGE
+=========================== */
 chatRouter.post("/messages/send/:id", userAuth, async (req, res) => {
   try {
     const { text, image } = req.body;
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
-    const receiver = await User.findById(receiverId);
-    if (!receiver) {
-      return res.status(404).json({ message: "Cannot send message: User account deactivated" });
-    }
-    
     const newMessage = new Message({
       senderId,
       receiverId,
       text,
-      image, // Handle image logic if needed
+      image,
     });
 
     await newMessage.save();
 
-    // REAL-TIME EMIT
-    const receiverSocketId = getReceiverSocketId(receiverId);
-    if (receiverSocketId) {
-      const io = getIO();
-      // Only send to the specific receiver
-      io.to(receiverSocketId).emit("newMessage", newMessage);
-    }
+    // SOCKET.IO: Notify the receiver instantly
+    const io = getIo();
+
+    io.to(String(receiverId)).emit("newMessage", newMessage);
+    io.to(String(senderId)).emit("newMessage", newMessage);
 
     res.status(201).json(newMessage);
-  } catch (err) {
-    res.status(500).json({ message: "Error sending message" });
+  } catch (error) {
+    console.error("Error in sendMessage:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// GET unread messages count + grouped users
-chatRouter.get("/messages/unread", userAuth, async (req, res) => {
+/* ===========================
+   ✅ 4. MARK AS SEEN
+=========================== */
+chatRouter.post("/messages/mark-seen/:senderId", userAuth, async (req, res) => {
   try {
-    const myId = req.user._id;
+    const { senderId } = req.params; // The person who sent the messages
+    const userId = req.user._id;     // You (the receiver)
 
-    const unreadMessages = await Message.find({
-      receiverId: myId,
-      seen: false, // Ensure this field exists and is false in your DB
-    }).populate("senderId", "firstName lastName profilePic");
+    // Update all messages where you are the receiver and they are the sender
+    await Message.updateMany(
+      { senderId, receiverId: userId, seen: false },
+      { $set: { seen: true } }
+    );
 
-    const grouped = {};
+    // SOCKET.IO: Notify the original sender that their messages were seen
+    const io = getIo();
 
-    unreadMessages.forEach((msg) => {
-      if (!msg.senderId || !msg.senderId._id) return; 
-
-      const senderId = msg.senderId._id.toString();
-
-      if (!grouped[senderId]) {
-        grouped[senderId] = {
-          user: msg.senderId,
-          count: 0,
-          lastMessage: msg.text || "Sent a message",
-          updatedAt: msg.createdAt,
-        };
-      }
-
-      grouped[senderId].count += 1;
-
-      if (new Date(msg.createdAt) > new Date(grouped[senderId].updatedAt)) {
-        grouped[senderId].lastMessage = msg.text;
-        grouped[senderId].updatedAt = msg.createdAt;
-      }
+    io.to(String(senderId)).emit("messagesSeen", {
+      seenBy: userId,
+      senderId,
     });
 
-    res.json({ data: Object.values(grouped) }); // Correctly wrapped in 'data'
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching unread messages" });
+    res.status(200).json({ success: true, message: "Messages marked as seen" });
+  } catch (error) {
+    console.error("Error in markSeen:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
