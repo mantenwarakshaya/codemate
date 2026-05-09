@@ -18,6 +18,5 @@ const profileViewSchema = new mongoose.Schema(
 );
 
 // prevent duplicate spam views (same user)
-profileViewSchema.index({ viewerId: 1, viewedUserId: 1 });
-
+profileViewSchema.index({ viewerId: 1, viewedUserId: 1 }, { unique: true });
 module.exports = mongoose.model("ProfileView", profileViewSchema);
