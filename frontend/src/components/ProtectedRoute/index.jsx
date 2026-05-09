@@ -10,7 +10,7 @@ class ProtectedRoute extends Component {
 
     // If token is missing, redirect the user to the login page
     if (token === undefined) {
-      return <Navigate to="/login" replace />
+      return <Navigate to="/landing" replace />
     }
 
     // If authenticated, render the protected content

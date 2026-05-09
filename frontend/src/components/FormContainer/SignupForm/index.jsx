@@ -3,13 +3,14 @@ import Cookies from 'js-cookie'
 import { Navigate, Link } from 'react-router-dom'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { MdEmail, MdLock, MdPerson } from 'react-icons/md'
+import Footer from "../Footer";
 import './index.css'
 import navlogo from "../../../assets/navlogo.png";
 
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "/api"
-    : "http://localhost:7777/api";
+const BASE_URL = import.meta.env.PROD
+  ? "/api"
+  : "http://localhost:7777/api";
+
 
 class SignupForm extends Component {
   state = {
@@ -211,6 +212,7 @@ class SignupForm extends Component {
     // SIGNUP FORM
     // =========================
     return (
+      <>
       <div className="signupform-main-container">
         <form className="signupform-container" onSubmit={this.submitForm}>
           <img
@@ -317,6 +319,9 @@ class SignupForm extends Component {
           </div>
         </form>
       </div>
+      {/* Footer */}
+      <Footer />
+      </>
     )
   }
 }

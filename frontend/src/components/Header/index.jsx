@@ -71,7 +71,7 @@ class Header extends Component {
 
   onClickLogout = () => {
     Cookies.remove("jwt_token");
-    this.props.navigate("/login", { replace: true });
+    this.props.navigate("/landing", { replace: true });
   };
 
   render() {

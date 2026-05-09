@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { LoaderView, ErrorView } from "../../Common";
 
-const BASE_URL = 
+const BASE_URL =
   process.env.NODE_ENV === "production"
     ? "/api"
     : "http://localhost:7777/api";
+
 const LIMIT = 3;
 
 const apiStatusConstants = {
@@ -22,7 +23,7 @@ const RightSidebar = () => {
   const [messages, setMessages] = useState([]);
   const [views, setViews] = useState([]);
   const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial);
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,19 +32,23 @@ const RightSidebar = () => {
 
   const fetchNotifications = async () => {
     setApiStatus(apiStatusConstants.inProgress);
-    
+
     try {
       const safeFetch = async (endpoint) => {
         try {
-          const response = await fetch(`${BASE_URL}${endpoint}`, { credentials: "include" });
-          
+          const response = await fetch(`${BASE_URL}${endpoint}`, {
+            credentials: "include",
+          });
+
           if (!response.ok) {
-            console.error(`Backend Error @ ${endpoint}: Status ${response.status}`);
-            return []; 
+            console.error(`Backend Error @ ${endpoint}: ${response.status}`);
+            return [];
           }
-          
+
           const result = await response.json();
-          return result.data || [];
+
+          // ✅ FIX: support different response formats
+          return result.messages || result.data || [];
         } catch (err) {
           console.error(`Network error for ${endpoint}:`, err);
           return [];
@@ -51,16 +56,28 @@ const RightSidebar = () => {
       };
 
       const reqData = await safeFetch("/user/requests/received");
-      const msgData = await safeFetch("/messages/unread");
+      const rawMessages = await safeFetch("/messages/unread");
       const viewData = await safeFetch("/user/profile-views");
 
+      // ✅ FIX: Group unread messages by sender
+      const groupedMessages = rawMessages
+        .filter((msg) => msg.user?._id && msg.count > 0)
+        .map((msg) => ({
+          user: msg.user,
+          count: msg.count,
+          lastMessage: msg.text,
+          updatedAt: msg.createdAt,
+          isRead: msg.isRead,
+      }));
+
+
       setRequests(reqData);
-      setMessages(msgData);
+      setMessages(groupedMessages);
       setViews(viewData);
 
       setApiStatus(apiStatusConstants.success);
     } catch (err) {
-      console.error("Critical error in fetchNotifications:", err);
+      console.error("Critical error:", err);
       setApiStatus(apiStatusConstants.failure);
     }
   };
@@ -73,52 +90,66 @@ const RightSidebar = () => {
     };
   };
 
-  const { visible: visibleViews, remaining: remainingViews } = getLimitedData(views);
-  const { visible: visibleMessages, remaining: remainingMessages } = getLimitedData(messages);
-  const { visible: visibleRequests, remaining: remainingRequests } = getLimitedData(requests);
+  const { visible: visibleViews, remaining: remainingViews } =
+    getLimitedData(views);
+  const { visible: visibleMessages, remaining: remainingMessages } =
+    getLimitedData(messages);
+  const { visible: visibleRequests, remaining: remainingRequests } =
+    getLimitedData(requests);
 
   const renderSuccessView = () => (
     <div className="rightbar-container">
       {/* PROFILE VIEWS */}
       <div className="rightbar-card">
-        <h4>👀 Profile Views</h4>
+        <h4 className="rightbar-title">👀 Profile Views</h4>
         {views.length === 0 ? (
-          <p className="empty">No one viewed yet</p>
+          <p className="rightbar-empty">No one viewed yet</p>
         ) : (
           <>
             {visibleViews.map((view) => {
-              if (!view.viewerId || !view.viewerId._id) return null;
+              if (!view.viewerId?._id) return null;
 
               return (
                 <div
                   key={view._id}
                   className="rightbar-item"
-                  onClick={() => navigate(`/profile/${view.viewerId._id}`)}
+                  onClick={() =>
+                    navigate(`/profile/${view.viewerId._id}`)
+                  }
                 >
-                  <img src={view.viewerId.profilePic || "/avatar.png"} alt="User" />
-                  <div>
-                    <p>{view.viewerId.firstName}</p>
-                    <span>
-                      {formatDistanceToNow(new Date(view.createdAt), { addSuffix: true })}
+                  <img
+                    className="rightbar-img"
+                    src={view.viewerId.profilePic || "/avatar.png"}
+                    alt="User"
+                  />
+                  <div className="rightbar-info">
+                    <p className="rightbar-name">{view.viewerId.firstName}</p>
+                    <span className="rightbar-span">
+                      {formatDistanceToNow(
+                        new Date(view.createdAt),
+                        { addSuffix: true }
+                      )}
                     </span>
                   </div>
                 </div>
               );
             })}
-            {remainingViews > 0 && <p className="more-text">+{remainingViews} more</p>}
+            {remainingViews > 0 && (
+              <p className="rightbar-more-text">+{remainingViews} more</p>
+            )}
           </>
         )}
       </div>
 
       {/* MESSAGES */}
       <div className="rightbar-card">
-        <h4>💬 Messages</h4>
+        <h4 className="rightbar-title">💬 Messages</h4>
         {messages.length === 0 ? (
-          <p className="empty">No new messages</p>
+          <p className="rightbar-empty">No new messages</p>
         ) : (
           <>
             {visibleMessages.map((msg) => {
-              if (!msg.user || !msg.user._id) return null;
+              if (!msg.user?._id) return null;
 
               return (
                 <div
@@ -126,50 +157,70 @@ const RightSidebar = () => {
                   className="rightbar-item"
                   onClick={() => navigate(`/chat/${msg.user._id}`)}
                 >
-                  <img src={msg.user.profilePic || "/avatar.png"} alt="Sender" />
-                  <div>
-                    <p>{msg.user.firstName}</p>
-                    <span className="truncate-text">
+                  <img
+                    className="rightbar-img"
+                    src={msg.user.profilePic || "/avatar.png"}
+                    alt="Sender"
+                  />
+                  <div className="rightbar-info">
+                    <p className="rightbar-name">{msg.user.firstName}</p>
+                    <span className="rightbar-span rightbar-truncate-text">
                       {msg.lastMessage || "New message"} •{" "}
-                      {formatDistanceToNow(new Date(msg.updatedAt), { addSuffix: true })}
+                      {formatDistanceToNow(
+                        new Date(msg.updatedAt),
+                        { addSuffix: true }
+                      )}
                     </span>
                   </div>
-                  <div className="badge">{msg.count}</div>
+                  <div className="rightbar-badge">{msg.count}</div>
                 </div>
               );
             })}
-            {remainingMessages > 0 && <p className="more-text">+{remainingMessages} more</p>}
+            {remainingMessages > 0 && (
+              <p className="rightbar-more-text">+{remainingMessages} more</p>
+            )}
           </>
         )}
       </div>
 
       {/* REQUESTS */}
       <div className="rightbar-card">
-        <h4>🤝 Requests</h4>
+        <h4 className="rightbar-title">🤝 Requests</h4>
         {requests.length === 0 ? (
-          <p className="empty">No requests</p>
+          <p className="rightbar-empty">No requests</p>
         ) : (
           <>
             {visibleRequests.map((req) => {
-              if (!req.fromUserId || !req.fromUserId._id) return null;
+              if (!req.fromUserId?._id) return null;
 
               return (
                 <div
                   key={req._id}
                   className="rightbar-item"
-                  onClick={() => navigate(`/profile/${req.fromUserId._id}`)}
+                  onClick={() =>
+                    navigate(`/profile/${req.fromUserId._id}`)
+                  }
                 >
-                  <img src={req.fromUserId.profilePic || "/avatar.png"} alt="Requester" />
-                  <div>
-                    <p>{req.fromUserId.firstName}</p>
-                    <span>
-                      {formatDistanceToNow(new Date(req.createdAt), { addSuffix: true })}
+                  <img
+                    className="rightbar-img"
+                    src={req.fromUserId.profilePic || "/avatar.png"}
+                    alt="Requester"
+                  />
+                  <div className="rightbar-info">
+                    <p className="rightbar-name">{req.fromUserId.firstName}</p>
+                    <span className="rightbar-span">
+                      {formatDistanceToNow(
+                        new Date(req.createdAt),
+                        { addSuffix: true }
+                      )}
                     </span>
                   </div>
                 </div>
               );
             })}
-            {remainingRequests > 0 && <p className="more-text">+{remainingRequests} more</p>}
+            {remainingRequests > 0 && (
+              <p className="rightbar-more-text">+{remainingRequests} more</p>
+            )}
           </>
         )}
       </div>
@@ -180,7 +231,12 @@ const RightSidebar = () => {
     case apiStatusConstants.inProgress:
       return <LoaderView />;
     case apiStatusConstants.failure:
-      return <ErrorView message="Failed to load notifications" onRetry={fetchNotifications} />;
+      return (
+        <ErrorView
+          message="Failed to load notifications"
+          onRetry={fetchNotifications}
+        />
+      );
     case apiStatusConstants.success:
       return renderSuccessView();
     default:

@@ -18,7 +18,7 @@
 }
 
 /* TITLE */
-.rightbar-card h4 {
+.rightbar-title {
   font-size: 14px;
   margin-bottom: 12px;
   color: #475569;
@@ -43,7 +43,7 @@
 }
 
 /* IMAGE */
-.rightbar-item img {
+.rightbar-img {
   width: 42px;
   height: 42px;
   border-radius: 10px; 
@@ -52,18 +52,29 @@
   background: #f1f5f9;
 }
 
+/* INFO WRAPPER */
+.rightbar-info {
+  flex: 1;
+  min-width: 0;
+}
+
 /* TEXT */
-.rightbar-item p {
+.rightbar-name {
   font-size: 13.5px;
   font-weight: 600; 
   color: #1e293b;
   line-height: 1.2;
+  margin: 0;
 }
 
-.rightbar-item span {
+.rightbar-span {
   font-size: 11px;
   color: #94a3b8; 
   margin-top: 2px;
+  display: block;
+}
+
+.rightbar-truncate-text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -71,7 +82,7 @@
 }
 
 /* BADGE */
-.badge {
+.rightbar-badge {
   background: #ef4444; 
   color: white;
   font-size: 10px;
@@ -87,7 +98,7 @@
 }
 
 /* EMPTY */
-.empty {
+.rightbar-empty {
   font-size: 12px;
   color: #94a3b8;
   text-align: center;
@@ -97,13 +108,7 @@
   margin: 5px 0;
 }
 
-.rightbar-item span {
-  font-size: 11px;
-  color: #64748b;
-  display: block;
-}
-
-.more-text {
+.rightbar-more-text {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -117,7 +122,7 @@
   transition: 0.2s;
 }
 
-.more-text:hover {
+.rightbar-more-text:hover {
   background: #e2e8f0;
   color: #0f172a;
   text-decoration: none;

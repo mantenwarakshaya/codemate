@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { Routes, Route, Navigate } from "react-router-dom";
 
+import LandingPage from "./components/FormContainer/LandingPage";
 import LoginForm from "./components/FormContainer/LoginForm";
 import SignupForm from "./components/FormContainer/SignupForm";
 import VerifyEmail from "./components/FormContainer/VerifyEmail";
@@ -51,6 +52,7 @@ const App = () => {
     <Routes>
 
       {/* Public */}
+      <Route path="/landing" element={<LandingPage />} />
       <Route path="/login" element={<LoginForm />} />
       <Route path="/signup" element={<SignupForm />} />
       <Route path="/verify-email/:token" element={<VerifyEmail />} />

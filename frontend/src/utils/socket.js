@@ -1,15 +1,33 @@
-import io from "socket.io-client";
+import { io } from "socket.io-client";
 
-const BASE_URL =
-  location.hostname === "localhost"
-    ? "http://localhost:7777"
-    : "/api";
-    
+const SOCKET_URL = import.meta.env.PROD
+  ? window.location.origin
+  : "http://localhost:7777";
 
-export const createSocketConnection = () => {
-  if (location.hostname === "localhost") {
-    return io(BASE_URL);
-  } else {
-    return io("/", { path: "/api/socket.io" });
+let socket = null;
+
+export const connectSocket = (userId) => {
+  if (!userId) return null;
+
+  if (socket?.connected) {
+    return socket;
   }
+
+  socket = io(SOCKET_URL, {
+    query: { userId },
+    withCredentials: true,
+    transports: ["websocket"],
+  });
+
+  return socket;
+};
+
+export const getSocket = () => socket;
+
+export const disconnectSocket = () => {
+  if (!socket) return;
+
+  socket.removeAllListeners();
+  socket.disconnect();
+  socket = null;
 };

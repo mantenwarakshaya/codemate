@@ -4,10 +4,9 @@ import axios from "axios";
 import "./index.css";
 import { LoaderView, ErrorView, EmptyView } from "../../Common";
 
-const BASE_URL = 
-  process.env.NODE_ENV === "production"
-    ? "/api"
-    : "http://localhost:7777/api";
+const BASE_URL = import.meta.env.PROD
+  ? "/api"
+  : "http://localhost:7777/api";
 
 const apiStatusConstants = {
   INITIAL: "INITIAL",

@@ -3,13 +3,14 @@ import Cookies from 'js-cookie'
 import { Navigate, Link } from 'react-router-dom'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { MdEmail, MdLock } from 'react-icons/md' 
+import Footer from "../Footer";
 import './index.css'
 import navlogo from "../../../assets/navlogo.png";
 
-const BASE_URL = 
-  process.env.NODE_ENV === "production"
-    ? "/api"
-    : "http://localhost:7777/api";
+const BASE_URL = import.meta.env.PROD
+  ? "/api"
+  : "http://localhost:7777/api";
+
         
 class LoginForm extends Component {
   constructor(props) {
@@ -133,6 +134,7 @@ class LoginForm extends Component {
     if (Cookies.get('jwt_token') !== undefined) return <Navigate to="/" replace />
 
     return (
+      <>
       <div className="loginform-main-container">
         <form className="loginform-container" onSubmit={this.submitForm}>
           <img src={navlogo} className="loginform-website-logo-desktop-img" alt="website logo" />
@@ -205,6 +207,9 @@ class LoginForm extends Component {
           </div>
         </form>
       </div>
+      {/* Footer */}
+      <Footer />
+      </>
     )
   }
 }
