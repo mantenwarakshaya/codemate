@@ -117,10 +117,48 @@ userRouter.get("/users/all", userAuth, async (req, res) => {
   }
 });
 
+// GET profile views
+userRouter.get("/user/profile-views", userAuth, async (req, res) => {
+  try {
+    // 1. Ensure user is logged in
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ message: "Unauthorized: No user found" });
+    }
+
+    const loggedInUserId = req.user._id;
+
+    // 2. Query the database
+    const views = await ProfileView.find({
+      viewedUserId: loggedInUserId,
+    })
+      .populate("viewerId", "firstName profilePic") 
+      .sort({ updatedAt: -1 })
+      .limit(10)
+      .lean();
+
+    // 3. Check if views exists (even if empty)
+    if (!views) {
+      return res.status(200).json({ data: [] });
+    }
+
+    // 4. Filter and send
+    const activeViews = views.filter((v) => v.viewerId != null);
+
+    res.json({ 
+      success: true,
+      data: activeViews 
+    }); 
+  } catch (err) {
+    // THIS LOG IS CRITICAL: Check your VS Code terminal (not browser) to see the real error
+    console.error("Profile Views Route Error:", err);
+    res.status(400).json({ message: err.message }); // Changing this to 400 helps us see the error in the browser
+  }
+});
+
 userRouter.get("/user/:id", userAuth, async (req, res) => {
   try {
-    const { id } = req.params;
-    const myId = req.user._id;
+    const { id } = req.params;      // The ID of the user being viewed
+    const myId = req.user._id;      // Your ID (the viewer) from auth middleware
 
     const user = await User.findById(id).select(USER_SAFE_DATA);
 
@@ -128,49 +166,27 @@ userRouter.get("/user/:id", userAuth, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // ✅ TRACK PROFILE VIEW
+    // ✅ TRACK PROFILE VIEW START
+    // Only record if you are viewing someone else's profile
     if (myId.toString() !== id) {
       await ProfileView.findOneAndUpdate(
         { viewerId: myId, viewedUserId: id },
+        { $set: { viewerId: myId, viewedUserId: id } }, 
         {
-          viewerId: myId,
-          viewedUserId: id,
-        },
-        {
-          upsert: true,
-          new: true,
+          upsert: true, 
+          returnDocument: 'after',    
         }
       );
     }
-
     res.json({
       message: "User fetched successfully",
       data: user,
     });
   } catch (err) {
+    console.error("Silent Profile View Error:", err)
     res.status(400).json({ message: err.message });
   }
 });
 
-// GET profile views
-userRouter.get("/user/profile-views", userAuth, async (req, res) => {
-  try {
-    if (!req.user?._id) {
-      return res.status(401).json({ message: "Not authenticated" });
-    }
-
-    const views = await ProfileView.find({
-      viewedUserId: req.user._id,
-    })
-      .populate("viewerId", "firstName profilePic") // Field must exist in ProfileView Schema
-      .sort({ createdAt: -1 });
-
-    const activeViews = views.filter((v) => v.viewerId !== null);
-
-    res.json({ data: activeViews || [] }); // Always return an array
-  } catch (err) {
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
 
 module.exports = userRouter;
