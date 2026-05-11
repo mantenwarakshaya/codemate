@@ -24,9 +24,15 @@ import Notifications from "./components/Notifications";
 
 import Chat from "./components/ChatContainer/Chat";
 
+import Premium from "./components/Premium";
+
 import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "/api"
+    : "http://localhost:7777/api";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -34,10 +40,10 @@ const App = () => {
   useEffect(() => {
     const syncUser = async () => {
       try {
-        const res = await axios.get("/api/profile", {
+        const res = await axios.get(BASE_URL+"/profile/view", {
           withCredentials: true,
         });
-
+        console.log("Profile Sync Data:", res.data);
         dispatch({ type: "SET_USER", payload: res.data });
       } catch (err) {
         if (err.response?.status === 401) return;
@@ -160,6 +166,15 @@ const App = () => {
         element={
           <ProtectedRoute>
             <Notifications />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/premium"
+        element={
+          <ProtectedRoute>
+            <Premium />
           </ProtectedRoute>
         }
       />

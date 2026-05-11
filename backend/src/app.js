@@ -46,6 +46,7 @@ const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
 const chatRouter = require("./routes/chat");
+const paymentRouter = require("./routes/payment");
 
 app.set("trust proxy", 1);
 app.use("/api", authRouter);
@@ -53,6 +54,7 @@ app.use("/api", profileRouter);
 app.use("/api", requestRouter);
 app.use("/api", userRouter);
 app.use("/api", chatRouter);
+app.use("/api", paymentRouter);
 
 if (process.env.NODE_ENV === "production"){
   // Serve frontend (React build)

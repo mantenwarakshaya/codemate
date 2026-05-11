@@ -15,6 +15,24 @@ const startCleanupTask = () => {
       });
 
       console.log(`Cleanup complete. Deleted ${result.deletedCount} expired accounts.`);
+      
+      const expiredPremiumUsers = await User.updateMany(
+        {
+          isPremium: true,
+          membershipExpiresAt: { $lte: new Date() },
+        },
+        {
+          $set: {
+            isPremium: false,
+            membershipType: null,
+          },
+        }
+      );
+
+      console.log(
+        `Premium cleanup complete. Expired ${expiredPremiumUsers.modifiedCount} memberships.`
+      );
+
     } catch (err) {
       console.error("Cleanup Task Error:", err.message);
     }

@@ -15,8 +15,13 @@ const userAuth = async (req, res, next) => {
     const user = await User.findById(_id);
     
     if (!user) {
-      throw new Error("User not found");
+      res.clearCookie("jwt_token");
+      return res.status(401).json({
+        success: false,
+        message: "User not found. Please login again.",
+      });
     }
+
     if (user.isDeleted) {
       return res.status(403).send("Account is deactivated. Please reactivate.");
     }

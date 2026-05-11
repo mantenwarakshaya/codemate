@@ -2,7 +2,7 @@ import { Component } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { Users, MessageSquare, Bell, Home, ChevronDown } from "lucide-react";
+import { Users, MessageSquare, Bell, Home, ChevronDown, Crown } from "lucide-react";
 import "./index.css";
 import navlogo from "../../assets/navlogo.png";
 
@@ -132,6 +132,15 @@ class Header extends Component {
                     <div className="nav-item nav-notification">
                       <Bell size={22} strokeWidth={1.5} />
                       <span>Notifications</span>
+                    </div>
+                  </NavLink>
+                </li>
+
+                <li>
+                  <NavLink to="/premium" className="nav-link" onClick={this.closeMenu}>
+                    <div className="nav-item">
+                      <Crown size={22} strokeWidth={1.5} />
+                      <span>Pro</span>
                     </div>
                   </NavLink>
                 </li>

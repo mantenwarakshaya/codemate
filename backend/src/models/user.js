@@ -105,6 +105,21 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    isPremium: {
+      type: Boolean,
+      default: false,
+    },
+    membershipType: {
+      type: String,
+      enum: ["monthly", "yearly", null],
+      default: null,
+    },
+    membershipStartedAt: {
+      type: Date,
+    },
+    membershipExpiresAt: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );
