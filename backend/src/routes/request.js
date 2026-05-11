@@ -16,18 +16,35 @@ requestRouter.post(
       const toUserId = req.params.toUserId;
       const status = req.params.status;
 
+      // 1. Validate Status
       const allowedStatus = ["ignored", "interested"];
       if (!allowedStatus.includes(status)) {
-        return res
-          .status(400)
-          .json({ message: "Invalid status type: " + status });
+        return res.status(400).json({ message: "Invalid status type: " + status });
       }
 
-      const toUser = await User.findById(toUserId);
-      if (!toUser) {
-        return res.status(404).json({ message: "User not found!" });
+      // 2. Check Rate Limits
+      const LIMIT_NORMAL = 20;
+      const LIMIT_PREMIUM = 200;
+      const userLimit = req.user.isPremium ? LIMIT_PREMIUM : LIMIT_NORMAL;
+
+      // Calculate the start of "today" (last 24 hours)
+      const twentyFourHoursAgo = new Date();
+      twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+
+      const requestCountToday = await ConnectionRequest.countDocuments({
+        fromUserId,
+        createdAt: { $gte: twentyFourHoursAgo },
+      });
+
+      if (requestCountToday >= userLimit) {
+        return res.status(429).json({
+          message: `Daily limit reached! ${
+            req.user.isPremium ? "Premium" : "Normal"
+          } users are allowed ${userLimit} requests per 24h.`,
+        });
       }
 
+      // 3. Prevent Duplicate Requests
       const existingConnectionRequest = await ConnectionRequest.findOne({
         $or: [
           { fromUserId, toUserId },
@@ -35,11 +52,16 @@ requestRouter.post(
         ],
       });
       if (existingConnectionRequest) {
-        return res
-          .status(400)
-          .send({ message: "Connection Request Already Exists!!" });
+        return res.status(400).send({ message: "Connection Request Already Exists!!" });
       }
 
+      // 4. Validate Target User
+      const toUser = await User.findById(toUserId);
+      if (!toUser) {
+        return res.status(404).json({ message: "User not found!" });
+      }
+
+      // 5. Save Request
       const connectionRequest = new ConnectionRequest({
         fromUserId,
         toUserId,
@@ -48,15 +70,9 @@ requestRouter.post(
 
       const data = await connectionRequest.save();
 
-      // const emailRes = await sendEmail.run(
-      //   "A new friend request from " + req.user.firstName,
-      //   req.user.firstName + " is " + status + " in " + toUser.firstName
-      // );
-      // console.log(emailRes);
-
       res.json({
-        message:
-          req.user.firstName + " is " + status + " in " + toUser.firstName,
+        message: `${req.user.firstName} is ${status} in ${toUser.firstName}`,
+        remainingRequests: userLimit - (requestCountToday + 1),
         data,
       });
     } catch (err) {

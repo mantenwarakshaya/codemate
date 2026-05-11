@@ -181,3 +181,104 @@
   transform: translateY(-2px);
   box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
 }
+
+/* --- Optimized Limit Card --- */
+.limit-card {
+  width: 100%;
+  max-width: 550px;
+  background: #ffffff;
+  border-radius: 32px; /* Matches your profile card radius */
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+}
+
+.limit-card .limit-card-icon-container {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #fff1f2; /* Soft red tint for a "limit" feel that isn't aggressive */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.limit-card .limit-card-emoji {
+  font-size: 32px;
+}
+
+/* Title - Now matches the "AKSHAYA" blue from your sidebar */
+.limit-card .limit-card-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #344251; 
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.limit-card .limit-card-message-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #3d4a5b;
+  margin-bottom: 8px;
+}
+
+.limit-card .limit-card-sub-text {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.6;
+  max-width: 300px;
+  margin-bottom: 40px;
+}
+
+/* --- Action Buttons --- */
+.limit-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+}
+
+/* Primary Upgrade Button */
+.limit-card .limit-card-btn-upgrade {
+  background: #2563eb;
+  color: white;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.limit-card .limit-card-btn-upgrade:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+/* Back to Feed - Matches Sidebar "Quick Actions" Style */
+.limit-card .limit-card-btn-back {
+  background: #f8fafc; /* Very light gray/blue */
+  color: #475569;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.limit-card .limit-card-btn-back:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}

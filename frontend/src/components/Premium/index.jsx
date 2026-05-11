@@ -207,7 +207,7 @@ const Premium = () => {
 
               <div className="premium-feature">
                 <span>✓</span>
-                <p>Unlimited Connection Requests</p>
+                <p>200 Daily Connection & Ignore Actions</p>
               </div>
 
               <div className="premium-feature">
@@ -331,7 +331,7 @@ const Premium = () => {
 
             <div className="feature-item">
               <span>✓</span>
-              <p>Unlimited Connection Requests</p>
+              <p>200 Daily Connection & Ignore Actions</p>
             </div>
 
             <div className="feature-item">

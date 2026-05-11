@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link, Navigate } from "react-router-dom";
 import "./index.css";
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { SiDiscord } from "react-icons/si";
@@ -23,6 +24,7 @@ class Feed extends Component {
     feed: [],
     currentIndex: 0,
     apiStatus: apiStatusConstants.initial,
+    limitError: null,
   };
 
   componentDidMount() {
@@ -66,6 +68,13 @@ class Feed extends Component {
         }
       );
 
+      // Handle Rate Limit specifically
+      if (res.status === 429) {
+        const errorData = await res.json();
+        this.setState({ limitError: errorData.message });
+        return;
+      }
+
       if (!res.ok) throw new Error("Request failed");
 
       this.setState((prevState) => ({
@@ -74,6 +83,48 @@ class Feed extends Component {
     } catch (err) {
       console.error("Error sending request:", err);
     }
+  };
+
+  renderLimitCard = () => {
+    const { limitError } = this.state;
+    const isAlreadyPremium = limitError?.toLowerCase().includes("premium");
+
+    return (
+      <div className="feed-container">
+        <div className="feed-user-card limit-card">
+          <div className="limit-card-icon-container">
+            <span className="limit-card-emoji">⏳</span>
+          </div>
+
+          <h2 className="limit-card-title">Daily Limit Reached</h2>
+          
+          <p className="limit-card-message-text">{limitError}</p>
+          
+          <p className="limit-card-sub-text">
+            {isAlreadyPremium 
+              ? "You've exhausted your premium daily allowance. Come back tomorrow!" 
+              : "Upgrade to premium to get 200 requests per day and find your match faster."}
+          </p>
+
+          <div className="limit-card-actions">
+            {!isAlreadyPremium && (
+              <button 
+                className="limit-card-btn-upgrade" 
+                onClick={() => window.location.href = "/premium"}
+              >
+                Upgrade to Premium
+              </button>
+            )}
+            <button 
+              className="limit-card-btn-back" 
+              onClick={() => this.setState({ limitError: null })}
+            >
+              Back to Feed
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   renderSuccessView = () => {
@@ -167,7 +218,13 @@ class Feed extends Component {
   };
 
   renderFeed = () => {
-    const { apiStatus } = this.state;
+    // FIX: Destructure limitError from this.state
+    const { apiStatus, limitError } = this.state;
+
+    // Show limit card if error exists, regardless of API status
+    if (limitError) {
+      return this.renderLimitCard();
+    }   
 
     switch (apiStatus) {
       case apiStatusConstants.inProgress:
