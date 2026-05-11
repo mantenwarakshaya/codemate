@@ -4,6 +4,7 @@ const requestRouter = express.Router();
 const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
+const { deleteModel } = require("mongoose");
 
 
 requestRouter.post(
@@ -99,5 +100,38 @@ requestRouter.post(
     }
   }
 );
+
+requestRouter.get("/user/requests/ignored", userAuth, async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+    const ignoredRequests = await ConnectionRequest.find({
+      fromUserId: loggedInUser._id,
+      status: "ignored",
+    }).populate("toUserId", "firstName lastName profilePic skills isPremium");
+
+    res.json({ data: ignoredRequests });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+requestRouter.delete("/request/restore/:requestId", userAuth, async(req,res) => {
+  try{
+    const { requestId } = req.params;
+
+    const deleteRequest = await ConnectionRequest.findByIdAndDelete({
+      _id: requestId,
+      fromUserId: req.user._id
+    });
+
+    if(!deleteRequest){
+      return res.status(404).json({ messaage: "Request not found" });
+    }
+
+    res.json({ messaage: "Moved back to feed ( deleted from ignored )" });
+  } catch(err){
+    res.status(500).json({ messaage: "Server Error" });
+  }
+});
 
 module.exports = requestRouter;

@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import Header from "../../Header";
 import Connections from "../Connections";
 import Requests from "../Requests";
+import Ignored from "../Ignored";
 import "./index.css";
 
 const Network = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
+  
+  const user = useSelector((store) => store.user);
+
+  const membershipExpiresAt = user?.membershipExpiresAt?.$date || user?.membershipExpiresAt;
+  
+  const isPremiumActive =
+    user?.isPremium === true &&
+    membershipExpiresAt &&
+    new Date(membershipExpiresAt).getTime() > Date.now();
+
   const initialTab = location.state?.activeTab || "requests";
   const [activeTab, setActiveTab] = useState(initialTab);
 
@@ -38,15 +51,22 @@ const Network = () => {
             >
               Connections
             </button>
+            {isPremiumActive && (
+              <button
+                type="button"
+                className={`tab-btn ${activeTab === "ignored" ? "active" : ""}`}
+                onClick={() => setActiveTab("ignored")}
+              >
+                Ignored
+              </button>
+            )}
           </div>
 
           {/* DYNAMIC CONTENT AREA */}
           <div className="tab-content-area">
-            {activeTab === "requests" ? (
-              <Requests />
-            ) : (
-              <Connections />
-            )}
+            {activeTab === "requests" && <Requests />}
+            {activeTab === "connections" && <Connections />}
+            {activeTab === "ignored" && isPremiumActive && <Ignored />}
           </div>
         </div>
       </div>
