@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import { LoaderView, ErrorView } from "../../Common";
+import { LoaderView, ErrorView, PremiumVerifiedBadge } from "../../Common";
 
 const BASE_URL =
   process.env.NODE_ENV === "production"
@@ -123,7 +123,10 @@ const RightSidebar = () => {
                     alt="User"
                   />
                   <div className="rightbar-info">
-                    <p className="rightbar-name">{view.viewerId.firstName}</p>
+                    <p className="rightbar-name">
+                      {view.viewerId.firstName}
+                      <PremiumVerifiedBadge user={view.viewerId} />
+                    </p>
                     <span className="rightbar-span">
                       {formatDistanceToNow(
                         new Date(view.createdAt),
@@ -163,7 +166,10 @@ const RightSidebar = () => {
                     alt="Sender"
                   />
                   <div className="rightbar-info">
-                    <p className="rightbar-name">{msg.user.firstName}</p>
+                    <p className="rightbar-name">
+                      {msg.user.firstName}
+                      <PremiumVerifiedBadge user={msg.user} />
+                    </p>
                     <span className="rightbar-span rightbar-truncate-text">
                       {msg.lastMessage || "New message"} •{" "}
                       {formatDistanceToNow(
@@ -207,7 +213,10 @@ const RightSidebar = () => {
                     alt="Requester"
                   />
                   <div className="rightbar-info">
-                    <p className="rightbar-name">{req.fromUserId.firstName}</p>
+                    <p className="rightbar-name">
+                      {req.fromUserId.firstName}
+                      <PremiumVerifiedBadge user={req.fromUserId} />
+                    </p>
                     <span className="rightbar-span">
                       {formatDistanceToNow(
                         new Date(req.createdAt),

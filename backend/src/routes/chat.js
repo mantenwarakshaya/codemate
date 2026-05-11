@@ -37,7 +37,7 @@ chatRouter.get("/messages/unread", userAuth, async (req, res) => {
 
     const populated = await User.populate(messages, {
       path: "_id",
-      select: "firstName profilePic",
+      select: "firstName profilePic isPremium",
     });
 
     const formatted = populated.map((item) => ({

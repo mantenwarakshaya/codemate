@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import { LoaderView, ErrorView, EmptyView } from "../Common";
+import { LoaderView, ErrorView, EmptyView, PremiumVerifiedBadge } from "../Common";
 import Header from "../Header";
 
 const BASE_URL =
@@ -209,6 +209,7 @@ const Notification = () => {
                         <p className="notification-main-text">
                           <span className="user-name">
                             {item.user?.firstName || "Someone"}
+                            <PremiumVerifiedBadge user={item.user} />
                           </span>{" "}
                           {meta.action}
                         </p>

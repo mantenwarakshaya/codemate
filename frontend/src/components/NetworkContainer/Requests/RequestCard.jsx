@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { FaCheck, FaTimes } from "react-icons/fa";
+import { PremiumVerifiedBadge } from "../../Common";
 import "./index.css";
 
 class RequestCard extends Component {
@@ -36,6 +37,7 @@ class RequestCard extends Component {
               >
                 {firstName} {lastName}
               </Link>
+              <PremiumVerifiedBadge user={fromUser} />
             </h2>
 
             <div className="requestcard-skills">

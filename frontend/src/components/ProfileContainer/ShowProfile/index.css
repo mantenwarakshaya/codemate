@@ -83,6 +83,9 @@
 }
 
 .sp-user-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 32px;
   font-weight: 800;
   color: #1e293b;

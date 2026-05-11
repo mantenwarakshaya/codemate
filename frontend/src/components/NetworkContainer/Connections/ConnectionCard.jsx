@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { PremiumVerifiedBadge } from "../../Common";
 import "./index.css";
 
 class ConnectionCard extends Component {
@@ -34,6 +35,7 @@ class ConnectionCard extends Component {
               <Link to={`/profile/${_id}`} className="connectioncard-user-link">
                 {firstName} {lastName}
               </Link>
+              <PremiumVerifiedBadge user={user} />
             </h2>
 
             <div className="connectioncard-skills">

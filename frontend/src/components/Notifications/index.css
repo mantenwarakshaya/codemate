@@ -158,11 +158,18 @@
   color: #39465a;
   font-size: 15px;
   line-height: 1.45;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
 }
 
 .user-name {
   color: #202b3d;
   font-weight: 750;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .notification-time {

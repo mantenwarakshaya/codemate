@@ -81,6 +81,9 @@
 }
 
 .connectioncard-user-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 17px;
   font-weight: 700;
   margin: 0;

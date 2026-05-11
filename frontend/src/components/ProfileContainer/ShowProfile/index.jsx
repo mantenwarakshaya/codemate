@@ -6,7 +6,7 @@ import { MdMessage } from "react-icons/md";
 import "./index.css";
 import Header from "../../Header";
 
-import { LoaderView, ErrorView, EmptyView } from "../../Common";
+import { LoaderView, ErrorView, EmptyView, PremiumVerifiedBadge } from "../../Common";
 
 const BASE_URL =
   process.env.NODE_ENV === "production"
@@ -176,6 +176,7 @@ class ShowProfile extends Component {
             <div className="sp-profile-header">
               <h2 className="sp-user-name">
                 {user.firstName} {user.lastName}
+                <PremiumVerifiedBadge user={user} />
               </h2>
 
               <div className="sp-user-meta">

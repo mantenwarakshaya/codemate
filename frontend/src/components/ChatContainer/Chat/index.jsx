@@ -6,7 +6,7 @@ import { Send, Image, Smile, ArrowLeft, MoreVertical, CheckCheck } from "lucide-
 
 import ConnectionsChatList from "../ConnectionsChatList";
 import Header from "../../Header";
-import { LoaderView, ErrorView, EmptyView } from "../../Common";
+import { LoaderView, ErrorView, EmptyView, PremiumVerifiedBadge } from "../../Common";
 import { useChatStore } from "../../../store/useChatStore";
 
 import navlogo from "../../../assets/navlogo.png";
@@ -300,6 +300,7 @@ const Chat = () => {
                           targetUser.lastName || ""
                         }`.trim() || "Chat"
                       : "Chat"}
+                    <PremiumVerifiedBadge user={targetUser} />
                   </h3>
                 </div>
 

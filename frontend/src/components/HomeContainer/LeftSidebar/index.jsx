@@ -3,7 +3,7 @@ import { HiLightningBolt } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./index.css";
-import { LoaderView, ErrorView } from "../../Common";
+import { LoaderView, ErrorView, PremiumVerifiedBadge } from "../../Common";
 import { SiDiscord } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 
@@ -70,7 +70,10 @@ const LeftSidebar = () => {
           </div>
 
           <div className="profilecard-userinfo">
-            <h4>{user.firstName} {user.lastName}</h4>
+            <h4>
+              {user.firstName} {user.lastName}
+              <PremiumVerifiedBadge user={user} />
+            </h4>
             <p>{user.emailId}</p>
           </div>
         </div>

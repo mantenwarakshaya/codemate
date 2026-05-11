@@ -131,7 +131,7 @@ userRouter.get("/user/profile-views", userAuth, async (req, res) => {
     const views = await ProfileView.find({
       viewedUserId: loggedInUserId,
     })
-      .populate("viewerId", "firstName profilePic") 
+      .populate("viewerId", "firstName profilePic isPremium") 
       .sort({ updatedAt: -1 })
       .limit(10)
       .lean();

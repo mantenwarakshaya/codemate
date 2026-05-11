@@ -4,7 +4,7 @@ import Header from "../../Header";
 import { Camera } from "lucide-react";
 import "./index.css";
 
-import { LoaderView, ErrorView } from "../../Common";
+import { LoaderView, ErrorView, PremiumVerifiedBadge } from "../../Common";
 
 const BASE_URL = 
   process.env.NODE_ENV === "production"
@@ -159,7 +159,10 @@ class EditProfile extends Component {
                 </label>
               </div>
               <div className="ep-identity-meta">
-                <h1 className="ep-user-full-name">{user.firstName} {user.lastName}</h1>
+                <h1 className="ep-user-full-name">
+                  {user.firstName} {user.lastName}
+                  <PremiumVerifiedBadge user={user} />
+                </h1>
                 <span className="ep-user-email-badge">{user.emailId}</span>
               </div>
             </div>

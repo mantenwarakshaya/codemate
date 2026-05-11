@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./index.css";
-import { LoaderView, ErrorView, EmptyView } from "../../Common";
+import { LoaderView, ErrorView, EmptyView, PremiumVerifiedBadge } from "../../Common";
 
 const BASE_URL = import.meta.env.PROD
   ? "/api"
@@ -138,6 +138,7 @@ const navigate = useNavigate();
               <div className="ConnectionsChatList-user-info">
                 <p className="ConnectionsChatList-user-name">
                   {user.firstName} {user.lastName}
+                  <PremiumVerifiedBadge user={user} />
                 </p>
 
                 <p className="ConnectionsChatList-last-message">

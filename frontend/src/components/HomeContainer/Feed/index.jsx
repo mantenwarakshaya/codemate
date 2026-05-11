@@ -4,7 +4,7 @@ import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { SiDiscord } from "react-icons/si";
 import { MdMessage } from "react-icons/md";
 
-import { LoaderView, ErrorView, EmptyView } from "../../Common";
+import { LoaderView, ErrorView, EmptyView, PremiumVerifiedBadge } from "../../Common";
 
 const BASE_URL = 
   process.env.NODE_ENV === "production"
@@ -98,6 +98,7 @@ class Feed extends Component {
 
           <h2 className="feed-user-name">
             {user.firstName} {user.lastName}
+            <PremiumVerifiedBadge user={user} />
           </h2>
 
           <p className="feed-user-email">{user.emailId}</p>

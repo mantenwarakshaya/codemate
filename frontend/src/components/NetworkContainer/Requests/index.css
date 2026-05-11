@@ -84,6 +84,9 @@
 }
 
 .requestcard-user-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 18px;
   font-weight: 700;
 }
