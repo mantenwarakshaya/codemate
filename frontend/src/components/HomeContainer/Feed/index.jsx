@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
 import "./index.css";
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
@@ -42,8 +43,20 @@ class Feed extends Component {
       if (!res.ok) throw new Error("Failed");
 
       const data = await res.json();
+      let feedData = data?.data || [];
+
+      const { user: currentUser } = this.props
+
+      if (currentUser && currentUser.isPremium) {
+        feedData = [...feedData].sort((a,b) => {
+          if(a.isPremium && !b.isPremium) return -1;
+          if(!a.isPremium && b.isPremium) return 1;
+          return 0;
+        })
+      }
+
       this.setState({
-        feed: data?.data || [],
+        feed: feedData,
         apiStatus: apiStatusConstants.success,
       });
     } catch (err) {
@@ -248,4 +261,8 @@ class Feed extends Component {
   }
 }
 
-export default Feed;
+const mapStateToProps = (state) => ({
+  user: state.user,
+})
+
+export default connect(mapStateToProps)(Feed);
