@@ -293,3 +293,28 @@
 .sp-cancel-btn:active {
   transform: scale(0.96);
 }
+
+.sp-status-feedback {
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.sp-status-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.sp-status-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.sp-request-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}

@@ -3,9 +3,56 @@ import { Link, useNavigate } from "react-router-dom";
 import { PremiumVerifiedBadge } from "../../Common";
 import "./index.css";
 
+const BASE_URL = 
+  process.env.NODE_ENV === "production"
+    ? "/api"
+    : "http://localhost:7777/api";
+
 class ConnectionCard extends Component {
+  state = {
+    isRemoving: false,
+    statusMessage: "",
+    showConfirm: false // New state for custom UI confirmation
+  };
+
+  // Toggle confirmation view
+  toggleConfirm = () => {
+    this.setState((prevState) => ({ 
+        showConfirm: !prevState.showConfirm,
+        statusMessage: "" 
+    }));
+  };
+
+  handleRemove = async () => {
+    const { user } = this.props;
+    
+    // Switch from "Confirm?" UI to "Removing..." UI
+    this.setState({ isRemoving: true, statusMessage: "Removing...", showConfirm: false });
+
+    try {
+      const res = await fetch(`${BASE_URL}/connection/remove/${user._id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        this.setState({ statusMessage: "Removed!" });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        this.setState({ isRemoving: false, statusMessage: "Failed to remove" });
+      }
+    } catch (err) {
+      console.error("Error removing connection:", err);
+      this.setState({ isRemoving: false, statusMessage: "Error occurred" });
+    }
+  };
+
   render() {
     const { user } = this.props; 
+    const { isRemoving, statusMessage, showConfirm } = this.state;
+    
     if (!user) return null;
 
     const {
@@ -21,7 +68,6 @@ class ConnectionCard extends Component {
     return (
       <div className="connectioncard-card">
         <div className="connectioncard-card-left">
-          {/* ✅ Wrapped Image in Link for navigation */}
           <Link to={`/profile/${_id}`} className="connectioncard-avatar-link">
             <img
               src={profilePic || "/avatar.png"} 
@@ -53,9 +99,43 @@ class ConnectionCard extends Component {
           </div>
         </div>
 
-        <Link to={`/chat/${_id}`} className="connectioncard-message-btn">
-          <span className="connectioncard-msg-text">Message</span>
-        </Link>
+        <div className="connectioncard-actions">
+          {/* FLOW: Status Message -> Confirmation Prompt -> Default Buttons */}
+          {statusMessage ? (
+            <span className={`status-message ${statusMessage.toLowerCase().replace(" ", "-")}`}>
+              {statusMessage}
+            </span>
+          ) : showConfirm ? (
+            <div className="connectioncard-confirm-box">
+              <span className="confirm-text">Are you sure?</span>
+              <button 
+                onClick={this.handleRemove} 
+                className="confirm-btn-yes"
+              >
+                Yes
+              </button>
+              <button 
+                onClick={this.toggleConfirm} 
+                className="confirm-btn-no"
+              >
+                No
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link to={`/chat/${_id}`} className="connectioncard-message-btn">
+                <span className="connectioncard-msg-text">Message</span>
+              </Link>
+              <button 
+                onClick={this.toggleConfirm} 
+                className="connectioncard-remove-btn"
+                disabled={isRemoving}
+              >
+                Remove
+              </button>
+            </>
+          )}
+        </div>
       </div>
     );
   }

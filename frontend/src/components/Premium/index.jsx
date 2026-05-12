@@ -197,32 +197,12 @@ const Premium = () => {
 
               <div className="premium-feature">
                 <span>✓</span>
-                <p>View Ignored Profiles</p>
-              </div>
-
-              <div className="premium-feature">
-                <span>✓</span>
-                <p>Restore Removed Connections</p>
-              </div>
-
-              <div className="premium-feature">
-                <span>✓</span>
                 <p>200 Daily Connection & Ignore Actions</p>
               </div>
 
               <div className="premium-feature">
                 <span>✓</span>
-                <p>Advanced Developer Search</p>
-              </div>
-
-              <div className="premium-feature">
-                <span>✓</span>
                 <p>Priority Profile Visibility</p>
-              </div>
-
-              <div className="premium-feature">
-                <span>✓</span>
-                <p>Developer Availability Status</p>
               </div>
 
             </div>
@@ -321,22 +301,7 @@ const Premium = () => {
 
             <div className="feature-item">
               <span>✓</span>
-              <p>View Ignored Profiles</p>
-            </div>
-
-            <div className="feature-item">
-              <span>✓</span>
-              <p>Restore Removed Connections</p>
-            </div>
-
-            <div className="feature-item">
-              <span>✓</span>
               <p>200 Daily Connection & Ignore Actions</p>
-            </div>
-
-            <div className="feature-item">
-              <span>✓</span>
-              <p>Advanced Developer Search</p>
             </div>
 
             <div className="feature-item">
@@ -344,10 +309,6 @@ const Premium = () => {
               <p>Priority Profile Visibility</p>
             </div>
 
-            <div className="feature-item">
-              <span>✓</span>
-              <p>Developer Availability Status</p>
-            </div>
           </div>
 
           <button

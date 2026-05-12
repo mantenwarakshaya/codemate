@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react"; // 1. Added useMemo
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./index.css";
 import { LoaderView, ErrorView, EmptyView, PremiumVerifiedBadge } from "../../Common";
+import { useChatStore } from "../../../store/useChatStore"; // 2. Ensure this import is here
 
-const BASE_URL = import.meta.env.PROD
-  ? "/api"
-  : "http://localhost:7777/api";
+const BASE_URL = import.meta.env.PROD ? "/api" : "http://localhost:7777/api";
 
 const apiStatusConstants = {
   INITIAL: "INITIAL",
@@ -20,13 +19,15 @@ const ConnectionsChatList = ({ onSelectUser, loggedInUserId }) => {
   const [apiStatus, setApiStatus] = useState(apiStatusConstants.INITIAL);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
+  
+  // 3. Hook must be inside the component
+  const { messages } = useChatStore();
 
   useEffect(() => {
     fetchConnections();
   }, []);
 
-  // Fetch connections + last messages
   const fetchConnections = async () => {
     setApiStatus(apiStatusConstants.IN_PROGRESS);
 
@@ -43,6 +44,7 @@ const navigate = useNavigate();
         return;
       }
 
+      // Fetch message history for all connections to get the initial "last message"
       const results = await Promise.allSettled(
         users.map((user) =>
           axios.get(`${BASE_URL}/messages/${user._id}`, {
@@ -53,20 +55,13 @@ const navigate = useNavigate();
 
       const chats = results.map((result, index) => {
         const user = users[index];
-
-        if (result.status === "fulfilled") {
-          const messages = result.value.data || [];
-          const lastMsg = messages[messages.length - 1];
-
-          return {
-            user,
-            lastMessage: lastMsg || null,
-          };
-        }
+        const msgs = result.status === "fulfilled" ? result.value.data || [] : [];
+        const lastMsg = msgs[msgs.length - 1];
 
         return {
           user,
-          lastMessage: null,
+          lastMessage: lastMsg || null,
+          lastMessageTime: lastMsg ? new Date(lastMsg.createdAt).getTime() : 0,
         };
       });
 
@@ -78,26 +73,40 @@ const navigate = useNavigate();
     }
   };
 
-  // Format message preview
+  // 4. This block keeps your sidebar updated in real-time as new socket messages arrive
+  const sortedChatData = useMemo(() => {
+    return [...chatData]
+      .map((chat) => {
+        // Filter messages from global store for this specific connection
+        const connectionMessages = messages.filter(
+          (m) => 
+            String(m.senderId) === String(chat.user._id) || 
+            String(m.receiverId) === String(chat.user._id)
+        );
+
+        const latestStoreMsg = connectionMessages[connectionMessages.length - 1];
+
+        return {
+          ...chat,
+          lastMessage: latestStoreMsg || chat.lastMessage,
+          lastMessageTime: latestStoreMsg
+            ? new Date(latestStoreMsg.createdAt).getTime()
+            : (chat.lastMessage ? new Date(chat.lastMessage.createdAt).getTime() : 0),
+        };
+      })
+      .sort((a, b) => b.lastMessageTime - a.lastMessageTime);
+  }, [chatData, messages]);
+
   const formatMessage = (msg) => {
     if (!msg) return "Start a conversation";
-
     let text = msg.text || "";
-
-    if (text.length > 25) {
-      text = text.slice(0, 25) + "...";
-    }
-
-    if (msg.senderId?.toString() === loggedInUserId?.toString()) {
-      return `You: ${text}`;
-    }
-
+    if (text.length > 25) text = text.slice(0, 25) + "...";
+    if (String(msg.senderId) === String(loggedInUserId)) return `You: ${text}`;
     return text;
   };
 
-  // Success UI
   const renderSuccessView = () => {
-    if (chatData.length === 0) {
+    if (sortedChatData.length === 0) {
       return (
         <EmptyView
           message="No chats yet."
@@ -109,14 +118,13 @@ const navigate = useNavigate();
 
     return (
       <div className="ConnectionsChatList-sidebar">
-        {/* HEADER */}
         <div className="ConnectionsChatList-header">
           <h2 className="ConnectionsChatList-heading">Chats</h2>
         </div>
 
-        {/* USERS LIST */}
         <div className="ConnectionsChatList-list">
-          {chatData.map(({ user, lastMessage }) => (
+          {/* 5. Loop through the SORTED data here */}
+          {sortedChatData.map(({ user, lastMessage }) => (
             <div
               key={user._id}
               className={`ConnectionsChatList-user-card ${
@@ -127,14 +135,12 @@ const navigate = useNavigate();
                 onSelectUser(user);
               }}
             >
-              {/* Profile Image */}
               <img
                 src={user.profilePic || "/avatar.png"}
                 alt="user"
                 className="ConnectionsChatList-user-img"
               />
 
-              {/* User Info */}
               <div className="ConnectionsChatList-user-info">
                 <p className="ConnectionsChatList-user-name">
                   {user.firstName} {user.lastName}
@@ -152,23 +158,14 @@ const navigate = useNavigate();
     );
   };
 
-  // API State Handler
   const renderContent = () => {
     switch (apiStatus) {
       case apiStatusConstants.IN_PROGRESS:
         return <LoaderView />;
-
       case apiStatusConstants.FAILURE:
-        return (
-          <ErrorView
-            message="Failed to load chats."
-            onRetry={fetchConnections}
-          />
-        );
-
+        return <ErrorView message="Failed to load chats." onRetry={fetchConnections} />;
       case apiStatusConstants.SUCCESS:
         return renderSuccessView();
-
       default:
         return null;
     }

@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import Header from "../../Header";
 import Connections from "../Connections";
 import Requests from "../Requests";
-import Ignored from "../Ignored";
 import "./index.css";
 
 const Network = () => {
@@ -51,22 +50,12 @@ const Network = () => {
             >
               Connections
             </button>
-            {isPremiumActive && (
-              <button
-                type="button"
-                className={`tab-btn ${activeTab === "ignored" ? "active" : ""}`}
-                onClick={() => setActiveTab("ignored")}
-              >
-                Ignored
-              </button>
-            )}
           </div>
 
           {/* DYNAMIC CONTENT AREA */}
           <div className="tab-content-area">
             {activeTab === "requests" && <Requests />}
             {activeTab === "connections" && <Connections />}
-            {activeTab === "ignored" && isPremiumActive && <Ignored />}
           </div>
         </div>
       </div>

@@ -117,36 +117,27 @@ requestRouter.post(
   }
 );
 
-requestRouter.get("/user/requests/ignored", userAuth, async (req, res) => {
+requestRouter.delete("/connection/remove/:userId", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
-    const ignoredRequests = await ConnectionRequest.find({
-      fromUserId: loggedInUser._id,
-      status: "ignored",
-    }).populate("toUserId", "firstName lastName profilePic skills isPremium");
+    const { userId } = req.params;
 
-    res.json({ data: ignoredRequests });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-requestRouter.delete("/request/restore/:requestId", userAuth, async(req,res) => {
-  try{
-    const { requestId } = req.params;
-
-    const deleteRequest = await ConnectionRequest.findByIdAndDelete({
-      _id: requestId,
-      fromUserId: req.user._id
+    // Find and delete the connection where status is 'accepted'
+    // It could be from -> to OR to -> from
+    const connection = await ConnectionRequest.findOneAndDelete({
+      $or: [
+        { fromUserId: loggedInUser._id, toUserId: userId, status: "accepted" },
+        { fromUserId: userId, toUserId: loggedInUser._id, status: "accepted" },
+      ],
     });
 
-    if(!deleteRequest){
-      return res.status(404).json({ messaage: "Request not found" });
+    if (!connection) {
+      return res.status(404).json({ message: "Connection not found" });
     }
 
-    res.json({ messaage: "Moved back to feed ( deleted from ignored )" });
-  } catch(err){
-    res.status(500).json({ messaage: "Server Error" });
+    res.json({ message: "Connection removed successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server Error: " + err.message });
   }
 });
 
