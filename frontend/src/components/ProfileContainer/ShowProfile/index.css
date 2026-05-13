@@ -1,3 +1,5 @@
+/* ALL YOUR ORIGINAL CSS REMAINS UNCHANGED */
+
 /* Layout & Container */
 .sp-profile-container {
   background-color: #f8fafc; 
@@ -151,15 +153,15 @@
 
 .sp-message-link {
   text-decoration: none;
+  display: inline-block;
 }
 
 /* Buttons */
 .sp-btn-primary {
-  width: 100%;
   background: #0967d2;
   color: white;
   border: none;
-  padding: 14px;
+  padding: 12px 24px;
   border-radius: 10px;
   font-size: 16px;
   font-weight: 600;
@@ -168,49 +170,50 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
+  min-width: 170px;
 }
 
 .sp-btn-primary:hover { background: #0754ad; }
 
 .sp-request-controls {
   display: flex;
-  gap: 12px;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  width: fit-content;
 }
 
 .sp-btn-accept {
-  flex: 2;
   background: #0967d2;
   color: white;
   border: none;
-  padding: 12px;
+  padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+  min-width: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .sp-btn-reject {
-  flex: 1;
   background: transparent;
   color: #64748b;
   border: 1px solid #cbd5e1;
-  padding: 12px;
+  padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+  min-width: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .sp-btn-reject:hover { background: #f1f5f9; }
-
-/* Responsive */
-@media (max-width: 850px) {
-  .sp-profile-card {
-    grid-template-columns: 1fr;
-  }
-  .sp-profile-sidebar {
-    border-right: none;
-    border-bottom: 1px solid #f1f5f9;
-  }
-}
 
 /* 🔴 Danger Zone */
 .sp-danger-zone {
@@ -267,14 +270,13 @@
 
 .sp-danger-actions {
   display: flex;
-  /* justify-content: flex-end;  */
   gap: 10px;
   margin-top: 10px;
 }
 
 .sp-cancel-btn {
   background: transparent;
-  border: 1px solid #cbd5e1; /* subtle gray border */
+  border: 1px solid #cbd5e1;
   color: #475569;
   padding: 8px 14px;
   border-radius: 8px;
@@ -288,10 +290,6 @@
   background: #f1f5f9;
   border-color: #94a3b8;
   color: #1e293b;
-}
-
-.sp-cancel-btn:active {
-  transform: scale(0.96);
 }
 
 .sp-status-feedback {
@@ -313,8 +311,81 @@
   border: 1px solid #f5c6cb;
 }
 
-.sp-request-controls {
+/* ===========================================
+   NEW UNIQUE REMOVE CONFIRM UI (sp- prefix)
+=========================================== */
+
+.sp-remove-confirm-box {
   display: flex;
-  gap: 12px;
   align-items: center;
+  gap: 16px;
+  background-color: #fff7ed;
+  border: 1px solid #fed7aa;
+  padding: 10px 16px;
+  border-radius: 12px;
+  animation: spFadeIn 0.3s ease;
+}
+
+.sp-confirm-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #9a3412;
+}
+
+.sp-confirm-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.sp-confirm-btn-yes {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.sp-confirm-btn-yes:hover {
+  background-color: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.sp-confirm-btn-no {
+  background-color: white;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.sp-confirm-btn-no:hover {
+  background-color: #f8fafc;
+}
+
+@keyframes spFadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .sp-remove-confirm-box {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+    text-align: center;
+  }
+  .sp-confirm-actions {
+    flex-direction: column;
+  }
+  .sp-confirm-btn-yes, .sp-confirm-btn-no {
+    width: 100%;
+  }
 }

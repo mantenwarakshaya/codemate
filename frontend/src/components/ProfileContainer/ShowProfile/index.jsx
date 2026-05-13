@@ -28,7 +28,7 @@ class ShowProfile extends Component {
     deletePassword: "",
     isDeleting: false,
     showConfirm: false,
-    // New state for UI feedback
+    showRemoveConfirm: false, // New state for custom remove UI
     statusMessage: "",
     messageType: "" 
   };
@@ -53,12 +53,16 @@ class ShowProfile extends Component {
     }
   };
 
-  // New Method
+  toggleRemoveConfirm = () => {
+    this.setState((prevState) => ({ 
+        showRemoveConfirm: !prevState.showRemoveConfirm,
+        statusMessage: "" 
+    }));
+  };
+
   handleRemoveConnection = async () => {
     const { user } = this.state;
-    if (!window.confirm(`Remove ${user.firstName} from your connections?`)) return;
-
-    this.setState({ isProcessingAction: true, statusMessage: "Removing..." });
+    this.setState({ isProcessingAction: true, statusMessage: "Removing...", showRemoveConfirm: false });
 
     try {
       const res = await fetch(`${BASE_URL}/connection/remove/${user._id}`, {
@@ -127,7 +131,7 @@ class ShowProfile extends Component {
   };
 
   renderSuccessView = () => {
-    const { user, isProcessingAction, statusMessage, messageType } = this.state;
+    const { user, isProcessingAction, statusMessage, messageType, showRemoveConfirm } = this.state;
     const { requestId, fromRequestPage } = this.props.locationState || {};
     const { id } = this.props.params;
     const isOwnProfile = !id;
@@ -137,7 +141,6 @@ class ShowProfile extends Component {
     return (
       <div className="sp-profile-container">
         <div className="sp-profile-card">
-          {/* Sidebar and Main content remains exactly as your original */}
           <div className="sp-profile-sidebar">
             <div className="sp-profile-image-container">
               <img src={user.profilePic || "/avatar.png"} alt="profile" className="sp-profile-avatar" />
@@ -172,7 +175,6 @@ class ShowProfile extends Component {
             </div>
 
             <div className="sp-profile-actions">
-              {/* If there is a status message, show it instead of buttons */}
               {statusMessage ? (
                 <div className={`sp-status-feedback sp-status-${messageType}`}>
                    {statusMessage}
@@ -210,9 +212,21 @@ class ShowProfile extends Component {
                   <Link to={`/chat/${user._id}`} className="sp-message-link">
                     <button className="sp-btn-primary"><MdMessage /> Send Message</button>
                   </Link>
-                  <button className="sp-btn-reject" onClick={this.handleRemoveConnection}>
-                    <FaTimes /> Remove Connection
-                  </button>
+                  
+                  {/* Updated custom confirmation UI for removing connections */}
+                  {!showRemoveConfirm ? (
+                    <button className="sp-btn-reject" onClick={this.toggleRemoveConfirm}>
+                      <FaTimes /> Remove Connection
+                    </button>
+                  ) : (
+                    <div className="sp-remove-confirm-box">
+                      <span className="sp-confirm-text">Are you sure?</span>
+                      <div className="sp-confirm-actions">
+                        <button className="sp-confirm-btn-yes" onClick={this.handleRemoveConnection}>Yes</button>
+                        <button className="sp-confirm-btn-no" onClick={this.toggleRemoveConfirm}>No</button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
