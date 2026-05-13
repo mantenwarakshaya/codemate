@@ -69,19 +69,16 @@ class SignupForm extends Component {
         body: JSON.stringify(userDetails),
       })
 
+      const data = await response.json();
+
       if (response.ok) {
         this.onSubmitSuccess()
       } else {
-        let data
-        try {
-          data = await response.json()
-        } catch {
-          data = await response.text()
-        }
-        this.onSubmitFailure(data.message || data)
+        this.onSubmitFailure(data.message || "Registration failed");
       }
     } catch (error) {
-      this.onSubmitFailure("Server error. Please try again later.")
+      console.error("Signup Terminal Error:", error);
+      this.onSubmitFailure("Check your internet connection and try again.");
     }
   }
 
@@ -193,7 +190,12 @@ class SignupForm extends Component {
           </p>
 
           {showSubmitError && (
-            <p className="verify-error">{errorMsg}</p>
+            <p className="signupform-error-message">
+              {errorMsg} 
+              {errorMsg.includes("already registered") && (
+                <span>. <Link to="/login" style={{color: 'blue', textDecoration: 'underline'}}>Login here</Link></span>
+              )}
+            </p>
           )}
 
           <p className="verify-footer">

@@ -24,7 +24,7 @@ class ConnectionCard extends Component {
   };
 
   handleRemove = async () => {
-    const { user } = this.props;
+    const { user, onRemoveSuccess } = this.props;
     
     // Switch from "Confirm?" UI to "Removing..." UI
     this.setState({ isRemoving: true, statusMessage: "Removing...", showConfirm: false });
@@ -38,7 +38,7 @@ class ConnectionCard extends Component {
       if (res.ok) {
         this.setState({ statusMessage: "Removed!" });
         setTimeout(() => {
-          window.location.reload();
+          onRemoveSuccess();
         }, 1000);
       } else {
         this.setState({ isRemoving: false, statusMessage: "Failed to remove" });
@@ -59,11 +59,13 @@ class ConnectionCard extends Component {
       firstName = "",
       lastName = "",
       profilePic = "", 
+      roles = [],          
+      connectionStatus = "",
       skills = [],
       _id,
     } = user;
 
-    const safeSkills = Array.isArray(skills) ? skills : [];
+    const safeRoles = Array.isArray(roles) ? roles : [];
 
     return (
       <div className="connectioncard-card">
@@ -84,18 +86,21 @@ class ConnectionCard extends Component {
               <PremiumVerifiedBadge user={user} />
             </h2>
 
-            <div className="connectioncard-skills">
-              {safeSkills.slice(0, 5).map((skill, index) => (
-                <span key={index} className="connectioncard-skill-badge">
-                  {skill}
+            {connectionStatus && (
+              <span className="connectioncard-status-label">
+                {connectionStatus}
+              </span>
+            )}
+
+            {/* Roles replaced Skills */}
+            <div className="connectioncard-roles">
+              {safeRoles.map((role, index) => (
+                <span key={index} className="connectioncard-role-badge">
+                  {role}
                 </span>
               ))}
-              {safeSkills.length > 5 && (
-                <span className="connectioncard-skill-more">
-                  +{safeSkills.length - 5} more
-                </span>
-              )}
             </div>
+
           </div>
         </div>
 

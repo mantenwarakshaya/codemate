@@ -97,7 +97,6 @@ const LeftSidebar = () => {
           </h4>
           <div
             className="profilecard-stat clickable"
-            onClick={() => navigate("/connections")}
           >
             <span>Connections</span>
             <strong>{connectionsCount}</strong>
@@ -107,25 +106,11 @@ const LeftSidebar = () => {
 
           <div
             className="profilecard-stat clickable"
-            onClick={() => navigate("/requests")}
           >
             <span>Requests</span>
             <strong>{requestsCount}</strong>
           </div>
         </div>
-
-        {/* 🔹 SKILLS */}
-        {user.skills?.length > 0 && (
-          <div className="profilecard-card">
-            <h4 className="profilecard-title">🧠 Skills</h4>
-
-            <div className="skills-list">
-              {user.skills.slice(0, 5).map((skill, i) => (
-                <span key={i} className="skill-tag">{skill}</span>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* 🔹 SOCIAL */}
         <div className="profilecard-card profilecard-social">

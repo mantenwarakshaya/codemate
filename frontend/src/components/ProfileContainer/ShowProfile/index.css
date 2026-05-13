@@ -1,6 +1,6 @@
-/* ALL YOUR ORIGINAL CSS REMAINS UNCHANGED */
-
-/* Layout & Container */
+/* ==========================================
+   1. LAYOUT & CONTAINER
+   ========================================== */
 .sp-profile-container {
   background-color: #f8fafc; 
   min-height: calc(100vh - 70px);
@@ -23,7 +23,9 @@
   height: auto;
 }
 
-/* Left Sidebar */
+/* ==========================================
+   2. LEFT SIDEBAR
+   ========================================== */
 .sp-profile-sidebar {
   background: #fdfdfd;
   padding: 40px;
@@ -77,7 +79,25 @@
   background: #f0f7ff;
 }
 
-/* Right Content Area */
+/* Legacy Status Indicator (In sidebar) */
+.sp-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f0fdf4;
+  color: #166534;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: capitalize;
+  margin-bottom: 24px;
+  border: 1px solid #bbf7d0;
+}
+
+/* ==========================================
+   3. RIGHT CONTENT AREA
+   ========================================== */
 .sp-profile-main {
   padding: 40px 50px;
   display: flex;
@@ -106,11 +126,57 @@
 .sp-meta-divider { color: #cbd5e1; }
 
 .sp-experience-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   color: #0967d2;
   font-weight: 600;
 }
 
-/* Bio Section */
+/* ==========================================
+   4. CURRENT FOCUS SECTION
+   ========================================== */
+.sp-focus-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  background: #f8fafc;
+  padding: 10px 16px;
+  border-radius: 12px;
+  width: fit-content;
+  border: 1px solid #f1f5f9;
+}
+
+.sp-focus-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sp-focus-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 8px;
+  text-transform: capitalize;
+}
+
+/* Dynamic Status Colors */
+.sp-focus-type-seeking-opportunities { background-color: #ecfdf5; color: #059669; }
+.sp-focus-type-open-to-collaboration { background-color: #eff6ff; color: #2563eb; }
+.sp-focus-type-available-for-mentorship { background-color: #faf5ff; color: #9333ea; }
+.sp-focus-type-currently-engaged { background-color: #f1f5f9; color: #475569; }
+.sp-focus-type-networking-exclusively { background-color: #fffbeb; color: #d97706; }
+
+/* ==========================================
+   5. BIO & ROLES
+   ========================================== */
 .sp-bio-section {
   margin-bottom: 30px;
 }
@@ -125,7 +191,6 @@
   border-left: 4px solid #0967d2;
 }
 
-/* Skills */
 .sp-section-label {
   font-size: 12px;
   text-transform: uppercase;
@@ -134,34 +199,56 @@
   margin-bottom: 12px;
 }
 
-.sp-skills-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.sp-roles-section {
   margin-bottom: 40px;
 }
 
-.sp-skill-tag {
-  background: #f1f5f9;
-  color: #475569;
-  padding: 6px 14px;
-  border-radius: 6px;
-  font-size: 13px;
+.sp-roles-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sp-role-tag {
+  background: #eff6ff;
+  color: #1e40af;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 14px;
   font-weight: 600;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #bfdbfe;
+  text-transform: capitalize;
+  transition: all 0.2s ease;
+}
+
+.sp-role-tag:hover {
+  background: #dbeafe;
+  transform: translateY(-2px);
+}
+
+.sp-no-data {
+  color: #94a3b8;
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* ==========================================
+   6. BUTTONS & ACTIONS
+   ========================================== */
+.sp-profile-actions {
+  margin-top: 10px;
 }
 
 .sp-message-link {
   text-decoration: none;
-  display: inline-block;
 }
 
-/* Buttons */
 .sp-btn-primary {
+  width: 100%;
   background: #0967d2;
   color: white;
   border: none;
-  padding: 12px 24px;
+  padding: 14px;
   border-radius: 10px;
   font-size: 16px;
   font-weight: 600;
@@ -170,52 +257,43 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-width: 170px;
 }
 
 .sp-btn-primary:hover { background: #0754ad; }
 
 .sp-request-controls {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
-  justify-content: flex-start;
-  width: fit-content;
 }
 
 .sp-btn-accept {
+  flex: 2;
   background: #0967d2;
   color: white;
   border: none;
-  padding: 12px 24px;
+  padding: 12px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  min-width: 170px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
 }
 
 .sp-btn-reject {
+  flex: 1;
   background: transparent;
   color: #64748b;
   border: 1px solid #cbd5e1;
-  padding: 12px 24px;
+  padding: 12px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  min-width: 170px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
 }
 
 .sp-btn-reject:hover { background: #f1f5f9; }
 
-/* 🔴 Danger Zone */
+/* ==========================================
+   7. DANGER ZONE
+   ========================================== */
 .sp-danger-zone {
   margin-top: 30px;
   padding: 18px;
@@ -254,25 +332,7 @@
   font-weight: 500;
 }
 
-.sp-danger-btn:hover {
-  background-color: #b91c1c;
-}
-
-.sp-danger-confirm {
-  margin-top: 10px;
-}
-
-.sp-warning-text {
-  font-size: 13px;
-  color: #dc2626;
-  margin-bottom: 8px;
-}
-
-.sp-danger-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
+.sp-danger-btn:hover { background-color: #b91c1c; }
 
 .sp-cancel-btn {
   background: transparent;
@@ -283,15 +343,11 @@
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-.sp-cancel-btn:hover {
-  background: #f1f5f9;
-  border-color: #94a3b8;
-  color: #1e293b;
-}
-
+/* ==========================================
+   8. FEEDBACK & RESPONSIVE
+   ========================================== */
 .sp-status-feedback {
   padding: 10px 15px;
   border-radius: 6px;
@@ -311,81 +367,12 @@
   border: 1px solid #f5c6cb;
 }
 
-/* ===========================================
-   NEW UNIQUE REMOVE CONFIRM UI (sp- prefix)
-=========================================== */
-
-.sp-remove-confirm-box {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background-color: #fff7ed;
-  border: 1px solid #fed7aa;
-  padding: 10px 16px;
-  border-radius: 12px;
-  animation: spFadeIn 0.3s ease;
-}
-
-.sp-confirm-text {
-  font-size: 14px;
-  font-weight: 600;
-  color: #9a3412;
-}
-
-.sp-confirm-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.sp-confirm-btn-yes {
-  background-color: #dc2626;
-  color: white;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.sp-confirm-btn-yes:hover {
-  background-color: #b91c1c;
-  transform: translateY(-1px);
-}
-
-.sp-confirm-btn-no {
-  background-color: white;
-  color: #475569;
-  border: 1px solid #cbd5e1;
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.sp-confirm-btn-no:hover {
-  background-color: #f8fafc;
-}
-
-@keyframes spFadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 768px) {
-  .sp-remove-confirm-box {
-    flex-direction: column;
-    width: 100%;
-    align-items: stretch;
-    text-align: center;
+@media (max-width: 850px) {
+  .sp-profile-card {
+    grid-template-columns: 1fr;
   }
-  .sp-confirm-actions {
-    flex-direction: column;
-  }
-  .sp-confirm-btn-yes, .sp-confirm-btn-no {
-    width: 100%;
+  .sp-profile-sidebar {
+    border-right: none;
+    border-bottom: 1px solid #f1f5f9;
   }
 }

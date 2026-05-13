@@ -78,6 +78,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  align-items: flex-start;
 }
 
 .connectioncard-user-name {
@@ -86,7 +87,7 @@
   gap: 6px;
   font-size: 17px;
   font-weight: 700;
-  margin: 0;
+  margin-bottom: 2px;
 }
 
 .connectioncard-user-link {
@@ -228,6 +229,7 @@
   }
 
   .connectioncard-user-info {
+    gap: 8px;
     flex: 1;
   }
 
@@ -394,5 +396,65 @@
   .connectioncard-message-btn,
   .connectioncard-remove-btn {
     flex: 1;
+  }
+}
+
+/* Replace the old .connectioncard-skills and badge classes with these */
+
+.connectioncard-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* Tighter gap for professional look */
+}
+
+/* Connection Status Badge (e.g., seeking opportunities) */
+.connectioncard-status-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0967d2;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  background-color: #eff6ff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  width: fit-content;
+  margin-bottom: 2px;
+  border: 1px solid #e0f2fe; /* Subtle border to define the shape */
+  display: inline-block;
+}
+
+.connectioncard-roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.connectioncard-role-badge {
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 3px 12px;
+  border-radius: 999px; /* Pill shape for roles */
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+  text-transform: capitalize;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Ensure status messages are visible */
+.status-message {
+  font-size: 14px;
+  font-weight: 600;
+  display: block;
+  min-width: 110px;
+  text-align: center;
+}
+
+/* Mobile specific adjustment for new layout */
+@media (max-width: 580px) {
+  .connectioncard-status-label {
+    padding: 3px 8px;
+    font-size: 11px;
   }
 }

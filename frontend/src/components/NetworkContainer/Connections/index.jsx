@@ -26,6 +26,12 @@ class Connections extends Component {
     this.fetchConnections();
   }
 
+  handleRemoveState = (userId) => {
+    this.setState((prevState) => ({
+      connections: prevState.connections.filter((conn) => conn._id !== userId),
+    }));
+  };
+
   fetchConnections = async () => {
     this.setState({ apiStatus: apiStatusConstants.inProgress });
 
@@ -71,8 +77,15 @@ class Connections extends Component {
         </div>
 
         {connections.map((user) =>
-          user && user._id ? <ConnectionCard key={user._id} user={user} /> : null
+          user && user._id ? (
+            <ConnectionCard 
+              key={user._id} 
+              user={user} 
+              onRemoveSuccess={() => this.handleRemoveState(user._id)} // Pass the function here
+            />
+          ) : null
         )}
+        
       </div>
     );
   };

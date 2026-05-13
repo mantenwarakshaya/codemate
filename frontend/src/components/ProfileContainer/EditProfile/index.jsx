@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../Header";
-import { Camera } from "lucide-react";
+import { Camera, Briefcase, Handshake } from "lucide-react";
 import "./index.css";
 
 import { LoaderView, ErrorView, PremiumVerifiedBadge } from "../../Common";
@@ -18,8 +18,20 @@ const apiStatusConstants = {
   inProgress: "IN_PROGRESS",
 };
 
-const SKILLS_OPTIONS = ["AWS", "Bootstrap", "C", "C++", "CSS", "Cyber Security", "Docker", "Django", "Express.js", "Firebase", "Git", "GraphQL", "HTML", 
-  "Java", "JavaScript", "Jest", "Kubernetes", "MongoDB", "Next.js", "Node.js", "PostgreSQL", "Python", "React", "Redux", "REST APIs", "Tailwind CSS", "TypeScript"];
+const ROLE_OPTIONS = [
+  "Frontend Developer", "Backend Developer", "Full Stack Developer", 
+  "Mobile App Developer", "DevOps Engineer", "Data Scientist", 
+  "UI/UX Designer", "Product Manager", "System Architect", 
+  "QA Engineer", "Security Analyst", "Cloud Architect"
+];
+
+const CONNECTION_STATUS_OPTIONS = [
+  { label: "Seeking Opportunities", value: "seeking opportunities" },
+  { label: "Open to Collaboration", value: "open to collaboration" },
+  { label: "Available for Mentorship", value: "available for mentorship" },
+  { label: "Networking Exclusively", value: "networking exclusively" },
+  { label: "Currently Engaged", value: "currently engaged" },
+];
 
 const GENDER_OPTIONS = [
   { label: "Male", value: "male" },
@@ -30,16 +42,24 @@ const GENDER_OPTIONS = [
 class EditProfile extends Component {
   state = {
     user: {},
-    selectedSkills: [],
+    selectedRoles: [],
     apiStatus: apiStatusConstants.initial,
     isUpdatingProfile: false,
     previewImg: null, 
     activeTab: "general",
+    toast: { message: "", type: "" }
   };
 
   componentDidMount() {
     this.getProfile();
   }
+
+  showToast = (message, type = "error") => {
+    this.setState({ toast: { message, type } });
+    setTimeout(() => {
+      this.setState({ toast: { message: "", type: "" } });
+    }, 4000); 
+  };
 
   getProfile = async () => {
     this.setState({ apiStatus: apiStatusConstants.inProgress });
@@ -51,11 +71,10 @@ class EditProfile extends Component {
       const data = await res.json();
       this.setState({
         user: data,
-        selectedSkills: data.skills || [],
+        selectedRoles: data.roles || [],
         apiStatus: apiStatusConstants.success,
       });
     } catch (err) {
-      console.error(err);
       this.setState({ apiStatus: apiStatusConstants.failure });
     }
   };
@@ -78,24 +97,26 @@ class EditProfile extends Component {
     };
   };
 
-  handleAddSkill = (e) => {
-    const skill = e.target.value;
-    const { selectedSkills } = this.state;
-    if (skill && !selectedSkills.includes(skill)) {
-      this.setState({ selectedSkills: [...selectedSkills, skill] });
+  handleAddRole = (e) => {
+    const role = e.target.value;
+    const { selectedRoles } = this.state;
+    if (role && !selectedRoles.includes(role) && selectedRoles.length < 5) {
+      this.setState({ selectedRoles: [...selectedRoles, role] });
+    } else if (selectedRoles.length >= 5) {
+      this.showToast("You can select up to 5 professional roles.", "error");
     }
   };
 
-  handleRemoveSkill = (skillToRemove) => {
+  handleRemoveRole = (roleToRemove) => {
     this.setState((prevState) => ({
-      selectedSkills: prevState.selectedSkills.filter(
-        (skill) => skill !== skillToRemove
+      selectedRoles: prevState.selectedRoles.filter(
+        (role) => role !== roleToRemove
       ),
     }));
   };
 
   handleSave = async () => {
-    const { user, selectedSkills, previewImg } = this.state;
+    const { user, selectedRoles, previewImg } = this.state;
     this.setState({ isUpdatingProfile: true });
 
     try {
@@ -105,7 +126,8 @@ class EditProfile extends Component {
         gender: user.gender,
         age: user.age,
         about: user.about,
-        skills: selectedSkills,
+        roles: selectedRoles, 
+        connectionStatus: user.connectionStatus, 
         experience: user.experience,
         github: user.github,
         linkedin: user.linkedin,
@@ -122,29 +144,32 @@ class EditProfile extends Component {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Unknown error");
-
+      
+      if (!res.ok) {
+        // Extracting specific Mongoose validation error from backend
+        throw new Error(data.message || data.error || "Update failed");
+      }
+      
       this.setState({ 
         user: data.data, 
         isUpdatingProfile: false, 
         previewImg: null 
       });
-      if (res.ok) {
-        alert("Profile updated successfully!");
-        this.props.navigate("/profile"); 
-      }
+
+      this.showToast("Profile updated successfully!", "success");
+      setTimeout(() => this.props.navigate("/profile"), 1500);
+
     } catch (err) {
-      alert("Error updating profile: " + err.message);
+      this.showToast(err.message, "error");
       this.setState({ isUpdatingProfile: false });
     }
   };  
 
   renderProfile = () => {
-    const { user, selectedSkills, isUpdatingProfile, previewImg, activeTab = 'general' } = this.state;
+    const { user, selectedRoles, isUpdatingProfile, previewImg, activeTab } = this.state;
 
     return (
       <div className="ep-profile-dashboard-layout">
-        {/* 1. Header & Identity Surface (Always Visible) */}
         <section className="ep-profile-identity-header">
           <div className="ep-identity-flex-container">
             <div className="ep-avatar-interaction-group">
@@ -171,52 +196,32 @@ class EditProfile extends Component {
               onClick={this.handleSave} 
               disabled={isUpdatingProfile}
             >
-              {isUpdatingProfile ? "Saving Changes..." : "Save Profile"}
+              {isUpdatingProfile ? "Updating..." : "Save Changes"}
             </button>
           </div>
 
-          {/* 2. Navigation Tabs */}
           <nav className="ep-profile-navigation-tabs">
-            <button 
-              className={`ep-tab-link ${activeTab === 'general' ? 'ep-active' : ''}`}
-              onClick={() => this.setState({ activeTab: 'general' })}
-            >
-              General
-            </button>
-            <button 
-              className={`ep-tab-link ${activeTab === 'pro' ? 'ep-active' : ''}`}
-              onClick={() => this.setState({ activeTab: 'pro' })}
-            >
-              Professional
-            </button>
-            <button 
-              className={`ep-tab-link ${activeTab === 'social' ? 'ep-active' : ''}`}
-              onClick={() => this.setState({ activeTab: 'social' })}
-            >
-              Social Presence
-            </button>
+            <button className={`ep-tab-link ${activeTab === 'general' ? 'ep-active' : ''}`} onClick={() => this.setState({ activeTab: 'general' })}>General</button>
+            <button className={`ep-tab-link ${activeTab === 'pro' ? 'ep-active' : ''}`} onClick={() => this.setState({ activeTab: 'pro' })}>Professional</button>
+            <button className={`ep-tab-link ${activeTab === 'social' ? 'ep-active' : ''}`} onClick={() => this.setState({ activeTab: 'social' })}>Social Presence</button>
           </nav>
         </section>
 
-        {/* 3. Form Content Area (Changes based on activeTab) */}
         <section className="ep-profile-form-surface">
-          
-          {/* --- GENERAL TAB --- */}
           {activeTab === 'general' && (
             <div className="ep-animate-fade-in">
               <div className="ep-form-section-header">
                 <h3>Personal Information</h3>
-                <p>Update your photo and personal details here.</p>
+                <p>Basic details to help people know who you are.</p>
               </div>
-
               <div className="ep-form-grid-layout">
                 <div className="ep-field-container">
                   <label>First Name</label>
-                  <input name="firstName" value={user.firstName || ""} onChange={this.handleChange} placeholder="e.g. Akshaya" />
+                  <input name="firstName" value={user.firstName || ""} onChange={this.handleChange} />
                 </div>
                 <div className="ep-field-container">
                   <label>Last Name</label>
-                  <input name="lastName" value={user.lastName || ""} onChange={this.handleChange} placeholder="e.g. Mantenwar" />
+                  <input name="lastName" value={user.lastName || ""} onChange={this.handleChange} />
                 </div>
                 <div className="ep-field-container">
                   <label>Age</label>
@@ -225,7 +230,7 @@ class EditProfile extends Component {
                 <div className="ep-field-container">
                   <label>Gender</label>
                   <select name="gender" value={user.gender || ""} onChange={this.handleChange}>
-                    <option value="" disabled>Select gender</option>
+                    <option value="" disabled>Select</option>
                     {GENDER_OPTIONS.map((g) => <option key={g.value} value={g.value}>{g.label}</option>)}
                   </select>
                 </div>
@@ -233,36 +238,62 @@ class EditProfile extends Component {
             </div>
           )}
 
-          {/* --- PROFESSIONAL TAB --- */}
           {activeTab === 'pro' && (
             <div className="ep-animate-fade-in">
               <div className="ep-form-section-header">
-                <h3>Professional Bio</h3>
-                <p>This will be displayed on your public profile.</p>
+                <h3>Professional Identity</h3>
+                <p>Define your role and current status in the ecosystem.</p>
               </div>
               
+              <div className="ep-form-grid-layout">
+                <div className="ep-field-container">
+                  <label><Briefcase size={14} style={{marginRight: '4px'}}/>Current Focus</label>
+                  <select name="connectionStatus" value={user.connectionStatus || "seeking opportunities"} onChange={this.handleChange}>
+                    {CONNECTION_STATUS_OPTIONS.map((status) => (
+                      <option key={status.value} value={status.value}>{status.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="ep-field-container">
+                  <label>Years of Experience</label>
+                  <input name="experience" type="number" value={user.experience || 0} onChange={this.handleChange} />
+                </div>
+              </div>
+
               <div className="ep-field-container ep-full-span">
-                <label>About Me</label>
-                <textarea name="about" value={user.about || ""} onChange={this.handleChange} rows="5" />
-                <span className="ep-field-hint">Brief description for your profile. URLs are allowed.</span>
+                <label>
+                  Professional Bio 
+                  <span style={{ fontSize: '11px', color: (user.about?.length >= 500) ? '#ef4444' : '#6b7280', marginLeft: '10px', textTransform: 'none' }}>
+                    ({user.about?.length || 0} / 500)
+                  </span>
+                </label>
+                <textarea 
+                  name="about" 
+                  value={user.about || ""} 
+                  onChange={this.handleChange} 
+                  rows="4" 
+                  maxLength="500"
+                  placeholder="Tell the community about your journey..." 
+                />
               </div>
 
               <div className="ep-form-divider" />
 
               <div className="ep-form-section-header">
-                <h3>Skills & Tech Stack</h3>
+                <h3>Expertise & Roles</h3>
+                <p>Select up to 5 roles that best describe your professional career.</p>
               </div>
               
-              <div className="ep-skills-management-box">
-                <select className="ep-skills-dropdown" onChange={this.handleAddSkill} defaultValue="">
-                  <option value="" disabled>Add a technology...</option>
-                  {SKILLS_OPTIONS.map((skill) => <option key={skill} value={skill}>{skill}</option>)}
+              <div className="ep-roles-management-box">
+                <select className="ep-roles-dropdown" onChange={this.handleAddRole} defaultValue="">
+                  <option value="" disabled>Add a role...</option>
+                  {ROLE_OPTIONS.map((role) => <option key={role} value={role}>{role}</option>)}
                 </select>
-                <div className="ep-skills-pill-cloud">
-                  {selectedSkills.map((skill) => (
-                    <div key={skill} className="ep-skill-pill">
-                      {skill}
-                      <button className="ep-skill-del-btn" onClick={() => this.handleRemoveSkill(skill)}>×</button>
+                <div className="ep-roles-pill-cloud">
+                  {selectedRoles.map((role) => (
+                    <div key={role} className="ep-role-pill">
+                      {role}
+                      <button className="ep-role-del-btn" onClick={() => this.handleRemoveRole(role)}>×</button>
                     </div>
                   ))}
                 </div>
@@ -270,21 +301,20 @@ class EditProfile extends Component {
             </div>
           )}
 
-          {/* --- SOCIAL TAB --- */}
           {activeTab === 'social' && (
             <div className="ep-animate-fade-in">
               <div className="ep-form-section-header">
-                <h3>Social & Portfolios</h3>
-                <p>Connect your professional networks.</p>
+                <h3>Social Presence</h3>
+                <p>Links to your professional portfolios and social profiles.</p>
               </div>
               <div className="ep-form-grid-layout">
                 <div className="ep-field-container">
-                  <label>GitHub URL</label>
-                  <input name="github" value={user.github || ""} onChange={this.handleChange} placeholder="https://github.com/..." />
+                  <label>GitHub</label>
+                  <input name="github" value={user.github || ""} onChange={this.handleChange} placeholder="https://github.com/username" />
                 </div>
                 <div className="ep-field-container">
-                  <label>LinkedIn URL</label>
-                  <input name="linkedin" value={user.linkedin || ""} onChange={this.handleChange} placeholder="https://linkedin.com/in/..." />
+                  <label>LinkedIn</label>
+                  <input name="linkedin" value={user.linkedin || ""} onChange={this.handleChange} placeholder="https://linkedin.com/in/username" />
                 </div>
                 <div className="ep-field-container">
                   <label>Twitter (X)</label>
@@ -301,6 +331,7 @@ class EditProfile extends Component {
       </div>
     );
   };
+
   renderContent = () => {
     const { apiStatus } = this.state;
     switch (apiStatus) {
@@ -312,9 +343,15 @@ class EditProfile extends Component {
   };
 
   render() {
+    const { toast } = this.state;
     return (
       <div className="ep-profile-app-container">
         <Header />
+        {toast.message && (
+          <div className={`ep-toast-notification ${toast.type}`}>
+            {toast.message}
+          </div>
+        )}
         {this.renderContent()}
       </div>
     );

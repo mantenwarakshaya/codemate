@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { useParams, useLocation, Link } from "react-router-dom";
 import { FaGithub, FaLinkedin, FaTwitter, FaCheck, FaTimes } from "react-icons/fa";
 import { SiDiscord } from "react-icons/si";
-import { MdMessage } from "react-icons/md";
+import { MdMessage, MdWork, MdHandshake } from "react-icons/md";
 import "./index.css";
 import Header from "../../Header";
 
@@ -28,7 +28,6 @@ class ShowProfile extends Component {
     deletePassword: "",
     isDeleting: false,
     showConfirm: false,
-    showRemoveConfirm: false, // New state for custom remove UI
     statusMessage: "",
     messageType: "" 
   };
@@ -53,16 +52,11 @@ class ShowProfile extends Component {
     }
   };
 
-  toggleRemoveConfirm = () => {
-    this.setState((prevState) => ({ 
-        showRemoveConfirm: !prevState.showRemoveConfirm,
-        statusMessage: "" 
-    }));
-  };
-
   handleRemoveConnection = async () => {
     const { user } = this.state;
-    this.setState({ isProcessingAction: true, statusMessage: "Removing...", showRemoveConfirm: false });
+    if (!window.confirm(`Remove ${user.firstName} from your connections?`)) return;
+
+    this.setState({ isProcessingAction: true, statusMessage: "Removing..." });
 
     try {
       const res = await fetch(`${BASE_URL}/connection/remove/${user._id}`, {
@@ -130,8 +124,8 @@ class ShowProfile extends Component {
     }
   };
 
-  renderSuccessView = () => {
-    const { user, isProcessingAction, statusMessage, messageType, showRemoveConfirm } = this.state;
+renderSuccessView = () => {
+    const { user, isProcessingAction, statusMessage, messageType } = this.state;
     const { requestId, fromRequestPage } = this.props.locationState || {};
     const { id } = this.props.params;
     const isOwnProfile = !id;
@@ -145,6 +139,12 @@ class ShowProfile extends Component {
             <div className="sp-profile-image-container">
               <img src={user.profilePic || "/avatar.png"} alt="profile" className="sp-profile-avatar" />
             </div>
+            
+            {/* Status Indicator */}
+            <div className="sp-status-indicator">
+               <MdHandshake /> {user.connectionStatus || "Networking"}
+            </div>
+
             <div className="sp-social-links-grid">
               {user.github && <a href={user.github} target="_blank" rel="noreferrer" className="sp-social-pill"><FaGithub /> GitHub</a>}
               {user.linkedin && <a href={user.linkedin} target="_blank" rel="noreferrer" className="sp-social-pill"><FaLinkedin /> LinkedIn</a>}
@@ -154,27 +154,47 @@ class ShowProfile extends Component {
           </div>
 
           <div className="sp-profile-main">
+            
             <div className="sp-profile-header">
-              <h2 className="sp-user-name">{user.firstName} {user.lastName} <PremiumVerifiedBadge user={user} /></h2>
-              <div className="sp-user-meta">
-                <span>{user.emailId}</span>
-                <span className="sp-meta-divider">•</span>
-                <span className="sp-experience-badge">{user.experience ?? 0} {user.experience === 1 ? "Year" : "Years"} Exp.</span>
-              </div>
+                <h2 className="sp-user-name">
+                  {user.firstName} {user.lastName} 
+                  <PremiumVerifiedBadge user={user} />
+                </h2>
+                <div className="sp-user-meta">
+                  <span>{user.emailId}</span>
+                  <span className="sp-meta-divider">•</span>
+                  <span className="sp-experience-badge">
+                    <MdWork style={{marginBottom: '-2px'}}/> {user.experience ?? 0} Years Experience
+                  </span>
+                </div>
+            </div>
+
+            <div className="sp-focus-container">
+                <span className="sp-focus-label">Current Focus:</span>
+                <span className={`sp-focus-value sp-focus-type-${user.connectionStatus?.replace(/\s+/g, '-')}`}>
+                  <MdHandshake size={16} />
+                  {user.connectionStatus || "Networking"}
+                </span>
             </div>
 
             <div className="sp-bio-section">
-              <p className="sp-bio-text">{user.about || "Full Stack Developer ready to collaborate."}</p>
+              <p className="sp-bio-text">{user.about || "Professional developer ready to collaborate."}</p>
             </div>
 
-            <div className="sp-skills-section">
-              <h4 className="sp-section-label">Technical Stack</h4>
-              <div className="sp-skills-wrapper">
-                {user.skills?.map((skill, i) => <span key={i} className="sp-skill-tag">{skill}</span>)}
+            {/* Replaced Technical Stack with Professional Roles */}
+            <div className="sp-roles-section">
+              <h4 className="sp-section-label">Professional Roles</h4>
+              <div className="sp-roles-wrapper">
+                {user.roles && user.roles.length > 0 ? (
+                  user.roles.map((role, i) => <span key={i} className="sp-role-tag">{role}</span>)
+                ) : (
+                  <span className="sp-no-data">No roles specified</span>
+                )}
               </div>
             </div>
 
             <div className="sp-profile-actions">
+              {/* ... (Actions logic stays exactly the same as your previous code) ... */}
               {statusMessage ? (
                 <div className={`sp-status-feedback sp-status-${messageType}`}>
                    {statusMessage}
@@ -212,21 +232,9 @@ class ShowProfile extends Component {
                   <Link to={`/chat/${user._id}`} className="sp-message-link">
                     <button className="sp-btn-primary"><MdMessage /> Send Message</button>
                   </Link>
-                  
-                  {/* Updated custom confirmation UI for removing connections */}
-                  {!showRemoveConfirm ? (
-                    <button className="sp-btn-reject" onClick={this.toggleRemoveConfirm}>
-                      <FaTimes /> Remove Connection
-                    </button>
-                  ) : (
-                    <div className="sp-remove-confirm-box">
-                      <span className="sp-confirm-text">Are you sure?</span>
-                      <div className="sp-confirm-actions">
-                        <button className="sp-confirm-btn-yes" onClick={this.handleRemoveConnection}>Yes</button>
-                        <button className="sp-confirm-btn-no" onClick={this.toggleRemoveConfirm}>No</button>
-                      </div>
-                    </div>
-                  )}
+                  <button className="sp-btn-reject" onClick={this.handleRemoveConnection}>
+                    <FaTimes /> Remove Connection
+                  </button>
                 </div>
               )}
             </div>
@@ -236,6 +244,7 @@ class ShowProfile extends Component {
     );
   };
 
+  // ... (renderProfile and render stay the same)
   renderProfile = () => {
     const { apiStatus } = this.state;
     switch (apiStatus) {

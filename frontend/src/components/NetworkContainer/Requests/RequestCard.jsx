@@ -11,7 +11,16 @@ class RequestCard extends Component {
 
     if (!fromUser) return null;
 
-    const { firstName, lastName, profilePic, skills = [], _id } = fromUser;
+    const { 
+      firstName, 
+      lastName, 
+      profilePic, 
+      roles = [], 
+      connectionStatus = "", 
+      _id 
+    } = fromUser;
+
+    const safeRoles = Array.isArray(roles) ? roles : [];
 
     return (
       <div className="requestcard-card">
@@ -40,18 +49,19 @@ class RequestCard extends Component {
               <PremiumVerifiedBadge user={fromUser} />
             </h2>
 
-            <div className="requestcard-skills">
-              {/* Rendering only the first 5 skills */}
-              {skills.slice(0, 5).map((skill, index) => (
-                <span key={index} className="requestcard-skill-badge">
-                  {skill}
+            {connectionStatus && (
+              <span className="requestcard-status-label">
+                {connectionStatus}
+              </span>
+            )}
+
+            {/* Roles logic replacing skills */}
+            <div className="requestcard-roles">
+              {safeRoles.map((role, index) => (
+                <span key={index} className="requestcard-role-badge">
+                  {role}
                 </span>
               ))}
-              {skills.length > 5 && (
-                <span className="requestcard-skill-more">
-                  +{skills.length - 5} more
-                </span>
-              )}
             </div>
           </div>
         </div>

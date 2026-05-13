@@ -6,8 +6,9 @@ const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 const ProfileView = require("../models/profileView");
 
+// --- UPDATED CONSTANT ---
 const USER_SAFE_DATA = 
-  "firstName lastName emailId profilePic about skills experience github linkedin twitter discord isPremium membershipType membershipStartedAt membershipExpiresAt";
+  "firstName lastName emailId profilePic about roles connectionStatus experience github linkedin twitter discord isPremium membershipType membershipStartedAt membershipExpiresAt";
   // Get all the pending connection request for the loggedIn user
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
   try {

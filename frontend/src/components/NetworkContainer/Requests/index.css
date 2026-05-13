@@ -73,14 +73,14 @@
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #e6f6ff;
-  padding: o; 
   background-color: #e6f6ff;
 }
 
 .requestcard-user-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  align-items: flex-start;
 }
 
 .requestcard-user-name {
@@ -89,6 +89,42 @@
   gap: 6px;
   font-size: 18px;
   font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.requestcard-status-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0967d2;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  background-color: #eff6ff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  width: fit-content;
+  margin-bottom: 2px;
+  border: 1px solid #e0f2fe;
+  display: inline-block;
+}
+
+/* Roles Styling */
+.requestcard-roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.requestcard-role-badge {
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 3px 12px;
+  border-radius: 999px; /* Pill shape */
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+  text-transform: capitalize;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .requestcard-user-link {
@@ -141,11 +177,14 @@
 
 .requestcard-accept-btn {
   background-color: #0967d2;
+  color: #f1f5f9;
   padding: 8px 20px;
   border-radius: 8px;
   font-size: 13px;
-  box-shadow: none;
-  color: #f1f5f9;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
 .requestcard-accept-btn:hover {
@@ -161,12 +200,16 @@
   padding: 8px 20px;
   border-radius: 8px;
   font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
 .requestcard-reject-btn:hover {
   background-color: #f1f5f9;
   color: #475569;
   border-color: #cbd5e1;
+  
 }
 
 .requestcard-btn-icon {
@@ -178,7 +221,7 @@
 }
 
 /* Mobile Responsiveness */
-@media (max-width: 600px) {
+@media (max-width: 580px) {
   .requestcard-card {
     flex-direction: column;
     align-items: flex-start;
@@ -206,5 +249,10 @@
     align-items: center;
     height: 45px; 
     font-size: 20px;
+    text-align: center;
+  }
+
+  .requestcard-status-label {
+    padding: 3px 8px;
   }
 }

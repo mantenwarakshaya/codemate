@@ -334,3 +334,115 @@
   .ep-profile-form-surface { padding: 24px; }
   .ep-sync-profile-btn { width: 100%; justify-content: center; }
 }
+
+/* Update the existing skills sections to roles styling */
+
+.ep-roles-management-box {
+  background: #f8fafc;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.ep-roles-dropdown {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: white;
+  font-weight: 500;
+  margin-bottom: 20px;
+  transition: border-color 0.2s;
+}
+
+.ep-roles-dropdown:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.ep-roles-pill-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.ep-role-pill {
+  background: #eff6ff; /* Light blue background for roles */
+  color: #1e40af; /* Darker blue text */
+  border: 1px solid #bfdbfe;
+  padding: 8px 14px;
+  border-radius: 100px; /* Full round pills */
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.ep-role-pill:hover {
+  background: #dbeafe;
+  transform: translateY(-2px);
+}
+
+.ep-role-del-btn {
+  background: transparent;
+  border: none;
+  color: #60a5fa;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.ep-role-del-btn:hover {
+  color: #ef4444;
+}
+
+/* Status selection styling */
+select[name="connectionStatus"] {
+  background-color: #f0fdf4; /* Subtle green for status */
+  border-color: #bbf7d0;
+  color: #166534;
+  font-weight: 600;
+}
+
+.ep-full-span {
+    grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+    .ep-full-span {
+        grid-column: span 1;
+    }
+}
+
+.ep-toast-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideDown 0.3s ease-out;
+}
+
+.ep-toast-notification.error {
+  background-color: #ef4444; /* Red */
+}
+
+.ep-toast-notification.success {
+  background-color: #10b981; /* Green */
+}
+
+@keyframes slideDown {
+  from { top: -50px; opacity: 0; }
+  to { top: 20px; opacity: 1; }
+}

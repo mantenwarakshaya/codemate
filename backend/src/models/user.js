@@ -86,12 +86,30 @@ const userSchema = new mongoose.Schema(
       default: "Hey there! I am using CodeMate.",
       maxLength: 500,
     },
-    skills: {
+    roles: {
       type: [String],
+      required: [true, "Professional roles are required"],
       validate: {
-        validator: (v) => v.length <= 10,
-        message: "You can only add up to 10 skills",
+        // Limits the user to their top 3 professional identities for better profile focus
+        validator: (v) => v.length > 0 && v.length <= 5,
+        message: "Please specify between 1 and 3 professional roles",
       },
+      // Sanitizes input to ensure database consistency
+      set: (v) => v.map(role => role.toLowerCase().trim())
+    },
+    connectionStatus: {
+      type: String,
+      default: "seeking opportunities",
+      enum: {
+        values: [
+          "seeking opportunities",    // Replaces 'open to opportunities' (Executive tone)
+          "open to collaboration",    // Standard professional partnership terminology
+          "available for mentorship", // Positions the user as an industry expert
+          "networking exclusively",   // Formal way to say 'just here to meet people'
+          "currently engaged"         // Replaces 'not available' (Implies high-value/employed)
+        ],
+        message: "{VALUE} is not a valid professional status",
+      }
     },
     isVerified: {
       type: Boolean,
