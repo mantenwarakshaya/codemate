@@ -102,8 +102,12 @@ class ConnectionCard extends Component {
         <div className="connectioncard-actions">
           {/* FLOW: Status Message -> Confirmation Prompt -> Default Buttons */}
           {statusMessage ? (
-            <span className={`status-message ${statusMessage.toLowerCase().replace(" ", "-")}`}>
-              {statusMessage}
+            <span
+              className={`status-message ${statusMessage
+                .toLowerCase()
+                .replace(/\s+/g, "-")
+                .replace(/[!]/g, "")}`}
+            >
             </span>
           ) : showConfirm ? (
             <div className="connectioncard-confirm-box">

@@ -39,6 +39,7 @@ const Chat = () => {
   const [newMessage, setNewMessage] = useState("");
   const [apiStatus, setApiStatus] = useState("INITIAL");
   const [targetUser, setTargetUser] = useState(null);
+  const [showSidebar, setShowSidebar] = useState(true);
 
   const scrollRef = useRef(null);
 
@@ -254,14 +255,28 @@ const Chat = () => {
       <Header />
 
       <main className="chat-layout-container">
-        <aside className="chat-sidebar-container open">
-          <ConnectionsChatList
-            onSelectUser={(u) => navigate(`/chat/${u._id}`)}
-            loggedInUserId={loggedInUserId}
-          />
+        <aside
+          className={`chat-sidebar-container ${
+            showSidebar ? "open" : "mobile-hide-sidebar"
+          }`}
+        >
+        <ConnectionsChatList
+          onSelectUser={(u) => {
+            navigate(`/chat/${u._id}`);
+
+            if (window.innerWidth <= 768) {
+              setShowSidebar(false);
+            }
+          }}
+          loggedInUserId={loggedInUserId}
+        />
         </aside>
 
-        <section className="chat-main-container">
+        <section
+          className={`chat-main-container ${
+            !showSidebar ? "open-chat-mobile" : "mobile-hide-chat"
+          }`}
+        >
           {!targetUserId ? (
             <div className="chat-empty-container">
               <div className="chat-empty-content">
@@ -280,13 +295,19 @@ const Chat = () => {
             <>
               <header className="chat-header-main">
                 <div className="chat-header-left">
-                  <button
-                    type="button"
-                    className="chat-menu-btn"
-                    onClick={() => navigate("/chat")}
-                  >
-                    <ArrowLeft size={20} />
-                  </button>
+                <button
+                  type="button"
+                  className="chat-menu-btn"
+                  onClick={() => {
+                    navigate("/chat");
+
+                    if (window.innerWidth <= 768) {
+                      setShowSidebar(true);
+                    }
+                  }}
+                >
+                  <ArrowLeft size={20} />
+                </button>
 
                   <img
                     src={targetUser?.profilePic || "/avatar.png"}
