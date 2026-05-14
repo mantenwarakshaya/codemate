@@ -75,22 +75,26 @@ class Feed extends Component {
         {
           method: "POST",
           credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
-
-      if (res.status === 429) {
-        const errorData = await res.json();
-        this.setState({ limitError: errorData.message });
-        return;
-      }
-
-      if (!res.ok) throw new Error("Request failed");
 
       this.setState((prevState) => ({
         currentIndex: prevState.currentIndex + 1,
       }));
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Backend error:", errorData.message);
+      }
+
     } catch (err) {
       console.error("Error sending request:", err);
+      this.setState((prevState) => ({
+        currentIndex: prevState.currentIndex + 1,
+      }));
     }
   };
 

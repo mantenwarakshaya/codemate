@@ -428,7 +428,7 @@
   }
 
   .feed-action-footer {
-    flex-direction: column;
+    flex-direction: row;
   }
 }
 
