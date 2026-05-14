@@ -239,9 +239,11 @@
   margin-top: 10px;
 }
 
-.sp-message-link {
+/* .sp-message-link {
   text-decoration: none;
-}
+  width: 100%;
+  display: block;
+} */
 
 .sp-btn-primary {
   width: 100%;
@@ -367,12 +369,155 @@
   border: 1px solid #f5c6cb;
 }
 
-@media (max-width: 850px) {
+/* ==========================================
+   MOBILE RESPONSIVE FIXES
+   ========================================== */
+
+@media screen and (max-width: 768px) {
+  .sp-profile-container {
+    padding: 12px;
+  }
+
   .sp-profile-card {
     grid-template-columns: 1fr;
+    border-radius: 14px;
   }
+
   .sp-profile-sidebar {
+    padding: 24px 16px;
     border-right: none;
     border-bottom: 1px solid #f1f5f9;
   }
+
+  .sp-profile-main {
+    padding: 20px 16px;
+  }
+
+  .sp-profile-image-container {
+    width: 110px;
+    height: 110px;
+    margin-bottom: 18px;
+  }
+
+  .sp-user-name {
+    font-size: 28px;
+    line-height: 1.2;
+    flex-wrap: wrap;
+  }
+
+  .sp-user-meta {
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+
+  .sp-meta-divider {
+    display: none;
+  }
+
+  .sp-focus-container {
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .sp-focus-value {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sp-bio-text {
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 16px;
+  }
+
+  .sp-social-links-grid {
+    width: 100%;
+  }
+
+  .sp-social-pill {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .sp-btn-primary,
+  .sp-btn-accept,
+  .sp-btn-reject {
+    width: 100%;
+  }
+
+  .sp-danger-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .sp-danger-btn,
+  .sp-cancel-btn {
+    width: 100%;
+  }
+}
+
+/* EXTRA SMALL DEVICES */
+@media screen and (max-width: 480px) {
+  .sp-profile-container {
+    padding: 8px;
+  }
+
+  .sp-profile-main {
+    padding: 16px 12px;
+  }
+
+  .sp-profile-sidebar {
+    padding: 20px 12px;
+  }
+
+  .sp-user-name {
+    font-size: 22px;
+  }
+
+  .sp-user-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sp-role-tag {
+    width: 100%;
+    text-align: center;
+  }
+
+  .sp-status-indicator {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .sp-request-controls {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .sp-request-controls > * {
+    width: 100%;
+  }
+
+  .sp-focus-label {
+    width: 100%;
+  }
+
+  .sp-focus-value {
+    font-size: 13px;
+  }
+
+  .sp-bio-text {
+    font-size: 13px;
+  }
+
+  .sp-message-link {
+    width: 100%;
+    display: block;
+  }
+
 }
