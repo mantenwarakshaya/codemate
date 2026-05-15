@@ -56,7 +56,7 @@ const LandingPage = () => {
           <button className="lp-btn-primary-glow" onClick={() => navigate("/signup")}>
             Start Matching <ChevronRight size={18} />
           </button>
-          <button className="lp-btn-outline" onClick={() => window.open('https://github.com', '_blank')}>
+          <button className="lp-btn-outline">
             <FaGithub size={18} /> Star on GitHub
           </button>
         </div>
@@ -104,8 +104,7 @@ const LandingPage = () => {
             <div className="lp-feature-card">
               <div className="lp-icon-wrapper"><Zap /></div>
               <h3>Dev-Focused Profiles</h3>
-              <p>Showcase up to 10 technical skills and integrate GitHub, LinkedIn, and Discord.</p>
-            </div>
+              <p>Select from specialized industry roles and define your availability status to find the perfect match.</p>            </div>
           </div>
         </div>
       </section>
