@@ -318,11 +318,11 @@ class EditProfile extends Component {
                 </div>
                 <div className="ep-field-container">
                   <label>Twitter (X)</label>
-                  <input name="twitter" value={user.twitter || ""} onChange={this.handleChange} />
+                  <input name="twitter" value={user.twitter || ""} onChange={this.handleChange} placeholder="https://x.com/in/username" />
                 </div>
                 <div className="ep-field-container">
                   <label>Discord</label>
-                  <input name="discord" value={user.discord || ""} onChange={this.handleChange} />
+                  <input name="discord" value={user.discord || ""} onChange={this.handleChange} placeholder="username#0000" />
                 </div>
               </div>
             </div>
