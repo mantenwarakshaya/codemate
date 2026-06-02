@@ -14,7 +14,6 @@ initializeSocket(server);
 const cloudinary = require("cloudinary").v2;
 const startCleanupTask = require("./utils/cleanup");
 require("dotenv").config();
-process.env.BASE_URL = "http://localhost:5173";
 
 
 startCleanupTask();

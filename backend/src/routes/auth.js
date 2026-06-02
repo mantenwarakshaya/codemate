@@ -57,7 +57,7 @@ authRouter.post("/signup", async (req, res) => {
 
   } catch (err) {
     console.log("SIGNUP ERROR:", err.message);
-    return res.status(400).send(err.message);
+    return res.status(400).json({ message: err.message });
   }
 });
 
