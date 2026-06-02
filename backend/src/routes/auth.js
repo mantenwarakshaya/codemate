@@ -38,7 +38,7 @@ authRouter.post("/signup", async (req, res) => {
       { expiresIn: "15m" }
     );
 
-    const verifyLink = `${process.env.BASE_URL}/verify-email/${token}`;
+    const verifyLink = `${process.env.FRONTEND_URL}/verify-email/${token}`;
 
     await sendEmail(
       emailId,
