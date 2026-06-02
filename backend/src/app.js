@@ -23,7 +23,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 // ✅ Middlewares
-app.use(express.json());
+// app.use(express.json());
 
 // for production, CORS is not needed since frontend and backend are on same domain
 // app.use(cors());
@@ -82,7 +82,7 @@ connectDB()
   .then(() => {
     console.log("Database connection established");
     server.listen(PORT, () => {
-      console.log(`Server running on port http://localhost:${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
