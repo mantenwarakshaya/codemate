@@ -52,6 +52,7 @@ authRouter.post("/signup", async (req, res) => {
 
     return res.json({
       message: "📩 Verification email sent! Please check your inbox.",
+      token: token
     });
 
   } catch (err) {
@@ -92,51 +93,51 @@ authRouter.get("/verify-email/:token", async (req, res) => {
 
 authRouter.post("/resend-verification", async (req, res) => {
   try {
-    const { emailId } = req.body;
+    const { token } = req.body;
 
-    const user = await User.findOne({ emailId });
-
-    if (!user) {
-      return res.status(400).send("User not found");
+    if (!token) {
+      return res.status(400).json({ message: "No verification session found. Please sign up again." });
     }
 
-    if (user.isVerified) {
-      return res.status(400).send("User already verified");
-    }
-
-    // ⏳ Cooldown check (60 sec)
-    if (
-      user.lastEmailSent &&
-      Date.now() - new Date(user.lastEmailSent).getTime() < 60000
-    ) {
-      return res.status(429).send("Wait before resending");
-    }
-
-    const token = user.getEmailVerificationToken();
-    const verifyLink = `${process.env.FRONTEND_URL}/verify-email/${token}`;
-
+    let decoded;
     try {
-      await sendEmail(
-        emailId,
-        "Resend: Verify your CodeMate account",
-        `
-          <h2>Verify your email again 🔁</h2>
-          <p>Click below to verify your account:</p>
-          <a href="${verifyLink}">Verify Email</a>
-        `
-      );
-
-      // ✅ update last sent time
-      user.lastEmailSent = new Date();
-      await user.save();
-
+      decoded = jwt.verify(token, process.env.JWT_SECRET, { ignoreExpiration: true });
     } catch (err) {
-      console.log("❌ Resend email failed:", err.message);
+      return res.status(400).json({ message: "Invalid verification token. Please sign up again." });
     }
 
-    return res.send("📩 Verification email resent!");
+    const { firstName, lastName, emailId, password } = decoded;
+
+    const existingUser = await User.findOne({ emailId });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already verified. Please login." });
+    }
+
+    const newToken = jwt.sign(
+      { firstName, lastName, emailId, password },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    const verifyLink = `${process.env.FRONTEND_URL}/verify-email/${newToken}`;
+
+    await sendEmail(
+      emailId,
+      "Resend: Verify your CodeMate account",
+      `
+        <h2>Verify your email again 🔁</h2>
+        <p>Click below to verify your account:</p>
+        <a href="${verifyLink}">Verify Email</a>
+      `
+    );
+
+    return res.json({
+      message: "📩 Verification email resent!",
+      token: newToken
+    });
+
   } catch (err) {
-    return res.status(400).send(err.message);
+    return res.status(400).json({ message: err.message });
   }
 });
 

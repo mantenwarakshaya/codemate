@@ -5,11 +5,16 @@ const initialState = {
   user: null,
 };
 
-// 2. Define a reducer to handle the "SET_USER" action you called in App.js
+// 2. Define a reducer to handle actions
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SET_USER":
       return { ...state, user: action.payload };
+      
+    case "LOGOUT_USER":
+      // ✅ This resets the user field back to null when an auth error occurs
+      return { ...state, user: null };
+      
     default:
       return state;
   }

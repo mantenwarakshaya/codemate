@@ -29,22 +29,16 @@ const userAuth = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    console.error(err);
-
-    if (err.name === "JsonWebTokenError") {
+    // ✅ Handle expected signature and expiry issues quietly
+    if (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError") {
       return res.status(401).json({
         success: false,
-        message: "Invalid token"
+        message: "Session invalid or expired. Please login again."
       });
     }
 
-    if (err.name === "TokenExpiredError") {
-      return res.status(401).json({
-        success: false,
-        message: "Token expired"
-      });
-    }
-
+    // Only log unexpected server bugs (like database connection loss)
+    console.error("SYSTEM AUTH ERROR:", err);
     res.status(500).json({
       success: false,
       message: err.message || "Something went wrong"

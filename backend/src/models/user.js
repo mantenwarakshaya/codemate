@@ -88,14 +88,14 @@ const userSchema = new mongoose.Schema(
     },
     roles: {
       type: [String],
-      required: [true, "Professional roles are required"],
+      default: [],
       validate: {
-        // Limits the user to their top 3 professional identities for better profile focus
-        validator: (v) => v.length > 0 && v.length <= 5,
-        message: "Please specify between 1 and 3 professional roles",
+        // ✅ FIX: Allow an empty array (length === 0), but if values exist, limit them to 5
+        validator: (v) => v.length === 0 || (v.length > 0 && v.length <= 5),
+        message: "Please specify between 1 and 5 professional roles",
       },
-      // Sanitizes input to ensure database consistency
-      set: (v) => v.map(role => role.toLowerCase().trim())
+      // Added a safety check to prevent map errors on empty/null values
+      set: (v) => (v ? v.map(role => role.toLowerCase().trim()) : [])
     },
     connectionStatus: {
       type: String,

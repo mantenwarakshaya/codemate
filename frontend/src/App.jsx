@@ -29,6 +29,8 @@ import Premium from "./components/Premium";
 import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+import Cookies from "js-cookie";
+
 const BASE_URL =
   process.env.NODE_ENV === "production"
     ? "/api"
@@ -40,13 +42,18 @@ const App = () => {
   useEffect(() => {
     const syncUser = async () => {
       try {
-        const res = await axios.get(BASE_URL+"/profile/view", {
+        const res = await axios.get(BASE_URL + "/profile/view", {
           withCredentials: true,
         });
         console.log("Profile Sync Data:", res.data);
         dispatch({ type: "SET_USER", payload: res.data });
       } catch (err) {
-        if (err.response?.status === 401) return;
+        if (err.response?.status === 401) {
+          // 🧹 Clean up frontend states if backend invalidates session
+          Cookies.remove("jwt_token");
+          dispatch({ type: "LOGOUT_USER" }); // Or whatever resets your Redux user node to null
+          return;
+        }
         console.error("Profile fetch error:", err);
       }
     };

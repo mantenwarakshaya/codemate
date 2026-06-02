@@ -26,9 +26,10 @@ cloudinary.config({
 // ✅ Middlewares
 app.use(express.json());
 
+// for production, CORS is not needed since frontend and backend are on same domain
 app.use(cors());
 
-// ✅ CORS (simple since same domain)
+// for localhost development, allow CORS from frontend
 // app.use(
 //   cors({
 //     origin: "http://localhost:5173",

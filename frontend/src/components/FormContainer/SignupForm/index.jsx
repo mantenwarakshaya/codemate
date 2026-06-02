@@ -23,6 +23,7 @@ class SignupForm extends Component {
     showPassword: false,
     isLoading: false,
     isEmailSent: false,
+    signupToken: '', // ✅ Added to track temporary cryptographic registration token
   }
 
   onChangeInput = (event) => {
@@ -33,11 +34,12 @@ class SignupForm extends Component {
     this.setState(prev => ({ showPassword: !prev.showPassword }))
   }
 
-  onSubmitSuccess = () => {
+  onSubmitSuccess = (token) => {
     this.setState({
       isEmailSent: true,
       isLoading: false,
       showSubmitError: false,
+      signupToken: token, // ✅ Storing the token to state for resend flows
     })
   }
 
@@ -72,7 +74,8 @@ class SignupForm extends Component {
       const data = await response.json();
 
       if (response.ok) {
-        this.onSubmitSuccess()
+        // ✅ Passing data.token over to the success state handler
+        this.onSubmitSuccess(data.token)
       } else {
         this.onSubmitFailure(data.message || "Registration failed");
       }
@@ -83,12 +86,12 @@ class SignupForm extends Component {
   }
 
   resendVerificationEmail = async () => {
-    const { emailId } = this.state
+    const { signupToken } = this.state
 
-    if (!emailId) {
+    if (!signupToken) {
       return this.setState({
         showSubmitError: true,
-        errorMsg: "Email missing",
+        errorMsg: "Verification session missing. Please register again.",
       })
     }
 
@@ -103,21 +106,22 @@ class SignupForm extends Component {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ emailId }),
+        body: JSON.stringify({ token: signupToken }), // ✅ Sending token to backend instead of email
       })
 
-      const data = await response.text()
+      const data = await response.json()
 
       if (response.ok) {
         this.setState({
           showSubmitError: true,
           errorMsg: "📩 Email sent again!",
           isLoading: false,
+          signupToken: data.token, // ✅ Saving fresh verification token from backend
         })
       } else {
         this.setState({
           showSubmitError: true,
-          errorMsg: data,
+          errorMsg: data.message || "Resend failed",
           isLoading: false,
         })
       }
