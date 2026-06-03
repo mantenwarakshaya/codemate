@@ -27,43 +27,55 @@ authRouter.post("/signup", async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
 
     // 🔐 Create JWT token with user data
-    const token = jwt.sign(
-      {
-        firstName,
-        lastName,
-        emailId,
-        password: passwordHash,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "15m" }
-    );
+    // const token = jwt.sign(
+    //   {
+    //     firstName,
+    //     lastName,
+    //     emailId,
+    //     password: passwordHash,
+    //   },
+    //   process.env.JWT_SECRET,
+    //   { expiresIn: "15m" }
+    // );
 
-    const verifyLink = `${process.env.FRONTEND_URL}/verify-email/${token}`;
+    // const verifyLink = `${process.env.FRONTEND_URL}/verify-email/${token}`;
 
     // 👇 REPLACE YOUR OLD SENDEMAIL BLOCK WITH THIS 👇
-    const emailResult = await sendEmail(
-      emailId,
-      "Verify your CodeMate account",
-      `
-        <h2>Welcome to CodeMate 🚀</h2>
-        <p>Click below to verify your email:</p>
-        <a href="${verifyLink}">Verify Email</a>
-      `
-    );
+    // const emailResult = await sendEmail(
+    //   emailId,
+    //   "Verify your CodeMate account",
+    //   `
+    //     <h2>Welcome to CodeMate 🚀</h2>
+    //     <p>Click below to verify your email:</p>
+    //     <a href="${verifyLink}">Verify Email</a>
+    //   `
+    // );
 
-    // If emailResult is null (meaning transporter.sendMail failed and caught an error)
-    if (!emailResult) {
-      return res.status(500).json({ 
-        message: "Account details processed, but we failed to send the verification email. Please try resending." 
-      });
-    }
+    // // If emailResult is null (meaning transporter.sendMail failed and caught an error)
+    // if (!emailResult) {
+    //   return res.status(500).json({ 
+    //     message: "Account details processed, but we failed to send the verification email. Please try resending." 
+    //   });
+    // }
 
     // If it succeeded, send the success response
-    return res.json({
-      message: "📩 Verification email sent! Please check your inbox.",
-      token: token
+    // return res.json({
+    //   message: "📩 Verification email sent! Please check your inbox.",
+    //   token: token
+    // });
+    const newUser = new User({
+      firstName,
+      lastName,
+      emailId,
+      password: passwordHash,
+      isVerified: true,
     });
-    // 👆 REPLACE END 👆
+
+    await newUser.save();
+
+    return res.status(201).json({
+      message: "Account created successfully",
+    });
 
   } catch (err) {
     console.log("SIGNUP ERROR:", err.message);
@@ -241,11 +253,11 @@ authRouter.post("/login", async (req, res) => {
       });    
     }
 
-    if (!user.isVerified) {
-      return res.status(403).json({
-        message: "Please verify your email first"
-      });
-    }
+    // if (!user.isVerified) {
+    //   return res.status(403).json({
+    //     message: "Please verify your email first"
+    //   });
+    // }
 
     const isPasswordValid = await user.validatePassword(password);
 
@@ -256,12 +268,12 @@ authRouter.post("/login", async (req, res) => {
 
     // Generate login token
     const token = await user.getJWT();
-    
+
     const isProduction = process.env.NODE_ENV === "production";
 
     res.cookie("jwt_token", token, {
       httpOnly: true,
-      secure: true, 
+      secure: isProduction, 
       sameSite: isProduction ? "None" : "Lax",
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });

@@ -22,8 +22,8 @@ class SignupForm extends Component {
     errorMsg: '',
     showPassword: false,
     isLoading: false,
-    isEmailSent: false,
-    signupToken: '', // ✅ Added to track temporary cryptographic registration token
+    // isEmailSent: false,
+    // signupToken: '', // ✅ Added to track temporary cryptographic registration token
   }
 
   onChangeInput = (event) => {
@@ -34,13 +34,17 @@ class SignupForm extends Component {
     this.setState(prev => ({ showPassword: !prev.showPassword }))
   }
 
-  onSubmitSuccess = (token) => {
-    this.setState({
-      isEmailSent: true,
-      isLoading: false,
-      showSubmitError: false,
-      signupToken: token, // ✅ Storing the token to state for resend flows
-    })
+  // onSubmitSuccess = (token) => {
+  //   this.setState({
+  //     isEmailSent: true,
+  //     isLoading: false,
+  //     showSubmitError: false,
+  //     signupToken: token, // ✅ Storing the token to state for resend flows
+  //   })
+  // }
+
+  onSubmitSuccess = () => {
+    window.location.replace('/login')
   }
 
   onSubmitFailure = (errorMsg) => {
@@ -75,7 +79,8 @@ class SignupForm extends Component {
 
       if (response.ok) {
         // ✅ Passing data.token over to the success state handler
-        this.onSubmitSuccess(data.token)
+        // this.onSubmitSuccess(data.token)
+        this.onSubmitSuccess()
       } else {
         this.onSubmitFailure(data.message || "Registration failed");
       }
@@ -85,54 +90,54 @@ class SignupForm extends Component {
     }
   }
 
-  resendVerificationEmail = async () => {
-    const { signupToken } = this.state
+  // resendVerificationEmail = async () => {
+  //   const { signupToken } = this.state
 
-    if (!signupToken) {
-      return this.setState({
-        showSubmitError: true,
-        errorMsg: "Verification session missing. Please register again.",
-      })
-    }
+  //   if (!signupToken) {
+  //     return this.setState({
+  //       showSubmitError: true,
+  //       errorMsg: "Verification session missing. Please register again.",
+  //     })
+  //   }
 
-    this.setState({
-      isLoading: true,
-      showSubmitError: false,
-    })
+  //   this.setState({
+  //     isLoading: true,
+  //     showSubmitError: false,
+  //   })
 
-    try {
-      const response = await fetch(`${BASE_URL}/resend-verification`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token: signupToken }), // ✅ Sending token to backend instead of email
-      })
+  //   try {
+  //     const response = await fetch(`${BASE_URL}/resend-verification`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ token: signupToken }), // ✅ Sending token to backend instead of email
+  //     })
 
-      const data = await response.json()
+  //     const data = await response.json()
 
-      if (response.ok) {
-        this.setState({
-          showSubmitError: true,
-          errorMsg: "📩 Email sent again!",
-          isLoading: false,
-          signupToken: data.token, // ✅ Saving fresh verification token from backend
-        })
-      } else {
-        this.setState({
-          showSubmitError: true,
-          errorMsg: data.message || "Resend failed",
-          isLoading: false,
-        })
-      }
-    } catch (err) {
-      this.setState({
-        showSubmitError: true,
-        errorMsg: "Something went wrong",
-        isLoading: false,
-      })
-    }
-  }
+  //     if (response.ok) {
+  //       this.setState({
+  //         showSubmitError: true,
+  //         errorMsg: "📩 Email sent again!",
+  //         isLoading: false,
+  //         signupToken: data.token, // ✅ Saving fresh verification token from backend
+  //       })
+  //     } else {
+  //       this.setState({
+  //         showSubmitError: true,
+  //         errorMsg: data.message || "Resend failed",
+  //         isLoading: false,
+  //       })
+  //     }
+  //   } catch (err) {
+  //     this.setState({
+  //       showSubmitError: true,
+  //       errorMsg: "Something went wrong",
+  //       isLoading: false,
+  //     })
+  //   }
+  // }
 
   render() {
     const {
@@ -144,75 +149,78 @@ class SignupForm extends Component {
       errorMsg,
       showPassword,
       isLoading,
-      isEmailSent,
+      // isEmailSent,
     } = this.state
 
     // Redirect if already logged in
-    if (Cookies.get('jwt_token') && !isEmailSent) {
+    // if (Cookies.get('jwt_token') && !isEmailSent) {
+    //   return <Navigate to="/" replace />
+    // }
+    if (Cookies.get('jwt_token')) {
       return <Navigate to="/" replace />
     }
 
     // =========================
     // EMAIL SENT SCREEN
     // =========================
-    if (isEmailSent) {
-      return (
-      <div className="signupform-main-container">
-        <div className="verify-card">
+    // if (isEmailSent) {
+    //   return (
+    //   <div className="signupform-main-container">
+    //     <div className="verify-card">
 
-          <img
-            src={navlogo}
-            alt="logo"
-            className="verify-logo"
-          />
+    //       <img
+    //         src={navlogo}
+    //         alt="logo"
+    //         className="verify-logo"
+    //       />
 
-          <div className="verify-icon">📩</div>
+    //       <div className="verify-icon">📩</div>
 
-          <h2 className="verify-title">Verify your email</h2>
+    //       <h2 className="verify-title">Verify your email</h2>
 
-          <p className="verify-text">
-            We’ve sent a verification link to
-          </p>
+    //       <p className="verify-text">
+    //         We’ve sent a verification link to
+    //       </p>
 
-          <p className="verify-email">{emailId}</p>
+    //       <p className="verify-email">{emailId}</p>
 
-          <p className="verify-subtext">
-            Please check your inbox and click the link to activate your account.
-          </p>
+    //       <p className="verify-subtext">
+    //         Please check your inbox and click the link to activate your account.
+    //       </p>
 
-          <button
-            type="button"
-            className="verify-btn"
-            onClick={this.resendVerificationEmail}
-            disabled={isLoading}
-          >
-            {isLoading ? "Sending..." : "Resend Email"}
-          </button>
+    //       <button
+    //         type="button"
+    //         className="verify-btn"
+    //         onClick={this.resendVerificationEmail}
+    //         disabled={isLoading}
+    //       >
+    //         {isLoading ? "Sending..." : "Resend Email"}
+    //       </button>
 
-          <p className="verify-hint">
-            Didn’t receive the email? Check your spam folder.
-          </p>
+    //       <p className="verify-hint">
+    //         Didn’t receive the email? Check your spam folder.
+    //       </p>
 
-          {showSubmitError && (
-            <p className="signupform-error-message">
-              {errorMsg} 
-              {errorMsg.includes("already registered") && (
-                <span>. <Link to="/login" style={{color: 'blue', textDecoration: 'underline'}}>Login here</Link></span>
-              )}
-            </p>
-          )}
+    //       {showSubmitError && (
+    //         <p className="signupform-error-message">
+    //           {errorMsg} 
+    //           {errorMsg.includes("already registered") && (
+    //             <span>. <Link to="/login" style={{color: 'blue', textDecoration: 'underline'}}>Login here</Link></span>
+    //           )}
+    //         </p>
+    //       )}
 
-          <p className="verify-footer">
-            After verification, you can{" "}
-            <Link to="/login" className="verify-link">
-              login here
-            </Link>
-          </p>
+    //       <p className="verify-footer">
+    //         After verification, you can{" "}
+    //         <Link to="/login" className="verify-link">
+    //           login here
+    //         </Link>
+    //       </p>
 
-        </div>
-      </div>
-      )
-    }
+    //     </div>
+    //   </div>
+    //   )
+    // }
 
     // =========================
     // SIGNUP FORM

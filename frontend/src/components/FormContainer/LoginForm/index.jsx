@@ -46,9 +46,9 @@ class LoginForm extends Component {
       return
     }
 
-    if (message.toLowerCase().includes("verify")) {
-      message = "📩 Please verify your email before logging in."
-    }
+    // if (message.toLowerCase().includes("verify")) {
+    //   message = "📩 Please verify your email before logging in."
+    // }
 
     this.setState({
       password: '',
@@ -195,11 +195,11 @@ class LoginForm extends Component {
               </button>
             </div>
           )}
-          <div className="loginform-forgot-row">
+          {/* <div className="loginform-forgot-row">
               <Link to="/forgot-password" className="loginform-forgot-link">
                 Forgot password?
               </Link>
-          </div>
+          </div> */}
           {showSubmitError && <p className="loginform-error-message">{errorMsg}</p>}
 
           <div className="loginform-desc">

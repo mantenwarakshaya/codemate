@@ -6,9 +6,9 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import LandingPage from "./components/FormContainer/LandingPage";
 import LoginForm from "./components/FormContainer/LoginForm";
 import SignupForm from "./components/FormContainer/SignupForm";
-import VerifyEmail from "./components/FormContainer/VerifyEmail";
-import ForgotPassword from "./components/FormContainer/ForgotPassword";
-import ResetPassword from "./components/FormContainer/ResetPassword";
+// import VerifyEmail from "./components/FormContainer/VerifyEmail";
+// import ForgotPassword from "./components/FormContainer/ForgotPassword";
+// import ResetPassword from "./components/FormContainer/ResetPassword";
 
 import Home from "./components/HomeContainer/Home";
 
@@ -68,9 +68,9 @@ const App = () => {
       <Route path="/landing" element={<LandingPage />} />
       <Route path="/login" element={<LoginForm />} />
       <Route path="/signup" element={<SignupForm />} />
-      <Route path="/verify-email/:token" element={<VerifyEmail />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
+      {/* <Route path="/verify-email/:token" element={<VerifyEmail />} /> */}
+      {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
+      {/* <Route path="/reset-password/:token" element={<ResetPassword />} /> */}
 
       {/* Protected */}
 
