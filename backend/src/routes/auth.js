@@ -256,6 +256,8 @@ authRouter.post("/login", async (req, res) => {
 
     // Generate login token
     const token = await user.getJWT();
+    
+    const isProduction = process.env.NODE_ENV === "production";
 
     res.cookie("jwt_token", token, {
       httpOnly: true,

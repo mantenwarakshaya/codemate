@@ -54,7 +54,10 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
-// ✅ Create transporter with timeout protection
+console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log("EMAIL_PASS exists:", !!process.env.EMAIL_PASS);
+
+// ✅ Create transporter first
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -66,12 +69,22 @@ const transporter = nodemailer.createTransport({
   socketTimeout: 5000,
 });
 
+// ✅ Verify transporter after creation
+transporter.verify((error, success) => {
+  if (error) {
+    console.log("SMTP ERROR:", error);
+  } else {
+    console.log("SMTP READY");
+  }
+});
+
 // ✅ Verification Email
 const sendVerificationEmail = async (email, token) => {
   const domain = process.env.BASE_URL || "http://localhost:5173";
   const link = `${domain}/verify-email?token=${token}`;
 
   console.log("📨 Sending email to:", email);
+  
 
   try {
     const info = await transporter.sendMail({
@@ -96,16 +109,16 @@ const sendVerificationEmail = async (email, token) => {
 };
 
 // ✅ General Email
-const sendEmail = async (to, subject, text) => {
+const sendEmail = async (to, subject, html) => {
   try {
     return await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to,
       subject,
-      text,
+      html,
     });
   } catch (err) {
-    console.error("❌ GENERAL EMAIL FAILED:", err.message);
+    console.error("❌ GENERAL EMAIL FAILED:", err);
     return null;
   }
 };
