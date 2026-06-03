@@ -292,7 +292,7 @@ authRouter.post("/login", async (req, res) => {
 authRouter.post("/logout", async (req, res) => {
   const isProduction = process.env.NODE_ENV === "production";
   res.cookie("jwt_token", null, {
-    httpOnly: true,
+    httpOnly: false,
     secure: isProduction,
     sameSite: isProduction ? "None" : "Lax",
     expires: new Date(0),
@@ -319,7 +319,7 @@ authRouter.delete("/delete-account", userAuth, async (req, res) => {
 
     // 🍪 Step 2: Clear cookie
     res.cookie("jwt_token", null, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       expires: new Date(0),
