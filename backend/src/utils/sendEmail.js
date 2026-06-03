@@ -1,26 +1,21 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  family: 4,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendEmail = async (to, subject, html) => {
-  await transporter.sendMail({
-    from: `"CodeMate" <${process.env.EMAIL_USER}>`,
+  const { data, error } = await resend.emails.send({
+    from: process.env.RESEND_FROM_EMAIL || "CodeMate <onboarding@resend.dev>",
     to,
     subject,
     html,
   });
+
+  if (error) {
+    console.error("RESEND EMAIL ERROR:", error);
+    throw new Error(error.message || "Email sending failed");
+  }
+
+  return data;
 };
 
 module.exports = sendEmail;
