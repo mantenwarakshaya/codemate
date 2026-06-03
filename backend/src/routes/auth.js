@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
-const sendEmail = require("../utils/sendEmail");
+const { sendEmail } = require("../utils/sendEmail");
 const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const { validateSignUpData } = require("../utils/validation");
@@ -40,7 +40,8 @@ authRouter.post("/signup", async (req, res) => {
 
     const verifyLink = `${process.env.FRONTEND_URL}/verify-email/${token}`;
 
-    await sendEmail(
+    // 👇 REPLACE YOUR OLD SENDEMAIL BLOCK WITH THIS 👇
+    const emailResult = await sendEmail(
       emailId,
       "Verify your CodeMate account",
       `
@@ -50,10 +51,19 @@ authRouter.post("/signup", async (req, res) => {
       `
     );
 
+    // If emailResult is null (meaning transporter.sendMail failed and caught an error)
+    if (!emailResult) {
+      return res.status(500).json({ 
+        message: "Account details processed, but we failed to send the verification email. Please try resending." 
+      });
+    }
+
+    // If it succeeded, send the success response
     return res.json({
       message: "📩 Verification email sent! Please check your inbox.",
       token: token
     });
+    // 👆 REPLACE END 👆
 
   } catch (err) {
     console.log("SIGNUP ERROR:", err.message);
@@ -248,9 +258,9 @@ authRouter.post("/login", async (req, res) => {
     const token = await user.getJWT();
 
     res.cookie("jwt_token", token, {
-      httpOnly: false,
+      httpOnly: true,
       secure: true, 
-      sameSite: "lax",
+      sameSite: isProduction ? "None" : "Lax",
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
