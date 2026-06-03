@@ -272,7 +272,7 @@ authRouter.post("/login", async (req, res) => {
     const isProduction = process.env.NODE_ENV === "production";
 
     res.cookie("jwt_token", token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: isProduction, 
       sameSite: isProduction ? "None" : "Lax",
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
