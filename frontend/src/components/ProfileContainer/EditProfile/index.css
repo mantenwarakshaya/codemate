@@ -323,6 +323,40 @@
   to { transform: rotate(360deg); }
 }
 
+/* Header Actions Container */
+.ep-header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Close Button */
+.ep-close-profile-btn {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ep-close-profile-btn:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+  color: #374151;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ep-close-profile-btn:active {
+  transform: scale(0.95);
+}
+
 /* ======================
    7. RESPONSIVE DESIGN
    ====================== */
@@ -332,6 +366,7 @@
   .ep-identity-flex-container { flex-direction: column; align-items: center; text-align: center; gap: 24px; }
   .ep-avatar-interaction-group { flex-direction: column; }
   .ep-profile-form-surface { padding: 24px; }
+  .ep-header-actions { width: 100%; flex-wrap: wrap; }
   .ep-sync-profile-btn { width: 100%; justify-content: center; }
 }
 

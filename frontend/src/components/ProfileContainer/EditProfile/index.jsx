@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../Header";
-import { Camera, Briefcase, Handshake } from "lucide-react";
+import { Camera, Briefcase, Handshake, X } from "lucide-react";
 import "./index.css";
 
 import { LoaderView, ErrorView, PremiumVerifiedBadge } from "../../Common";
@@ -163,6 +163,10 @@ class EditProfile extends Component {
       this.showToast(err.message, "error");
       this.setState({ isUpdatingProfile: false });
     }
+  };
+
+  handleClose = () => {
+    this.props.navigate("/profile");
   };  
 
   renderProfile = () => {
@@ -191,13 +195,22 @@ class EditProfile extends Component {
                 <span className="ep-user-email-badge">{user.emailId}</span>
               </div>
             </div>
-            <button 
-              className={`ep-sync-profile-btn ${isUpdatingProfile ? 'ep-is-loading' : ''}`} 
-              onClick={this.handleSave} 
-              disabled={isUpdatingProfile}
-            >
-              {isUpdatingProfile ? "Updating..." : "Save Changes"}
-            </button>
+            <div className="ep-header-actions">
+              <button 
+                className="ep-close-profile-btn"
+                onClick={this.handleClose}
+                title="Discard changes"
+              >
+                <X size={20} />
+              </button>
+              <button 
+                className={`ep-sync-profile-btn ${isUpdatingProfile ? 'ep-is-loading' : ''}`} 
+                onClick={this.handleSave} 
+                disabled={isUpdatingProfile}
+              >
+                {isUpdatingProfile ? "Updating..." : "Save Changes"}
+              </button>
+            </div>
           </div>
 
           <nav className="ep-profile-navigation-tabs">

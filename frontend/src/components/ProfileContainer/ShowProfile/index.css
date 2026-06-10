@@ -246,6 +246,7 @@
 } */
 
 .sp-btn-primary {
+  flex: 1;
   width: 100%;
   background: #0967d2;
   color: white;
@@ -269,8 +270,19 @@
   align-items: center;
 }
 
+.sp-request-controls > * {
+  flex: 1;
+}
+
+.sp-message-link {
+  flex: 1;
+  text-decoration: none;
+  display: flex;
+}
+
 .sp-btn-accept {
-  flex: 2;
+  flex: 1;
+  width: 100%;
   background: #0967d2;
   color: white;
   border: none;
@@ -282,6 +294,7 @@
 
 .sp-btn-reject {
   flex: 1;
+  width: 100%;
   background: transparent;
   color: #64748b;
   border: 1px solid #cbd5e1;
@@ -313,6 +326,28 @@
   font-size: 13px;
   color: #475569;
   margin-bottom: 10px;
+}
+
+.sp-danger-warning {
+  padding: 12px;
+  background-color: #fef2f2;
+  border-left: 3px solid #dc2626;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.sp-danger-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #dc2626;
+  margin: 0 0 8px 0 !important;
+}
+
+.sp-danger-description {
+  font-size: 13px;
+  color: #7f1d1d;
+  line-height: 1.5;
+  margin: 0 !important;
 }
 
 .sp-danger-input {

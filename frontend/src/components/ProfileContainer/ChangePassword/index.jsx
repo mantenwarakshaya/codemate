@@ -37,8 +37,7 @@ const ChangePassword = () => {
       setMessage(res.data.message);
       setFormData({ oldPassword: "", newPassword: "" });
 
-      alert("Password updated successfully!");
-      navigate("/profile");
+      setTimeout(() => navigate("/profile"), 2000);
 
     } catch (err) {
       setError(err.response?.data?.error || "Something went wrong");

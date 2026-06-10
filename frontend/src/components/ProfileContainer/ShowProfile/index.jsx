@@ -206,8 +206,11 @@ renderSuccessView = () => {
                     <Link to="/profile/password" className="sp-message-link"><button className="sp-btn-reject">🔐 Change Password</button></Link>
                   </div>
                   <div className="sp-danger-zone">
-                    <h4>Danger Zone</h4>
-                    <p>Deleting your account will deactivate it for 7 days.</p>
+                    <h4>⚠️ Danger Zone</h4>
+                    <div className="sp-danger-warning">
+                      <p className="sp-danger-title">Account Deactivation</p>
+                      <p className="sp-danger-description">Deleting your account will deactivate it for 7 days. During this period, your profile will be hidden and you can restore your account by logging back in. After 7 days, your account and all associated data will be permanently deleted.</p>
+                    </div>
                     {!this.state.showConfirm ? (
                       <button className="sp-danger-btn" onClick={() => this.setState({ showConfirm: true })}>Delete Account</button>
                     ) : (
@@ -230,10 +233,10 @@ renderSuccessView = () => {
               ) : (
                 <div className="sp-request-controls">
                   <Link to={`/chat/${user._id}`} className="sp-message-link">
-                    <button className="sp-btn-primary"><MdMessage /> Send Message</button>
+                    <button className="sp-btn-primary"><MdMessage /> Message</button>
                   </Link>
                   <button className="sp-btn-reject" onClick={this.handleRemoveConnection}>
-                    <FaTimes /> Remove Connection
+                    <FaTimes /> Remove
                   </button>
                 </div>
               )}

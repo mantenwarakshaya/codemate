@@ -313,9 +313,17 @@ const Chat = () => {
                     src={targetUser?.profilePic || "/avatar.png"}
                     className="chat-header-avatar"
                     alt="user"
+                    onClick={() => targetUser?._id && navigate(`/profile/${targetUser._id}`)}
+                    style={{ cursor: targetUser?._id ? "pointer" : "default" }}
+                    title={targetUser?._id ? "View profile" : ""}
                   />
 
-                  <h3 className="chat-header-name">
+                  <h3 
+                    className="chat-header-name"
+                    onClick={() => targetUser?._id && navigate(`/profile/${targetUser._id}`)}
+                    style={{ cursor: targetUser?._id ? "pointer" : "default" }}
+                    title={targetUser?._id ? "View profile" : ""}
+                  >
                     {targetUser
                       ? `${targetUser.firstName || ""} ${
                           targetUser.lastName || ""

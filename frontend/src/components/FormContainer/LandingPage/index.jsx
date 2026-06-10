@@ -29,7 +29,6 @@ const LandingPage = () => {
           <div className="lp-nav-links">
             <a href="#features">Features</a>
             <a href="#tech-stack">Tech Stack</a>
-            <a href="#community">Community</a>
           </div>
           <div className="lp-nav-actions">
             <button className="lp-btn-ghost" onClick={() => navigate("/login")}>Log in</button>
