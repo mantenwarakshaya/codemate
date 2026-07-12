@@ -3,10 +3,10 @@
 ========================= */
 
 .premium-container {
-  min-height: 100vh;
+  height: calc(100vh - 64px);
   background-color: rgb(243, 243, 243);
   color: #475569;
-  padding: 80px 20px;
+  padding: 40px 20px;
   font-family: "Inter", sans-serif;
   display: flex;
   flex-direction: column;
