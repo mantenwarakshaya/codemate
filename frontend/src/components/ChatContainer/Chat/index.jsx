@@ -46,6 +46,8 @@ const Chat = () => {
   // ---- Clear Chat / dropdown menu state ----
   const [showMenu, setShowMenu] = useState(false);
   const [clearing, setClearing] = useState(false);
+  const [showClearModal, setShowClearModal] = useState(false);
+
   const menuRef = useRef(null);
 
   const scrollRef = useRef(null);
@@ -213,24 +215,25 @@ const Chat = () => {
   const handleClearChat = async () => {
     if (!targetUserId || clearing) return;
 
-    const confirmClear = window.confirm(
-      "Clear this chat? This will remove all messages from your view."
-    );
-    if (!confirmClear) return;
-
-    setClearing(true);
+    setShowClearModal(true);
     setShowMenu(false);
+  };
 
-    // Keep a snapshot in case the request fails and we need to roll back
+
+  const confirmClearChat = async () => {
+    setShowClearModal(false);
+    setClearing(true);
+
     const previousMessages = messages;
 
-    // Optimistically remove this conversation's messages from local state
     setMessages(
       messages.filter((msg) => {
         const senderId = getId(msg.senderId);
         const receiverId = getId(msg.receiverId);
+
         return (
-          senderId !== String(targetUserId) && receiverId !== String(targetUserId)
+          senderId !== String(targetUserId) &&
+          receiverId !== String(targetUserId)
         );
       })
     );
@@ -241,7 +244,6 @@ const Chat = () => {
       });
     } catch (err) {
       console.error("Clear Chat Error:", err);
-      // Roll back on failure
       setMessages(previousMessages);
     } finally {
       setClearing(false);
@@ -474,6 +476,33 @@ const Chat = () => {
           )}
         </section>
       </main>
+      {showClearModal && (
+        <div className="clear-modal-overlay">
+          <div className="clear-modal">
+            <h3>Clear Chat?</h3>
+
+            <p>
+              This will remove all messages from your view.
+            </p>
+
+            <div className="clear-modal-actions">
+              <button
+                className="clear-cancel-btn"
+                onClick={() => setShowClearModal(false)}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="clear-confirm-btn"
+                onClick={confirmClearChat}
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -427,6 +427,71 @@
   cursor: not-allowed;
 }
 
+.clear-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+}
+
+
+.clear-modal {
+  width: 320px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+
+.clear-modal h3 {
+  margin: 0 0 10px;
+  color: #0f172a;
+}
+
+
+.clear-modal p {
+  color: #64748b;
+  font-size: 14px;
+}
+
+
+.clear-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  margin-top: 20px;
+}
+
+
+.clear-cancel-btn,
+.clear-confirm-btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+
+.clear-cancel-btn {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+
+.clear-confirm-btn {
+  background: #ef4444;
+  color: white;
+}
+
 /* =========================================
    7. MOBILE VIEW LOGIC
    ========================================= */
