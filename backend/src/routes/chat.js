@@ -181,4 +181,99 @@ chatRouter.delete("/messages/clear/:id", userAuth, async (req, res) => {
   }
 });
 
+/* ===========================
+   ✅ 6. DELETE MESSAGE FOR ME (single message, this user only)
+=========================== */
+chatRouter.delete("/messages/:messageId/for-me", userAuth, async (req, res) => {
+  try {
+    const { messageId } = req.params;
+    const userId = req.user._id;
+
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ success: false, message: "Message not found" });
+    }
+
+    const isParticipant =
+      String(message.senderId) === String(userId) ||
+      String(message.receiverId) === String(userId);
+
+    if (!isParticipant) {
+      return res.status(403).json({ success: false, message: "Not authorized" });
+    }
+
+    await Message.updateOne(
+      { _id: messageId },
+      { $addToSet: { deletedFor: userId } }
+    );
+
+    // Cleanup: once BOTH participants have deleted it, remove it entirely
+    const refreshed = await Message.findById(messageId);
+    const bothDeleted =
+      refreshed &&
+      refreshed.deletedFor.some((id) => String(id) === String(message.senderId)) &&
+      refreshed.deletedFor.some((id) => String(id) === String(message.receiverId));
+
+    if (bothDeleted) {
+      await Message.deleteOne({ _id: messageId });
+    }
+
+    res.status(200).json({ success: true, message: "Message deleted for you" });
+  } catch (error) {
+    console.error("Error in deleteForMe:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+/* ===========================
+   ✅ 7. DELETE MESSAGE FOR EVERYONE (sender only)
+=========================== */
+chatRouter.delete("/messages/:messageId/for-everyone", userAuth, async (req, res) => {
+  try {
+    const { messageId } = req.params;
+    const userId = req.user._id;
+
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ success: false, message: "Message not found" });
+    }
+
+    if (String(message.senderId) !== String(userId)) {
+      return res.status(403).json({
+        success: false,
+        message: "Only the sender can delete this message for everyone",
+      });
+    }
+
+    // restrict to a time window (e.g. WhatsApp-style 1 hour cutoff)
+    const ONE_HOUR = 60 * 60 * 1000;
+    if (Date.now() - new Date(message.createdAt).getTime() > ONE_HOUR) {
+      return res.status(400).json({
+        success: false,
+        message: "Too late to delete this message for everyone",
+      });
+    }
+
+    message.text = "This message was deleted";
+    message.image = undefined;
+    message.deletedForEveryone = true;
+    await message.save();
+
+    const io = getIo();
+    io.to(String(message.senderId)).emit("messageDeleted", {
+      messageId,
+      mode: "everyone",
+    });
+    io.to(String(message.receiverId)).emit("messageDeleted", {
+      messageId,
+      mode: "everyone",
+    });
+
+    res.status(200).json({ success: true, message: "Message deleted for everyone" });
+  } catch (error) {
+    console.error("Error in deleteForEveryone:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = chatRouter;

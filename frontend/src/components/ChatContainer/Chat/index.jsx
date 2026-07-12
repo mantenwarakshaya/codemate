@@ -48,6 +48,12 @@ const Chat = () => {
   const [clearing, setClearing] = useState(false);
   const [showClearModal, setShowClearModal] = useState(false);
 
+  // message delete states
+  const [openMessageMenuId, setOpenMessageMenuId] = useState(null);
+  const [deletingMessageId, setDeletingMessageId] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedMessageId, setSelectedMessageId] = useState(null);
+
   const menuRef = useRef(null);
 
   const scrollRef = useRef(null);
@@ -89,11 +95,40 @@ const Chat = () => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setShowMenu(false);
       }
+
+      if (!e.target.closest(".message-actions-wrapper")) {
+        setOpenMessageMenuId(null);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleMessageDeleted = ({ messageId }) => {
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          String(msg._id) === String(messageId)
+            ? {
+                ...msg,
+                text: "This message was deleted",
+                deletedForEveryone: true,
+              }
+            : msg
+        )
+      );
+    };
+
+    socket.on("messageDeleted", handleMessageDeleted);
+
+    return () => {
+      socket.off("messageDeleted", handleMessageDeleted);
+    };
+
+  }, [socket, setMessages]);
 
   const getDateLabel = useCallback((dateString) => {
     const date = new Date(dateString);
@@ -250,6 +285,82 @@ const Chat = () => {
     }
   };
 
+  const handleDeleteForMe = async (messageId) => {
+    if (!messageId || deletingMessageId) return;
+
+    setDeletingMessageId(messageId);
+    setOpenMessageMenuId(null);
+
+    const previousMessages = messages;
+
+    setMessages(
+      messages.filter(
+        (msg) => String(msg._id) !== String(messageId)
+      )
+    );
+
+    try {
+      await axios.delete(
+        `${BASE_URL}/messages/${messageId}/for-me`,
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (err) {
+      console.error("Delete For Me Error:", err);
+      setMessages(previousMessages);
+    } finally {
+      setDeletingMessageId(null);
+    }
+  };
+
+
+  const handleDeleteForEveryone = (messageId) => {
+    setSelectedMessageId(messageId);
+    setShowDeleteModal(true);
+  };
+
+
+  const confirmDeleteForEveryone = async () => {
+    const messageId = selectedMessageId;
+
+    setShowDeleteModal(false);
+    setSelectedMessageId(null);
+
+    setDeletingMessageId(messageId);
+    setOpenMessageMenuId(null);
+
+    const previousMessages = messages;
+
+
+    setMessages(
+      messages.map((msg) =>
+        String(msg._id) === String(messageId)
+          ? {
+              ...msg,
+              text: "This message was deleted",
+              deletedForEveryone: true,
+            }
+          : msg
+      )
+    );
+
+
+    try {
+      await axios.delete(
+        `${BASE_URL}/messages/${messageId}/for-everyone`,
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (err) {
+      console.error("Delete For Everyone Error:", err);
+      setMessages(previousMessages);
+    } finally {
+      setDeletingMessageId(null);
+    }
+  };
+
   // Listen for "chatCleared" so other tabs/devices for the same user also clear
   useEffect(() => {
     if (!socket) return;
@@ -274,7 +385,7 @@ const Chat = () => {
 
     return activeChatMessages.map((msg, index) => {
       const senderId = getId(msg.senderId);
-      const isOwn = senderId !== String(targetUserId);
+      const isOwn = senderId === String(loggedInUserId);
 
       const currentDateLabel = getDateLabel(msg.createdAt);
       const showDivider = currentDateLabel !== lastDateLabel;
@@ -300,12 +411,57 @@ const Chat = () => {
               />
 
               <div className="chat-bubble-container">
+                <div className="message-actions-wrapper">
+
                 <div
-                  className={`chat-bubble ${
+                className={`chat-bubble ${
                     isOwn ? "chat-bubble-own" : "chat-bubble-target"
-                  }`}
+                } ${msg.deletedForEveryone ? "chat-bubble-deleted" : ""}`}
                 >
-                  {msg.text}
+                {msg.text}
+                </div>
+
+
+                {!msg.deletedForEveryone && (
+                <>
+                <button
+                className="message-actions-trigger"
+                onClick={() =>
+                  setOpenMessageMenuId(
+                    openMessageMenuId === msg._id ? null : msg._id
+                  )
+                }
+                >
+                <MoreVertical size={14}/>
+                </button>
+
+
+                {openMessageMenuId === msg._id && (
+                <div className="message-dropdown-menu">
+
+                <button
+                className="chat-dropdown-item"
+                onClick={() => handleDeleteForMe(msg._id)}
+                >
+                Delete for me
+                </button>
+
+
+                {isOwn && (
+                <button
+                className="chat-dropdown-item chat-dropdown-danger"
+                onClick={() => handleDeleteForEveryone(msg._id)}
+                >
+                Delete for everyone
+                </button>
+                )}
+
+                </div>
+                )}
+
+                </>
+                )}
+
                 </div>
 
                 <span className="chat-time-stamp">
@@ -313,7 +469,7 @@ const Chat = () => {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
-                  {isOwn && (
+                  {isOwn && !msg.deletedForEveryone && (
                     <CheckCheck
                       size={14}
                       strokeWidth={2.4}
@@ -327,7 +483,15 @@ const Chat = () => {
         </React.Fragment>
       );
     });
-  }, [activeChatMessages, targetUserId, loggedInUser, targetUser, getDateLabel]);
+  }, [
+    activeChatMessages,
+    targetUserId,
+    loggedInUser,
+    targetUser,
+    getDateLabel,
+    openMessageMenuId,
+    deletingMessageId
+  ]);
 
   return (
     <div className="chat-page-wrapper">
@@ -502,6 +666,48 @@ const Chat = () => {
             </div>
           </div>
         </div>
+      )}
+      {showDeleteModal && (
+      <div className="clear-modal-overlay">
+
+      <div className="clear-modal">
+
+      <h3>
+      Delete for everyone?
+      </h3>
+
+      <p>
+      This message will be removed for everyone.
+      </p>
+
+
+      <div className="clear-modal-actions">
+
+      <button
+      className="clear-cancel-btn"
+      onClick={()=>{
+      setShowDeleteModal(false);
+      setSelectedMessageId(null);
+      setOpenMessageMenuId(null);
+      }}
+      >
+      Cancel
+      </button>
+
+
+      <button
+      className="clear-confirm-btn"
+      onClick={confirmDeleteForEveryone}
+      >
+      Delete
+      </button>
+
+
+      </div>
+
+      </div>
+
+      </div>
       )}
     </div>
   );

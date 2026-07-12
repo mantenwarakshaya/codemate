@@ -155,7 +155,7 @@
   width: 100%;
 }
 
-.chat-row-start {
+.chat-row {
   justify-content: flex-start;
   padding-right: 15%;
 }
@@ -164,6 +164,7 @@
 .chat-row-end {
   justify-content: flex-end;
   padding-left: 15%;
+  padding-right: 20px;
 }
 
 .chat-message-wrapper {
@@ -491,6 +492,90 @@
   background: #ef4444;
   color: white;
 }
+
+.message-actions-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.message-actions-trigger {
+  opacity: 0;
+  position: absolute;
+  right: -28px;
+
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  color: #64748b;
+  padding: 4px;
+
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: opacity 0.15s ease;
+}
+
+.chat-row-end .message-actions-trigger {
+  right: auto;
+  left: -28px;
+}
+
+.message-actions-wrapper:hover .message-actions-trigger {
+  opacity: 1;
+}
+
+.message-actions-trigger:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.message-dropdown-menu {
+  position: absolute;
+
+  top: -8px;
+  right: 0;
+
+  transform: translateY(-100%);
+
+  background: #ffffff;
+
+  border-radius: 10px;
+
+  box-shadow: 
+    0 10px 25px rgba(0,0,0,0.12);
+
+  min-width: 170px;
+
+  overflow: hidden;
+
+  z-index: 50;
+}
+
+.chat-row-end .message-dropdown-menu {
+  right: 0;
+}
+
+.chat-row-start .message-dropdown-menu {
+  left: 0;
+}
+
+.message-dropdown-menu.align-right {
+  right: 0;
+}
+
+.message-dropdown-menu.align-left {
+  left: 0;
+}
+
+.chat-bubble-deleted {
+  font-style: italic;
+  color: #9ca3af;
+}
+
 
 /* =========================================
    7. MOBILE VIEW LOGIC
