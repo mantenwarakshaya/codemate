@@ -169,26 +169,88 @@
   gap: 14px;
 }
 
+/* =========================
+   SOCIAL LINKS
+========================= */
+
 .feed-social-bar a {
   width: 48px;
   height: 48px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.9);
+
+  background: #ffffff;
   border: 1px solid #e2e8f0;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #475569;
+
+  color: #64748b;
+
   transition: all 0.25s ease;
   box-shadow: 0 6px 16px rgba(15, 23, 42, 0.04);
 }
 
-.feed-social-bar a:hover {
+
+/* GitHub */
+
+.feed-social-bar .github svg {
+  color: #181717;
+}
+
+.feed-social-bar .github:hover {
+  background: #181717;
+  border-color: #181717;
+  color: white;
   transform: translateY(-4px);
-  background: #0967d2;
+}
+
+
+/* LinkedIn */
+
+.feed-social-bar .linkedin svg {
+  color: #0A66C2;
+}
+
+.feed-social-bar .linkedin:hover {
+  background: #0A66C2;
+  border-color: #0A66C2;
+  color: white;
+  transform: translateY(-4px);
+}
+
+
+/* Twitter */
+
+.feed-social-bar .twitter svg {
+  color: #000000;
+}
+
+.feed-social-bar .twitter:hover {
+  background: #000000;
+  border-color: #000000;
+  color: white;
+  transform: translateY(-4px);
+}
+
+
+/* Discord */
+
+.feed-social-bar .discord svg {
+  color: #5865F2;
+}
+
+.feed-social-bar .discord:hover {
+  background: #5865F2;
+  border-color: #5865F2;
+  color: white;
+  transform: translateY(-4px);
+}
+
+
+.feed-social-bar a:hover svg {
   color: #ffffff;
-  border-color: #0967d2;
-  box-shadow: 0 16px 30px rgba(9, 103, 210, 0.22);
+  transform: scale(1.15);
 }
 
 /* =========================

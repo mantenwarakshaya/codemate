@@ -118,25 +118,25 @@ const LeftSidebar = () => {
 
           <div className="profilecard-social-list">
             {user.github && (
-              <a href={user.github} target="_blank" rel="noreferrer" className="profilecard-btn">
+              <a href={user.github} target="_blank" rel="noreferrer" className="profilecard-btn github">
                 <FaGithub /> GitHub
               </a>
             )}
 
             {user.linkedin && (
-              <a href={user.linkedin} target="_blank" rel="noreferrer" className="profilecard-btn">
+              <a href={user.linkedin} target="_blank" rel="noreferrer" className="profilecard-btn linkedin">
                 <FaLinkedin /> LinkedIn
               </a>
             )}
 
             {user.twitter && (
-              <a href={user.twitter} target="_blank" rel="noreferrer" className="profilecard-btn">
+              <a href={user.twitter} target="_blank" rel="noreferrer" className="profilecard-btn twitter">
                 <FaTwitter /> Twitter
               </a>
             )}
 
             {user.discord && (
-              <a href={user.discord} target="_blank" rel="noreferrer" className="profilecard-btn">
+              <a href={user.discord} target="_blank" rel="noreferrer" className="profilecard-btn discord">
                 <SiDiscord /> Discord
               </a>
             )}

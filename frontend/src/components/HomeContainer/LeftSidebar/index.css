@@ -177,36 +177,83 @@
   gap: 8px;
 }
 
+/* --- SOCIAL LINKS --- */
+
 .profilecard-btn {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
   border-radius: 10px;
-  background: #f8fafc; 
+
+  background: #f8fafc;
   color: #475569;
+
   font-size: 13px;
   font-weight: 600;
   text-decoration: none;
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
+
+  border: 1px solid #e2e8f0;
+  transition: all 0.25s ease;
+}
+
+
+/* GitHub */
+.profilecard-btn.github svg {
+  color: #181717;
+}
+
+.profilecard-btn.github:hover {
+  background: #181717;
+  color: white;
+  border-color: #181717;
+}
+
+
+/* LinkedIn */
+.profilecard-btn.linkedin svg {
+  color: #0A66C2;
+}
+
+.profilecard-btn.linkedin:hover {
+  background: #0A66C2;
+  color: white;
+  border-color: #0A66C2;
+}
+
+
+/* Twitter / X */
+.profilecard-btn.twitter svg {
+  color: #000000;
+}
+
+.profilecard-btn.twitter:hover {
+  background: #000000;
+  color: white;
+  border-color: #000000;
+}
+
+
+/* Discord */
+.profilecard-btn.discord svg {
+  color: #5865F2;
+}
+
+.profilecard-btn.discord:hover {
+  background: #5865F2;
+  color: white;
+  border-color: #5865F2;
+}
+
+
+.profilecard-btn:hover svg {
+  color: white;
+  transform: scale(1.1);
 }
 
 .profilecard-btn svg {
-  font-size: 16px;
-  color: #0967d2;
-  transition: 0.3s;
-}
-
-.profilecard-btn:hover {
-  background: #0967d2;
-  color: #ffffff;
-  transform: translateX(5px);
-}
-
-.profilecard-btn:hover svg {
-  color: #ffffff;
-  transform: scale(1.1);
+  font-size: 17px;
+  transition: 0.25s ease;
 }
 
 .header-icon {

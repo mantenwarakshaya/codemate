@@ -181,10 +181,49 @@ class Feed extends Component {
             </div>
 
             <div className="feed-social-bar">
-              {user.github && <a href={user.github} target="_blank" rel="noreferrer"><FaGithub size={20}/></a>}
-              {user.linkedin && <a href={user.linkedin} target="_blank" rel="noreferrer"><FaLinkedin size={20}/></a>}
-              {user.twitter && <a href={user.twitter} target="_blank" rel="noreferrer"><FaTwitter size={20}/></a>}
-              {user.discord && <a href={user.discord} target="_blank" rel="noreferrer"><SiDiscord size={20}/></a>}
+              {user.github && (
+                <a 
+                  className="github"
+                  href={user.github} 
+                  target="_blank" 
+                  rel="noreferrer"
+                >
+                  <FaGithub size={20}/>
+                </a>
+              )}
+
+              {user.linkedin && (
+                <a 
+                  className="linkedin"
+                  href={user.linkedin} 
+                  target="_blank" 
+                  rel="noreferrer"
+                >
+                  <FaLinkedin size={20}/>
+                </a>
+              )}
+
+              {user.twitter && (
+                <a 
+                  className="twitter"
+                  href={user.twitter} 
+                  target="_blank" 
+                  rel="noreferrer"
+                >
+                  <FaTwitter size={20}/>
+                </a>
+              )}
+
+              {user.discord && (
+                <a 
+                  className="discord"
+                  href={user.discord} 
+                  target="_blank" 
+                  rel="noreferrer"
+                >
+                  <SiDiscord size={20}/>
+                </a>
+              )}
             </div>
           </div>
 

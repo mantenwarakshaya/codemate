@@ -145,12 +145,53 @@ renderSuccessView = () => {
                <MdHandshake /> {user.connectionStatus || "Networking"}
             </div>
 
-            <div className="sp-social-links-grid">
-              {user.github && <a href={user.github} target="_blank" rel="noreferrer" className="sp-social-pill"><FaGithub /> GitHub</a>}
-              {user.linkedin && <a href={user.linkedin} target="_blank" rel="noreferrer" className="sp-social-pill"><FaLinkedin /> LinkedIn</a>}
-              {user.twitter && <a href={user.twitter} target="_blank" rel="noreferrer" className="sp-social-pill"><FaTwitter /> Twitter</a>}
-              {user.discord && <a href={user.discord} target="_blank" rel="noreferrer" className="sp-social-pill"><SiDiscord /> Discord</a>}
-            </div>
+          <div className="sp-social-links-grid">
+
+            {user.github && (
+              <a 
+                href={user.github} 
+                target="_blank" 
+                rel="noreferrer" 
+                className="sp-social-pill github"
+              >
+                <FaGithub /> GitHub
+              </a>
+            )}
+
+            {user.linkedin && (
+              <a 
+                href={user.linkedin} 
+                target="_blank" 
+                rel="noreferrer" 
+                className="sp-social-pill linkedin"
+              >
+                <FaLinkedin /> LinkedIn
+              </a>
+            )}
+
+            {user.twitter && (
+              <a 
+                href={user.twitter} 
+                target="_blank" 
+                rel="noreferrer" 
+                className="sp-social-pill twitter"
+              >
+                <FaTwitter /> Twitter
+              </a>
+            )}
+
+            {user.discord && (
+              <a 
+                href={user.discord} 
+                target="_blank" 
+                rel="noreferrer" 
+                className="sp-social-pill discord"
+              >
+                <SiDiscord /> Discord
+              </a>
+            )}
+
+          </div>
           </div>
 
           <div className="sp-profile-main">
