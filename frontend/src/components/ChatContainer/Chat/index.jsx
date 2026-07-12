@@ -34,12 +34,19 @@ const Chat = () => {
   const loggedInUser = currentUser || reduxLoggedInUser;
   const loggedInUserId = getId(loggedInUser?._id);
 
-  const { messages, setMessages, addMessage, initializeSocket } = useChatStore();
+  // NOTE: if your store doesn't expose `socket`, this will just be undefined
+  // and the cross-tab "chatCleared" listener below will simply no-op.
+  const { messages, setMessages, addMessage, initializeSocket, socket } = useChatStore();
 
   const [newMessage, setNewMessage] = useState("");
   const [apiStatus, setApiStatus] = useState("INITIAL");
   const [targetUser, setTargetUser] = useState(null);
   const [showSidebar, setShowSidebar] = useState(true);
+
+  // ---- Clear Chat / dropdown menu state ----
+  const [showMenu, setShowMenu] = useState(false);
+  const [clearing, setClearing] = useState(false);
+  const menuRef = useRef(null);
 
   const scrollRef = useRef(null);
 
@@ -73,6 +80,18 @@ const Chat = () => {
 
     initializeSocket(loggedInUserId);
   }, [loggedInUserId, initializeSocket]);
+
+  // Close the three-dot dropdown when clicking outside it
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const getDateLabel = useCallback((dateString) => {
     const date = new Date(dateString);
@@ -189,6 +208,64 @@ const Chat = () => {
       setNewMessage(trimmedMsg);
     }
   };
+
+  // ---- Clear Chat handler ----
+  const handleClearChat = async () => {
+    if (!targetUserId || clearing) return;
+
+    const confirmClear = window.confirm(
+      "Clear this chat? This will remove all messages from your view."
+    );
+    if (!confirmClear) return;
+
+    setClearing(true);
+    setShowMenu(false);
+
+    // Keep a snapshot in case the request fails and we need to roll back
+    const previousMessages = messages;
+
+    // Optimistically remove this conversation's messages from local state
+    setMessages(
+      messages.filter((msg) => {
+        const senderId = getId(msg.senderId);
+        const receiverId = getId(msg.receiverId);
+        return (
+          senderId !== String(targetUserId) && receiverId !== String(targetUserId)
+        );
+      })
+    );
+
+    try {
+      await axios.delete(`${BASE_URL}/messages/clear/${targetUserId}`, {
+        withCredentials: true,
+      });
+    } catch (err) {
+      console.error("Clear Chat Error:", err);
+      // Roll back on failure
+      setMessages(previousMessages);
+    } finally {
+      setClearing(false);
+    }
+  };
+
+  // Listen for "chatCleared" so other tabs/devices for the same user also clear
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleChatCleared = ({ withUser }) => {
+      setMessages(
+        messages.filter((msg) => {
+          const senderId = getId(msg.senderId);
+          const receiverId = getId(msg.receiverId);
+          return senderId !== String(withUser) && receiverId !== String(withUser);
+        })
+      );
+    };
+
+    socket.on("chatCleared", handleChatCleared);
+    return () => socket.off("chatCleared", handleChatCleared);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket]);
 
   const renderedMessages = useMemo(() => {
     let lastDateLabel = "";
@@ -333,9 +410,28 @@ const Chat = () => {
                   </h3>
                 </div>
 
-                <button type="button" className="chat-icon-btn">
-                  <MoreVertical size={20} />
-                </button>
+                <div className="chat-menu-wrapper" ref={menuRef}>
+                  <button
+                    type="button"
+                    className="chat-icon-btn"
+                    onClick={() => setShowMenu((prev) => !prev)}
+                  >
+                    <MoreVertical size={20} />
+                  </button>
+
+                  {showMenu && (
+                    <div className="chat-dropdown-menu">
+                      <button
+                        type="button"
+                        className="chat-dropdown-item chat-dropdown-danger"
+                        onClick={handleClearChat}
+                        disabled={clearing}
+                      >
+                        {clearing ? "Clearing..." : "Clear Chat"}
+                      </button>
+                    </div>
+                  )}
+                </div>
               </header>
 
               <div className="chat-messages-area">

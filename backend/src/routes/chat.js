@@ -71,6 +71,7 @@ chatRouter.get("/messages/:id", userAuth, async (req, res) => {
         { senderId: myId, receiverId: userToChatId },
         { senderId: userToChatId, receiverId: myId },
       ],
+      deletedFor: { $ne: myId },
     }).sort({ createdAt: 1 });
 
     res.status(200).json(messages);
@@ -136,6 +137,46 @@ chatRouter.post("/messages/mark-seen/:senderId", userAuth, async (req, res) => {
     res.status(200).json({ success: true, message: "Messages marked as seen" });
   } catch (error) {
     console.error("Error in markSeen:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+/* ===========================
+   ✅ 5. CLEAR CHAT
+=========================== */
+chatRouter.delete("/messages/clear/:id", userAuth, async (req, res) => {
+  try {
+    const { id: otherUserId } = req.params;
+    const myId = req.user._id;
+
+    // Mark every message in this conversation as "deleted for me"
+    await Message.updateMany(
+      {
+        $or: [
+          { senderId: myId, receiverId: otherUserId },
+          { senderId: otherUserId, receiverId: myId },
+        ],
+      },
+      { $addToSet: { deletedFor: myId } }
+    );
+
+    // Optional cleanup: once BOTH participants have cleared a message,
+    // there's no reason to keep it around at all.
+    await Message.deleteMany({
+      $or: [
+        { senderId: myId, receiverId: otherUserId },
+        { senderId: otherUserId, receiverId: myId },
+      ],
+      deletedFor: { $all: [myId, otherUserId] },
+    });
+
+    // Notify only my own connected devices/tabs to clear the UI locally
+    const io = getIo();
+    io.to(String(myId)).emit("chatCleared", { withUser: otherUserId });
+
+    res.status(200).json({ success: true, message: "Chat cleared" });
+  } catch (error) {
+    console.error("Error in clearChat:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
