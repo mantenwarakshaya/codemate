@@ -5,10 +5,7 @@ import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { SiDiscord } from "react-icons/si";
 import { LoaderView, ErrorView, EmptyView, PremiumVerifiedBadge } from "../../Common";
 
-const BASE_URL = 
-  process.env.NODE_ENV === "production"
-    ? "/api"
-    : "http://localhost:7777/api";
+const BASE_URL = "/api";
 
 const apiStatusConstants = {
   initial: "INITIAL",

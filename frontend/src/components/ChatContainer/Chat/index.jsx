@@ -12,7 +12,7 @@ import { useChatStore } from "../../../store/useChatStore";
 import navlogo from "../../../assets/navlogo.png";
 import "./index.css";
 
-const BASE_URL = import.meta.env.PROD ? "/api" : "http://localhost:7777/api";
+const BASE_URL = "/api";
 
 const getId = (value) => {
   if (!value) return "";

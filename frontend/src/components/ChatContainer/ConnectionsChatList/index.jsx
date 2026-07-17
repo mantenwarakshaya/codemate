@@ -5,7 +5,7 @@ import "./index.css";
 import { LoaderView, ErrorView, EmptyView, PremiumVerifiedBadge } from "../../Common";
 import { useChatStore } from "../../../store/useChatStore"; // 2. Ensure this import is here
 
-const BASE_URL = import.meta.env.PROD ? "/api" : "http://localhost:7777/api";
+const BASE_URL = "/api";
 
 const apiStatusConstants = {
   INITIAL: "INITIAL",

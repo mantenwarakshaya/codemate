@@ -31,10 +31,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 import Cookies from "js-cookie";
 
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "/api"
-    : "http://localhost:7777/api";
+const BASE_URL = "/api";
 
 const App = () => {
   const dispatch = useDispatch();

@@ -2,10 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./index.css";
 
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "/api"
-    : "http://localhost:7777/api";
+const BASE_URL = "/api";
 
 const ResetPassword = () => {
   const { token } = useParams();

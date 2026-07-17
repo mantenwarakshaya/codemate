@@ -5,7 +5,7 @@ import { formatDistanceToNow } from "date-fns";
 import { LoaderView, ErrorView, PremiumVerifiedBadge } from "../../Common";
 import "./index.css";
 
-const BASE_URL = process.env.NODE_ENV === "production" ? "/api" : "http://localhost:7777/api";
+const BASE_URL = "/api";
 const LIMIT = 3;
 
 const apiStatusConstants = {

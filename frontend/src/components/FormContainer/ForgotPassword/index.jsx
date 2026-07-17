@@ -1,10 +1,7 @@
 import { useState } from "react";
 import "./index.css";
 
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "/api"
-    : "http://localhost:7777/api";
+const BASE_URL = "/api";
 
 const ForgotPassword = () => {
   const [emailId, setEmail] = useState("");

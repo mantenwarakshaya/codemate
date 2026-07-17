@@ -6,10 +6,7 @@ import { Users, MessageSquare, Bell, Home, ChevronDown, Crown } from "lucide-rea
 import "./index.css";
 import navlogo from "../../assets/navlogo.png";
 
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "/api"
-    : "http://localhost:7777/api";
+const BASE_URL = "/api";
 
 class Header extends Component {
   state = {

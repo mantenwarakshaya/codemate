@@ -3,10 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { PremiumVerifiedBadge } from "../../Common";
 import "./index.css";
 
-const BASE_URL = 
-  process.env.NODE_ENV === "production"
-    ? "/api"
-    : "http://localhost:7777/api";
+const BASE_URL = "/api";
 
 class ConnectionCard extends Component {
   state = {

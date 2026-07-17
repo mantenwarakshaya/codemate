@@ -7,10 +7,7 @@ import { LoaderView, ErrorView, PremiumVerifiedBadge } from "../../Common";
 import { SiDiscord } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 
-const BASE_URL = 
-  process.env.NODE_ENV === "production"
-    ? "/api"
-    : "http://localhost:7777/api";
+const BASE_URL = "/api";
 
 const apiStatusConstants = {
   initial: "INITIAL",

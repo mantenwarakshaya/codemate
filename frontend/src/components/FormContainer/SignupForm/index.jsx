@@ -7,9 +7,7 @@ import Footer from "../Footer";
 import './index.css'
 import navlogo from "../../../assets/navlogo.png";
 
-const BASE_URL = import.meta.env.PROD
-  ? "/api"
-  : "http://localhost:7777/api";
+const BASE_URL = "/api";
 
 
 class SignupForm extends Component {

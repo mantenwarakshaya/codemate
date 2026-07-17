@@ -6,10 +6,7 @@ import "./index.css";
 
 import { LoaderView, ErrorView, PremiumVerifiedBadge } from "../../Common";
 
-const BASE_URL = 
-  process.env.NODE_ENV === "production"
-    ? "/api"
-    : "http://localhost:7777/api";
+const BASE_URL = "/api";
 
 const apiStatusConstants = {
   initial: "INITIAL",
